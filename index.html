@@ -123,23 +123,30 @@
             color: #85c1e9;
             font-size: 1.2rem;
         }
-        .home-item {
+        .home-item, .article-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .home-item h3 {
+        .home-item h3, .article-item h3 {
             color: #f4d03f;
             margin-top: 0;
+            margin-bottom: 8px;
         }
-        .home-item img {
+        .home-item img, .article-item img {
             max-width: 100%;
             border-radius: 8px;
             margin-top: 10px;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: 300px;
+            object-fit: contain;
+            display: block;
+        }
+        .article-item .date {
+            font-size: 0.85rem;
+            color: #85c1e9;
+            margin-bottom: 8px;
         }
         .image-grid {
             display: grid;
@@ -168,6 +175,52 @@
         .image-item p {
             color: #e6edf5;
             font-size: 0.85rem;
+        }
+        .book-item, .video-item, .audio-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .book-item h3, .video-item h3, .audio-item h3 {
+            color: #f4d03f;
+            margin-bottom: 10px;
+        }
+        .book-item img {
+            max-height: 150px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .book-item a {
+            display: inline-block;
+            background: #27ae60;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        audio {
+            width: 100%;
+            margin-top: 8px;
         }
         .btn-container {
             text-align: center;
@@ -271,22 +324,25 @@
                 <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- باقي الأقسام -->
+            <!-- المقالات -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
+            <!-- الكتب -->
             <div id="booksSection" style="display:none;" class="card">
                 <h2>📚 مكتبة الكتب (PDF)</h2>
                 <div id="booksList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
+            <!-- الفيديوهات -->
             <div id="videosSection" style="display:none;" class="card">
                 <h2>🎬 دروس الفيديو</h2>
                 <div id="videosList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
+            <!-- الصوتيات -->
             <div id="audioSection" style="display:none;" class="card">
                 <h2>🎧 المكتبة الصوتية</h2>
                 <div id="audioList"><div class="loading">جاري التحميل...</div></div>
@@ -313,15 +369,21 @@
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
+                return json.table.rows.map(row => row.c ? row.c.map(cell => cell ? (cell.v !== null ? cell.v : '') : '') : []);
             } catch (error) {
-                console.error('خطأ:', error);
+                console.error('خطأ في جلب البيانات من الـ Sheet:', error);
                 return [];
             }
         }
 
+        // دالة لمعالجة روابط الصور المباشرة (مثل Google Drive أو روابط أخرى لو احتجت)
+        function cleanImageUrl(url) {
+            if (!url) return '';
+            return url.trim();
+        }
+
         // ============================================================
-        // الصفحة الرئيسية - تقرأ كل الصفوف من تاب "الصفحة الرئيسية"
+        // الصفحة الرئيسية
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
@@ -338,58 +400,56 @@
             let html = `<h2>🏠 الصفحة الرئيسية</h2>`;
             let hasContent = false;
 
-            // نبدأ من الصف الثاني (بعد العناوين)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? row[0].trim() : '';
-                const content = row[1] ? row[1].trim() : '';
-                const image = row[2] ? row[2].trim() : '';
+                const title = row[0] ? String(row[0]).trim() : '';
+                const content = row[1] ? String(row[1]).trim() : '';
+                const image = cleanImageUrl(row[2]);
 
-                // تخطي الصفوف الفاضية
                 if (!title && !content && !image) continue;
 
                 hasContent = true;
                 html += `
                     <div class="home-item">
-                        <h3>${title || 'بدون عنوان'}</h3>
-                        <p>${content || ''}</p>
+                        ${title ? `<h3>${title}</h3>` : ''}
+                        ${content ? `<p>${content}</p>` : ''}
                         ${image ? `<img src="${image}" alt="${title || 'صورة'}" loading="lazy">` : ''}
                     </div>
                 `;
             }
 
             if (!hasContent) {
-                html += '<p>لا يوجد محتوى في الصفحة الرئيسية. أضف محتوى في تاب "الصفحة الرئيسية".</p>';
+                html += '<p>لا يوجد محتوى في الصفحة الرئيسية حالياً.</p>';
             }
 
             container.innerHTML = html;
         }
 
         // ============================================================
-        // معرض الصور - يقرأ كل الصفوف من تاب "صور"
+        // معرض الصور
         // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
             const data = await fetchSheetData('صور');
             
             if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. أضف صوراً في تاب "صور".</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض حالياً.</p>';
                 return;
             }
 
             const items = [];
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? row[0].trim() : '';
-                const src = row[1] ? row[1].trim() : '';
-                const desc = row[2] ? row[2].trim() : '';
+                const title = row[0] ? String(row[0]).trim() : '';
+                const src = cleanImageUrl(row[1]);
+                const desc = row[2] ? String(row[2]).trim() : '';
                 if (title && src) {
                     items.push({ title, src, desc });
                 }
             }
 
             if (!items.length) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. أضف صوراً في تاب "صور" مع روابطها.</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. تأكد من إضافة العنوان ورابط الصورة الصحيح في تاب "صور".</p>';
                 return;
             }
 
@@ -408,43 +468,62 @@
         }
 
         // ============================================================
-        // دوال الأقسام الأخرى (بنفس الطريقة)
+        // المقالات
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
             const data = await fetchSheetData('مقالات');
-            if (data.length < 2) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
-            const items = data.slice(1).filter(r => r[0] && r[0].trim());
-            if (!items.length) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
+            
+            if (data.length < 2) { 
+                container.innerHTML = '<p>لا توجد مقالات حالياً.</p>'; 
+                return; 
+            }
+            
             let html = '';
-            items.forEach(r => {
-                const title = r[0] || 'بدون عنوان';
-                const content = r[1] || '';
-                const date = r[2] || '';
-                const image = r[3] || '';
+            let count = 0;
+            for (let i = 1; i < data.length; i++) {
+                const r = data[i];
+                const title = r[0] ? String(r[0]).trim() : '';
+                const content = r[1] ? String(r[1]).trim() : '';
+                const date = r[2] ? String(r[2]).trim() : '';
+                const image = cleanImageUrl(r[3]);
+
+                if (!title && !content) continue;
+
+                count++;
                 html += `
                     <div class="article-item">
-                        <h3>${title}</h3>
+                        <h3>${title || 'بدون عنوان'}</h3>
                         ${date ? `<div class="date">📅 ${date}</div>` : ''}
-                        <p>${content}</p>
+                        ${content ? `<p>${content}</p>` : ''}
                         ${image ? `<img src="${image}" alt="${title}" loading="lazy">` : ''}
                     </div>
                 `;
-            });
+            }
+
+            if (count === 0) {
+                container.innerHTML = '<p>لا توجد مقالات.</p>';
+                return;
+            }
             container.innerHTML = html;
         }
 
+        // ============================================================
+        // الكتب
+        // ============================================================
         async function loadBooks() {
             const container = document.getElementById('booksList');
             const data = await fetchSheetData('كتب PDF');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
-            const items = data.slice(1).filter(r => r[0] && r[0].trim());
-            if (!items.length) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
             let html = '';
-            items.forEach(r => {
-                const title = r[0] || 'بدون عنوان';
-                const link = r[1] || '#';
-                const cover = r[2] || '';
+            let count = 0;
+            for (let i = 1; i < data.length; i++) {
+                const r = data[i];
+                const title = r[0] ? String(r[0]).trim() : '';
+                const link = r[1] ? String(r[1]).trim() : '#';
+                const cover = cleanImageUrl(r[2]);
+                if (!title) continue;
+                count++;
                 html += `
                     <div class="book-item">
                         <h3>📄 ${title}</h3>
@@ -452,20 +531,26 @@
                         <a href="${link}" target="_blank">📥 تحميل الكتاب (PDF)</a>
                     </div>
                 `;
-            });
+            }
+            if (count === 0) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
             container.innerHTML = html;
         }
 
+        // ============================================================
+        // الفيديوهات
+        // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
-            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
-            if (!items.length) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
             let html = '';
-            items.forEach(r => {
-                const title = r[0] || 'فيديو';
-                const videoId = r[1] || '';
+            let count = 0;
+            for (let i = 1; i < data.length; i++) {
+                const r = data[i];
+                const title = r[0] ? String(r[0]).trim() : '';
+                const videoId = r[1] ? String(r[1]).trim() : '';
+                if (!title || !videoId) continue;
+                count++;
                 html += `
                     <div class="video-item">
                         <h3>🎬 ${title}</h3>
@@ -474,29 +559,36 @@
                         </div>
                     </div>
                 `;
-            });
+            }
+            if (count === 0) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
             container.innerHTML = html;
         }
 
+        // ============================================================
+        // الصوتيات
+        // ============================================================
         async function loadAudio() {
             const container = document.getElementById('audioList');
             const data = await fetchSheetData('صوتيات');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
-            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
-            if (!items.length) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
             let html = '';
-            items.forEach(r => {
-                const title = r[0] || 'بدون عنوان';
-                const src = r[1] || '';
-                const reader = r[2] || '';
+            let count = 0;
+            for (let i = 1; i < data.length; i++) {
+                const r = data[i];
+                const title = r[0] ? String(r[0]).trim() : '';
+                const src = r[1] ? String(r[1]).trim() : '';
+                const reader = r[2] ? String(r[2]).trim() : '';
+                if (!title || !src) continue;
+                count++;
                 html += `
                     <div class="audio-item">
                         <h3>🎵 ${title}</h3>
-                        ${reader ? `<p style="color: #85c1e9;">🎤 ${reader}</p>` : ''}
+                        ${reader ? `<p style="color: #85c1e9;">🎤 الشيخ / القارئ: ${reader}</p>` : ''}
                         <audio controls><source src="${src}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
                     </div>
                 `;
-            });
+            }
+            if (count === 0) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
             container.innerHTML = html;
         }
 
@@ -514,12 +606,7 @@
                 btn.classList.remove('active');
                 const btnSection = btn.dataset.section;
                 let targetSection = sectionId.replace('Section', '').toLowerCase();
-                if (targetSection === 'home') targetSection = 'home';
-                if (btnSection === targetSection) {
-                    btn.classList.add('active');
-                }
-                // معالجة خاصة للرئيسية
-                if (sectionId === 'homeSection' && btnSection === 'home') {
+                if (btnSection === targetSection || (sectionId === 'homeSection' && btnSection === 'home')) {
                     btn.classList.add('active');
                 }
             });
@@ -546,7 +633,6 @@
         // تشغيل الكود عند تحميل الصفحة
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // ربط أزرار القائمة
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const section = this.dataset.section;
@@ -559,7 +645,6 @@
                 });
             });
 
-            // تحميل المحتوى
             loadAllContent();
         });
     </script>
