@@ -4,48 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دار الحصري الصغير | الموقع الرسمي</title>
-    <!-- ربط ملف التصميم الخارجي -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="main-container">
-        <!-- الهيدر أو الشعار -->
-        <header class="site-header">
-            <h1 class="logo-title">دار الحصري الصغير</h1>
-            <p class="sub-title">لإعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
-        </header>
+    <!-- الهيدر الرئيسي للموقع -->
+    <header class="site-header">
+        <h1>دار الحصري الصغير</h1>
+        <p>لإعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
+    </header>
 
-        <!-- القسم التعريفي -->
-        <section class="about-section">
-            <p class="description">
-                مرحباً بكم في الموقع الرسمي لدار الحصري الصغير.<br>
-                مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه، وتخريج جيل من المعلمين المؤهلين بأعلى معايير الإتقان والتجويد.
+    <!-- المحتوى الرئيسي (مقسم لأقسام واضحة وسهلة التعديل) -->
+    <main class="container">
+
+        <!-- 1. قسم المقال أو الترحيب -->
+        <section class="content-section">
+            <h2>كلمة الدار</h2>
+            <p>
+                مرحباً بكم في الموقع الرسمي لدار الحصري الصغير. مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه، 
+                وتخريج جيل من المعلمين المؤهلين بأعلى معايير الإتقان والتجويد. هنا تجقون كافة الدروس والمصادر التعليمية.
             </p>
         </section>
 
-        <!-- مشغل الصوت (سورة الفاتحة) -->
-        <div class="audio-section">
-            <div class="audio-label">🎧 استمع إلى تلاوة سورة الفاتحة (الشيخ محمود خليل الحصري)</div>
-            <audio controls>
+        <!-- 2. قسم مشغل الصوت (سورة الفاتحة) -->
+        <section class="content-section">
+            <h2>🎧 تلاوة سورة الفاتحة</h2>
+            <p style="font-size: 14px; color: #d4e6f1; margin-bottom: 10px;">للشيخ محمود خليل الحصري</p>
+            <audio controls style="width: 100%;">
                 <source src="https://everyayah.com/data/Husary_128kbps/001001.mp3" type="audio/mpeg">
-                متصفحك لا يدعم تشغيل الملفات الصوتية.
+                متصفحك لا يدعم تشغيل الصوت.
             </audio>
-        </div>
+        </section>
 
-        <!-- أزرار التفاعل والانتقال -->
-        <div class="actions-section">
+        <!-- 3. قسم فيديو من يوتيوب (يمكنك تغيير رابط الفيديو بسهولة) -->
+        <section class="content-section">
+            <h2>📺 فيديو تعليمي / حصة مرئية</h2>
+            <div class="video-container">
+                <!-- استبدل رابط الفيديو المضمن برابط أي فيديو يوتيوب تريده -->
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="فيديو تعليمي" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <!-- 4. قسم كتب الـ PDF ومكتبة الملفات -->
+        <section class="content-section">
+            <h2>📚 مكتبة الكتب والمناهج (PDF)</h2>
+            <p>يمكنكم تحميل أو تصفح المناهج التعليمية المعتمدة:</p>
+            <div class="files-list">
+                <!-- ضع رابط ملف الـ PDF الخاص بك بدلاً من علامة # -->
+                <a href="#" target="_blank" class="btn-file">📄 تحميل منهج التجويد (PDF)</a>
+                <a href="#" target="_blank" class="btn-file">📄 كتاب القاعدة النورانية (PDF)</a>
+            </div>
+        </section>
+
+        <!-- 5. الزر الأساسي للنظام أو المنصة -->
+        <div style="margin: 30px 0;">
             <a href="#" class="btn-system">الدخول إلى النظام التعليمي</a>
         </div>
 
-        <!-- روابط التواصل الاجتماعي -->
-        <footer class="site-footer">
-            <a href="https://www.facebook.com/share/1EoDwxMfD6/?mibextid=wwXIfr" target="_blank" class="fb-link">
-                تابع صفحتنا الرسمية على فيسبوك
-            </a>
-            <p class="copyright">جميع الحقوق محفوظة لدار الحصري الصغير &copy; 2026</p>
-        </footer>
-    </div>
+    </main>
+
+    <!-- الفوتر -->
+    <footer class="site-footer">
+        <a href="https://www.facebook.com/share/1EoDwxMfD6/?mibextid=wwXIfr" target="_blank" class="fb-link">
+            تابع صفحتنا الرسمية على فيسبوك
+        </a>
+        <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
+    </footer>
 
 </body>
 </html>
