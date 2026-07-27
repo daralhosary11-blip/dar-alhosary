@@ -260,12 +260,18 @@
 
         <main class="content">
 
-            <!-- الصفحة الرئيسية -->
+            <!-- ===== الصفحة الرئيسية ===== -->
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <!-- باقي الأقسام مخفية -->
+            <!-- ===== معرض الصور ===== -->
+            <div id="imagesSection" style="display:none;" class="card">
+                <h2>🖼️ معرض الصور</h2>
+                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+
+            <!-- ===== باقي الأقسام ===== -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
@@ -284,11 +290,6 @@
             <div id="audioSection" style="display:none;" class="card">
                 <h2>🎧 المكتبة الصوتية</h2>
                 <div id="audioList"><div class="loading">جاري التحميل...</div></div>
-            </div>
-
-            <div id="imagesSection" style="display:none;" class="card">
-                <h2>🖼️ معرض الصور</h2>
-                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
             <div class="btn-container">
@@ -320,7 +321,7 @@
         }
 
         // ============================================================
-        // الصفحة الرئيسية - تقرأ من تاب "الصفحة الرئيسية"
+        // الصفحة الرئيسية
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
@@ -332,10 +333,11 @@
             }
 
             let html = `<h2>🏠 الصفحة الرئيسية</h2>`;
-            // نبدأ من الصف الثاني (بعد العناوين)
+            let hasContent = false;
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (!row[0] && !row[1]) continue; // تخطي الصفوف الفاضية
+                if (!row[0] && !row[1]) continue;
+                hasContent = true;
                 const title = row[0] || 'بدون عنوان';
                 const content = row[1] || '';
                 const image = row[2] || '';
@@ -347,11 +349,11 @@
                     </div>
                 `;
             }
-            container.innerHTML = html || '<p>لا يوجد محتوى في الصفحة الرئيسية.</p>';
+            container.innerHTML = hasContent ? html : '<p>لا يوجد محتوى في الصفحة الرئيسية.</p>';
         }
 
         // ============================================================
-        // معرض الصور - يقرأ من تاب "صور" فقط
+        // معرض الصور
         // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
@@ -386,7 +388,7 @@
         }
 
         // ============================================================
-        // دوال الأقسام الأخرى (نفس الكود القديم)
+        // الأقسام الأخرى
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
@@ -479,7 +481,7 @@
         }
 
         // ============================================================
-        // التنقل والتحميل
+        // التنقل
         // ============================================================
         function showSection(sectionId) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
