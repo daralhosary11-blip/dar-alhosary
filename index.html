@@ -135,9 +135,17 @@
             margin-top: 0;
             margin-bottom: 8px;
         }
-        .home-item img, .article-item img {
+        .home-item img, .article-item img, .image-item img {
             max-width: 100%;
             border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .home-item img:hover, .article-item img:hover, .image-item img:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
+        .home-item img {
             margin-top: 10px;
             max-height: 300px;
             object-fit: contain;
@@ -165,7 +173,6 @@
             width: 100%;
             height: 160px;
             object-fit: cover;
-            border-radius: 8px;
         }
         .image-item h4 {
             color: #f4d03f;
@@ -242,6 +249,64 @@
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 30px rgba(39, 174, 96, 0.5);
         }
+
+        /* --- تصميم نافذة تكبير الصور (Lightbox) --- */
+        #lightboxModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+        }
+        #lightboxModal img {
+            max-width: 85%;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.4);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .lightbox-close:hover { background: rgba(244, 208, 63, 0.8); color: #000; }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: 2rem;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .lightbox-nav:hover { background: #f4d03f; color: #000; }
+        #lightboxPrev { right: 30px; } /* اتجاه معكوس للعربية الـ RTL */
+        #lightboxNext { left: 30px; }
+
         .site-footer {
             text-align: center;
             padding: 25px 20px;
@@ -261,6 +326,7 @@
         .site-footer a:hover {
             text-decoration: underline;
         }
+
         @media (max-width: 768px) {
             .main-wrapper { flex-direction: column; }
             .sidebar {
@@ -285,10 +351,7 @@
             .card { padding: 18px; }
             .card h2 { font-size: 1.3rem; }
             .image-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-        }
-        @media (max-width: 480px) {
-            .site-header h1 { font-size: 1.7rem; }
-            .sidebar button { font-size: 0.75rem; padding: 6px 10px; }
+            .lightbox-nav { font-size: 1.5rem; padding: 8px 14px; }
         }
     </style>
 </head>
@@ -355,6 +418,14 @@
         </main>
     </div>
 
+    <!-- نافذة تكبير وعرض الصور (Lightbox Modal) -->
+    <div id="lightboxModal">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <button class="lightbox-nav" id="lightboxPrev">&#10095;</button>
+        <img id="lightboxImg" src="" alt="صورة مكبرة">
+        <button class="lightbox-nav" id="lightboxNext">&#10094;</button>
+    </div>
+
     <footer class="site-footer">
         <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
         <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
@@ -376,9 +447,7 @@
             }
         }
 
-        // ============================================================
-        // دالة تحويل رابط الصورة (تدعم أي رابط جوجل درايف تلقائياً)
-        // ============================================================
+        // دالة تنظيف روابط الصور (تتعامل مع جوجل درايف والروابط العادية)
         function cleanImageUrl(url) {
             if (!url) return '';
             url = url.trim();
@@ -391,19 +460,71 @@
             return url;
         }
 
-        // ============================================================
-        // دالة تحويل رابط يوتيوب لفيديو (سواء رابط كامل أو كود)
-        // ============================================================
+        // دالة تنظيف روابط يوتيوب
         function cleanVideoId(input) {
             if (!input) return '';
             input = input.trim();
-            // لو المستخدم حط رابط يوتيوب كامل
             if (input.includes('youtube.com') || input.includes('youtu.be')) {
                 const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
                 const match = input.match(regExp);
                 return (match && match[2].length === 11) ? match[2] : input;
             }
-            return input; // لو هو حط الـ ID مباشرة
+            return input;
+        }
+
+        // ============================================================
+        // نظام معرض الصور التفاعلي (Lightbox) وتتبع الصور في الصفحة
+        // ============================================================
+        let currentImageIndex = 0;
+        let allPageImages = [];
+
+        function initLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            const modalImg = document.getElementById('lightboxImg');
+            const closeBtn = document.getElementById('lightboxClose');
+            const prevBtn = document.getElementById('lightboxPrev');
+            const nextBtn = document.getElementById('lightboxNext');
+
+            // جمع كل الصور المعروضة في الصفحة ديناميكياً
+            allPageImages = Array.from(document.querySelectorAll('.content img'));
+
+            allPageImages.forEach((img, index) => {
+                // منع التكرار لو تم ربط الحدث مسبقاً
+                img.onclick = function() {
+                    currentImageIndex = index;
+                    modal.style.display = 'flex';
+                    modalImg.src = this.src;
+                };
+            });
+
+            function showImage(index) {
+                if (allPageImages.length === 0) return;
+                if (index >= allPageImages.length) currentImageIndex = 0;
+                if (index < 0) currentImageIndex = allPageImages.length - 1;
+                modalImg.src = allPageImages[currentImageIndex].src;
+            }
+
+            nextBtn.onclick = function(e) {
+                e.stopPropagation();
+                currentImageIndex++;
+                showImage(currentImageIndex);
+            };
+
+            prevBtn.onclick = function(e) {
+                e.stopPropagation();
+                currentImageIndex--;
+                showImage(currentImageIndex);
+            };
+
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
         }
 
         // ============================================================
@@ -561,7 +682,7 @@
         }
 
         // ============================================================
-        // الفيديوهات (الآن يقبل رابط يوتيوب كاملاً أو المعرف)
+        // الفيديوهات
         // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
@@ -634,10 +755,13 @@
                     btn.classList.add('active');
                 }
             });
+
+            // تحديث الصور المتاحة للتنقل عند تغيير القسم
+            initLightbox();
         }
 
         // ============================================================
-        // تحميل كل المحتوى
+        // تحميل كل المحتوى وتشغيل الميزات
         // ============================================================
         async function loadAllContent() {
             try {
@@ -648,14 +772,12 @@
                 await loadAudio();
                 await loadImages();
                 showSection('homeSection');
+                initLightbox(); // تفعيل العرض المكبر عند الضغط على أي صورة
             } catch (error) {
                 console.error('خطأ في تحميل المحتوى:', error);
             }
         }
 
-        // ============================================================
-        // تشغيل الكود عند تحميل الصفحة
-        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.addEventListener('click', function() {
