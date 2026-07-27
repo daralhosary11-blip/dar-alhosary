@@ -17,7 +17,6 @@
             flex-direction: column;
             padding: 0 15px;
         }
-        /* ===== الهيدر ===== */
         .site-header {
             text-align: center;
             padding: 30px 20px 25px;
@@ -38,7 +37,6 @@
             color: #d4e2f0;
             margin-top: 4px;
         }
-        /* ===== الحاوية الرئيسية (Flex) ===== */
         .main-wrapper {
             display: flex;
             gap: 20px;
@@ -48,7 +46,6 @@
             flex: 1;
             align-items: flex-start;
         }
-        /* ===== القائمة الجانبية (اليمين) ===== */
         .sidebar {
             flex: 0 0 260px;
             background: rgba(255, 255, 255, 0.06);
@@ -97,7 +94,6 @@
             color: #f4d03f;
             box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
         }
-        /* ===== المحتوى الرئيسي (النص) ===== */
         .content {
             flex: 1;
             min-width: 0;
@@ -133,7 +129,6 @@
             color: #85c1e9;
             font-size: 1.2rem;
         }
-        /* ===== المقالات ===== */
         .article-item, .book-item, .audio-item, .video-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
@@ -156,7 +151,6 @@
             max-height: 250px;
             object-fit: cover;
         }
-        /* ===== الكتب ===== */
         .book-item a {
             color: #85c1e9;
             text-decoration: none;
@@ -179,7 +173,6 @@
             max-height: 200px;
             object-fit: cover;
         }
-        /* ===== الفيديوهات ===== */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -198,14 +191,12 @@
             height: 100%;
             border: none;
         }
-        /* ===== الصوتيات ===== */
         audio {
             width: 100%;
             margin-top: 8px;
             border-radius: 30px;
             background: rgba(0, 0, 0, 0.3);
         }
-        /* ===== معرض الصور ===== */
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -234,7 +225,6 @@
             color: #e6edf5;
             font-size: 0.85rem;
         }
-        /* ===== الصفحة الرئيسية ===== */
         .main-image {
             width: 100%;
             max-height: 350px;
@@ -243,7 +233,6 @@
             margin: 15px 0;
             box-shadow: 0 6px 25px rgba(0,0,0,0.3);
         }
-        /* ===== زر النظام ===== */
         .btn-container {
             text-align: center;
             margin: 20px 0 10px;
@@ -264,7 +253,6 @@
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 30px rgba(39, 174, 96, 0.5);
         }
-        /* ===== الفوتر ===== */
         .site-footer {
             text-align: center;
             padding: 25px 20px;
@@ -284,11 +272,8 @@
         .site-footer a:hover {
             text-decoration: underline;
         }
-        /* ===== استجابة للشاشات الصغيرة ===== */
         @media (max-width: 768px) {
-            .main-wrapper {
-                flex-direction: column;
-            }
+            .main-wrapper { flex-direction: column; }
             .sidebar {
                 flex: none;
                 width: 100%;
@@ -300,10 +285,7 @@
                 gap: 6px;
                 padding: 15px;
             }
-            .sidebar h3 {
-                width: 100%;
-                margin-bottom: 8px;
-            }
+            .sidebar h3 { width: 100%; margin-bottom: 8px; }
             .sidebar button {
                 flex: 1 0 auto;
                 width: auto;
@@ -330,7 +312,6 @@
 
     <div class="main-wrapper">
 
-        <!-- ===== القائمة الجانبية (اليمين) ===== -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -341,17 +322,12 @@
             <button data-section="images">🖼️ معرض الصور</button>
         </aside>
 
-        <!-- ===== المحتوى الرئيسي (النص) ===== -->
         <main class="content">
 
-            <!-- ===== قسم الرئيسية (سيتم تعبئته من الجدول) ===== -->
             <section id="homeSection" class="card">
-                <div id="homeContent">
-                    <div class="loading">جاري تحميل المحتوى...</div>
-                </div>
+                <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <!-- ===== أقسام أخرى (مخفية مؤقتاً) ===== -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
@@ -377,7 +353,6 @@
                 <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- ===== زر النظام التعليمي ===== -->
             <div class="btn-container">
                 <a href="#" class="portal-btn">الدخول إلى النظام التعليمي</a>
             </div>
@@ -420,14 +395,11 @@
             const data = await fetchSheetData('الصفحة الرئيسية');
             
             if (data.length < 2) {
-                container.innerHTML = `
-                    <h2>🏠 كلمة الدار</h2>
-                    <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير. مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه، وتخريج جيل من المعلمين المؤهلين بأعلى معايير الإتقان والتجويد.</p>
-                `;
+                container.innerHTML = `<h2>🏠 كلمة الدار</h2><p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير...</p>`;
                 return;
             }
 
-            // أول صف هو العناوين، الصف الثاني هو المحتوى
+            // نأخذ الصف الثاني (أول صف بيانات بعد العناوين)
             const row = data[1];
             const title = row[0] || 'كلمة الدار';
             const content = row[1] || 'مرحباً بكم في الموقع الرسمي لدار الحصري الصغير...';
@@ -558,24 +530,20 @@
         }
 
         // ============================================================
-        // 5. التنقل بين الأقسام (من القائمة الجانبية)
+        // 5. التنقل بين الأقسام
         // ============================================================
         function showSection(sectionId) {
-            // إخفاء الكل
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
                 el.style.display = 'none';
             });
-            // إظهار القسم المطلوب
             const target = document.getElementById(sectionId);
             if (target) target.style.display = 'block';
 
-            // تحديث الزر النشط
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.section === sectionId.replace('Section', '').toLowerCase()) {
                     btn.classList.add('active');
                 }
-                // معالجة خاصة للرئيسية
                 if (sectionId === 'homeSection' && btn.dataset.section === 'home') {
                     btn.classList.add('active');
                 }
@@ -583,7 +551,7 @@
         }
 
         // ============================================================
-        // 6. تحميل كل المحتوى عند بدء التشغيل
+        // 6. تحميل كل المحتوى
         // ============================================================
         async function loadAllContent() {
             await loadHome();
@@ -592,16 +560,13 @@
             await loadVideos();
             await loadAudio();
             await loadImages();
-
-            // عرض الرئيسية افتراضياً
             showSection('homeSection');
         }
 
         // ============================================================
-        // 7. ربط أزرار القائمة
+        // 7. ربط الأزرار
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // ربط الأزرار
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const section = this.dataset.section;
@@ -613,8 +578,6 @@
                     else if (section === 'images') showSection('imagesSection');
                 });
             });
-
-            // تحميل المحتوى
             loadAllContent();
         });
     </script>
