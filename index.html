@@ -260,18 +260,18 @@
 
         <main class="content">
 
-            <!-- ===== الصفحة الرئيسية ===== -->
+            <!-- الصفحة الرئيسية -->
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <!-- ===== معرض الصور ===== -->
+            <!-- معرض الصور -->
             <div id="imagesSection" style="display:none;" class="card">
                 <h2>🖼️ معرض الصور</h2>
                 <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- ===== باقي الأقسام ===== -->
+            <!-- باقي الأقسام -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
@@ -321,65 +321,85 @@
         }
 
         // ============================================================
-        // الصفحة الرئيسية
+        // الصفحة الرئيسية - تقرأ كل الصفوف من تاب "الصفحة الرئيسية"
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
             
             if (data.length < 2) {
-                container.innerHTML = `<h2>🏠 كلمة الدار</h2><p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير...</p>`;
+                container.innerHTML = `
+                    <h2>🏠 الصفحة الرئيسية</h2>
+                    <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير. مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه.</p>
+                `;
                 return;
             }
 
             let html = `<h2>🏠 الصفحة الرئيسية</h2>`;
             let hasContent = false;
+
+            // نبدأ من الصف الثاني (بعد العناوين)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (!row[0] && !row[1]) continue;
+                const title = row[0] ? row[0].trim() : '';
+                const content = row[1] ? row[1].trim() : '';
+                const image = row[2] ? row[2].trim() : '';
+
+                // تخطي الصفوف الفاضية
+                if (!title && !content && !image) continue;
+
                 hasContent = true;
-                const title = row[0] || 'بدون عنوان';
-                const content = row[1] || '';
-                const image = row[2] || '';
                 html += `
                     <div class="home-item">
-                        <h3>${title}</h3>
-                        <p>${content}</p>
-                        ${image ? `<img src="${image}" alt="${title}" loading="lazy">` : ''}
+                        <h3>${title || 'بدون عنوان'}</h3>
+                        <p>${content || ''}</p>
+                        ${image ? `<img src="${image}" alt="${title || 'صورة'}" loading="lazy">` : ''}
                     </div>
                 `;
             }
-            container.innerHTML = hasContent ? html : '<p>لا يوجد محتوى في الصفحة الرئيسية.</p>';
+
+            if (!hasContent) {
+                html += '<p>لا يوجد محتوى في الصفحة الرئيسية. أضف محتوى في تاب "الصفحة الرئيسية".</p>';
+            }
+
+            container.innerHTML = html;
         }
 
         // ============================================================
-        // معرض الصور
+        // معرض الصور - يقرأ كل الصفوف من تاب "صور"
         // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
             const data = await fetchSheetData('صور');
             
             if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. أضف صوراً في تاب "صور".</p>';
                 return;
             }
 
-            const items = data.slice(1).filter(row => row[0] && row[0].trim() && row[1] && row[1].trim());
+            const items = [];
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const title = row[0] ? row[0].trim() : '';
+                const src = row[1] ? row[1].trim() : '';
+                const desc = row[2] ? row[2].trim() : '';
+                if (title && src) {
+                    items.push({ title, src, desc });
+                }
+            }
+
             if (!items.length) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. أضف صوراً في تاب "صور" مع روابطها.</p>';
                 return;
             }
 
             let html = '<div class="image-grid">';
-            items.forEach(row => {
-                const title = row[0] || 'بدون عنوان';
-                const src = row[1] || '';
-                const desc = row[2] || '';
+            items.forEach(item => {
                 html += `
                     <div class="image-item">
-                        <img src="${src}" alt="${title}" loading="lazy">
-                        <h4>${title}</h4>
-                        ${desc ? `<p>${desc}</p>` : ''}
+                        <img src="${item.src}" alt="${item.title}" loading="lazy">
+                        <h4>${item.title}</h4>
+                        ${item.desc ? `<p>${item.desc}</p>` : ''}
                     </div>
                 `;
             });
@@ -388,7 +408,7 @@
         }
 
         // ============================================================
-        // الأقسام الأخرى
+        // دوال الأقسام الأخرى (بنفس الطريقة)
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
@@ -481,7 +501,7 @@
         }
 
         // ============================================================
-        // التنقل
+        // التنقل بين الأقسام
         // ============================================================
         function showSection(sectionId) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
@@ -492,26 +512,41 @@
 
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.section === sectionId.replace('Section', '').toLowerCase()) {
+                const btnSection = btn.dataset.section;
+                let targetSection = sectionId.replace('Section', '').toLowerCase();
+                if (targetSection === 'home') targetSection = 'home';
+                if (btnSection === targetSection) {
                     btn.classList.add('active');
                 }
-                if (sectionId === 'homeSection' && btn.dataset.section === 'home') {
+                // معالجة خاصة للرئيسية
+                if (sectionId === 'homeSection' && btnSection === 'home') {
                     btn.classList.add('active');
                 }
             });
         }
 
+        // ============================================================
+        // تحميل كل المحتوى
+        // ============================================================
         async function loadAllContent() {
-            await loadHome();
-            await loadArticles();
-            await loadBooks();
-            await loadVideos();
-            await loadAudio();
-            await loadImages();
-            showSection('homeSection');
+            try {
+                await loadHome();
+                await loadArticles();
+                await loadBooks();
+                await loadVideos();
+                await loadAudio();
+                await loadImages();
+                showSection('homeSection');
+            } catch (error) {
+                console.error('خطأ في تحميل المحتوى:', error);
+            }
         }
 
+        // ============================================================
+        // تشغيل الكود عند تحميل الصفحة
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
+            // ربط أزرار القائمة
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const section = this.dataset.section;
@@ -523,6 +558,8 @@
                     else if (section === 'images') showSection('imagesSection');
                 });
             });
+
+            // تحميل المحتوى
             loadAllContent();
         });
     </script>
