@@ -1,0 +1,130 @@
+/* تنسيقات عامة للموقع */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Tahoma', 'Segoe UI', sans-serif;
+    background: linear-gradient(rgba(11, 46, 89, 0.85), rgba(26, 77, 122, 0.85)), 
+                url('دار الحصري.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* الحاوية الرئيسية للموقع */
+.main-container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    max-width: 650px;
+    width: 100%;
+    border: 2px solid rgba(244, 208, 63, 0.4);
+}
+
+/* الشعار والعناوين */
+.logo-title {
+    font-size: 34px;
+    font-weight: bold;
+    color: #f4d03f;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.sub-title {
+    font-size: 17px;
+    color: #d4e6f1;
+    margin-bottom: 25px;
+}
+
+/* الوصف */
+.description {
+    font-size: 16px;
+    line-height: 1.9;
+    margin-bottom: 25px;
+    color: #f0f0f0;
+}
+
+/* مشغل الصوت */
+.audio-section {
+    margin: 25px 0;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.audio-label {
+    font-size: 14px;
+    color: #f4d03f;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+audio {
+    width: 100%;
+    height: 40px;
+}
+
+/* الزر الأساسي */
+.btn-system {
+    display: inline-block;
+    background-color: #27ae60;
+    color: white;
+    padding: 15px 35px;
+    font-size: 19px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid #2ecc71;
+    margin: 15px 0;
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+}
+
+.btn-system:hover {
+    background-color: #2ecc71;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.6);
+}
+
+/* الفوتر وروابط التواصل */
+.site-footer {
+    margin-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+.fb-link {
+    display: inline-block;
+    color: #aed6f1;
+    text-decoration: none;
+    font-size: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #aed6f1;
+    transition: color 0.2s;
+}
+
+.fb-link:hover {
+    color: #ffffff;
+}
+
+.copyright {
+    font-size: 12px;
+    color: #85c1e9;
+}
+
+/* الشاشات الصغيرة (الجوال) */
+@media (max-width: 480px) {
+    .logo-title { font-size: 26px; }
+    .main-container { padding: 20px; }
+}
