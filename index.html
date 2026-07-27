@@ -6,7 +6,6 @@
     <title>دار الحصري الصغير</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== الأساسيات ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', Tahoma, sans-serif;
@@ -105,11 +104,6 @@
             border-radius: 20px;
             padding: 28px 30px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
         .card h2 {
             color: #f4d03f;
@@ -129,73 +123,23 @@
             color: #85c1e9;
             font-size: 1.2rem;
         }
-        .article-item, .book-item, .audio-item, .video-item {
+        .home-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .article-item h3, .book-item h3, .audio-item h3, .video-item h3 {
+        .home-item h3 {
             color: #f4d03f;
             margin-top: 0;
         }
-        .article-item .date {
-            color: #85c1e9;
-            font-size: 0.85rem;
-        }
-        .article-item img {
+        .home-item img {
             max-width: 100%;
             border-radius: 8px;
             margin-top: 10px;
             max-height: 250px;
             object-fit: cover;
-        }
-        .book-item a {
-            color: #85c1e9;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 8px;
-            padding: 8px 18px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-        .book-item a:hover {
-            background: rgba(244,208,63,0.15);
-            color: #f4d03f;
-        }
-        .book-item img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-            max-height: 200px;
-            object-fit: cover;
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 16px;
-            background: #000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            margin: 10px 0;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        audio {
-            width: 100%;
-            margin-top: 8px;
-            border-radius: 30px;
-            background: rgba(0, 0, 0, 0.3);
         }
         .image-grid {
             display: grid;
@@ -224,14 +168,6 @@
         .image-item p {
             color: #e6edf5;
             font-size: 0.85rem;
-        }
-        .main-image {
-            width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin: 15px 0;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
         }
         .btn-container {
             text-align: center;
@@ -324,10 +260,12 @@
 
         <main class="content">
 
+            <!-- الصفحة الرئيسية -->
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
+            <!-- باقي الأقسام مخفية -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
@@ -366,14 +304,8 @@
     </footer>
 
     <script>
-        // ============================================================
-        // 1. معرف جدول Google Sheets
-        // ============================================================
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
-        // ============================================================
-        // 2. دالة جلب البيانات
-        // ============================================================
         async function fetchSheetData(sheetName) {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
             try {
@@ -388,7 +320,7 @@
         }
 
         // ============================================================
-        // 3. تحميل المحتوى الرئيسي (من تاب "الصفحة الرئيسية")
+        // الصفحة الرئيسية - تقرأ من تاب "الصفحة الرئيسية"
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
@@ -399,22 +331,62 @@
                 return;
             }
 
-            // نأخذ الصف الثاني (أول صف بيانات بعد العناوين)
-            const row = data[1];
-            const title = row[0] || 'كلمة الدار';
-            const content = row[1] || 'مرحباً بكم في الموقع الرسمي لدار الحصري الصغير...';
-            const image = row[2] || '';
-
-            let html = `<h2>🏠 ${title}</h2>`;
-            if (image) {
-                html += `<img src="${image}" alt="${title}" class="main-image" loading="lazy">`;
+            let html = `<h2>🏠 الصفحة الرئيسية</h2>`;
+            // نبدأ من الصف الثاني (بعد العناوين)
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (!row[0] && !row[1]) continue; // تخطي الصفوف الفاضية
+                const title = row[0] || 'بدون عنوان';
+                const content = row[1] || '';
+                const image = row[2] || '';
+                html += `
+                    <div class="home-item">
+                        <h3>${title}</h3>
+                        <p>${content}</p>
+                        ${image ? `<img src="${image}" alt="${title}" loading="lazy">` : ''}
+                    </div>
+                `;
             }
-            html += `<p>${content}</p>`;
+            container.innerHTML = html || '<p>لا يوجد محتوى في الصفحة الرئيسية.</p>';
+        }
+
+        // ============================================================
+        // معرض الصور - يقرأ من تاب "صور" فقط
+        // ============================================================
+        async function loadImages() {
+            const container = document.getElementById('imagesList');
+            const data = await fetchSheetData('صور');
+            
+            if (data.length < 2) {
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
+                return;
+            }
+
+            const items = data.slice(1).filter(row => row[0] && row[0].trim() && row[1] && row[1].trim());
+            if (!items.length) {
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
+                return;
+            }
+
+            let html = '<div class="image-grid">';
+            items.forEach(row => {
+                const title = row[0] || 'بدون عنوان';
+                const src = row[1] || '';
+                const desc = row[2] || '';
+                html += `
+                    <div class="image-item">
+                        <img src="${src}" alt="${title}" loading="lazy">
+                        <h4>${title}</h4>
+                        ${desc ? `<p>${desc}</p>` : ''}
+                    </div>
+                `;
+            });
+            html += '</div>';
             container.innerHTML = html;
         }
 
         // ============================================================
-        // 4. دوال تحميل المحتوى (مقالات، كتب، فيديوهات، صوتيات، صور)
+        // دوال الأقسام الأخرى (نفس الكود القديم)
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
@@ -506,31 +478,8 @@
             container.innerHTML = html;
         }
 
-        async function loadImages() {
-            const container = document.getElementById('imagesList');
-            const data = await fetchSheetData('صور');
-            if (data.length < 2) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
-            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
-            if (!items.length) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
-            let html = '<div class="image-grid">';
-            items.forEach(r => {
-                const title = r[0] || 'بدون عنوان';
-                const src = r[1] || '';
-                const desc = r[2] || '';
-                html += `
-                    <div class="image-item">
-                        <img src="${src}" alt="${title}" loading="lazy">
-                        <h4>${title}</h4>
-                        ${desc ? `<p>${desc}</p>` : ''}
-                    </div>
-                `;
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
         // ============================================================
-        // 5. التنقل بين الأقسام
+        // التنقل والتحميل
         // ============================================================
         function showSection(sectionId) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
@@ -550,9 +499,6 @@
             });
         }
 
-        // ============================================================
-        // 6. تحميل كل المحتوى
-        // ============================================================
         async function loadAllContent() {
             await loadHome();
             await loadArticles();
@@ -563,9 +509,6 @@
             showSection('homeSection');
         }
 
-        // ============================================================
-        // 7. ربط الأزرار
-        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.addEventListener('click', function() {
