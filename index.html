@@ -6,7 +6,7 @@
     <title>دار الحصري الصغير</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== كل الستايلات ===== */
+        /* ===== الأساسيات ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', Tahoma, sans-serif;
@@ -15,12 +15,12 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            line-height: 1.7;
             padding: 0 15px;
         }
+        /* ===== الهيدر ===== */
         .site-header {
             text-align: center;
-            padding: 40px 20px 30px;
+            padding: 30px 20px 25px;
             background: rgba(0, 0, 0, 0.25);
             backdrop-filter: blur(8px);
             border-bottom: 2px solid rgba(244, 208, 63, 0.3);
@@ -28,29 +28,86 @@
             margin: 0 -15px 20px;
         }
         .site-header h1 {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             color: #f4d03f;
             letter-spacing: 2px;
             text-shadow: 0 2px 10px rgba(244, 208, 63, 0.3);
         }
         .site-header p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #d4e2f0;
-            margin-top: 6px;
+            margin-top: 4px;
         }
-        .container {
-            max-width: 860px;
+        /* ===== الحاوية الرئيسية (Flex) ===== */
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
             margin: 0 auto 30px;
             width: 100%;
             flex: 1;
+            align-items: flex-start;
+        }
+        /* ===== القائمة الجانبية (اليمين) ===== */
+        .sidebar {
+            flex: 0 0 260px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        .sidebar h3 {
+            color: #f4d03f;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(244,208,63,0.2);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            color: #d4e2f0;
+            font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .sidebar button:hover {
+            background: rgba(244, 208, 63, 0.12);
+            border-color: #f4d03f;
+            color: #fff;
+            transform: translateX(-4px);
+        }
+        .sidebar button.active {
+            background: rgba(244, 208, 63, 0.18);
+            border-color: #f4d03f;
+            color: #f4d03f;
+            box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
+        }
+        /* ===== المحتوى الرئيسي (النص) ===== */
+        .content {
+            flex: 1;
+            min-width: 0;
         }
         .card {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
-            padding: 25px 28px;
-            margin-bottom: 25px;
+            padding: 28px 30px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -60,15 +117,15 @@
         }
         .card h2 {
             color: #f4d03f;
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             margin-top: 0;
             margin-bottom: 12px;
             border-right: 4px solid #f4d03f;
-            padding-right: 12px;
+            padding-right: 14px;
         }
         .card p {
             color: #e6edf5;
-            margin-bottom: 8px;
+            line-height: 1.9;
         }
         .loading {
             text-align: center;
@@ -76,15 +133,15 @@
             color: #85c1e9;
             font-size: 1.2rem;
         }
-        /* المقالات */
-        .article-item, .book-item, .audio-item {
-            background: rgba(255,255,255,0.05);
+        /* ===== المقالات ===== */
+        .article-item, .book-item, .audio-item, .video-item {
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
-            padding: 15px;
+            padding: 16px;
             margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .article-item h3, .book-item h3, .audio-item h3 {
+        .article-item h3, .book-item h3, .audio-item h3, .video-item h3 {
             color: #f4d03f;
             margin-top: 0;
         }
@@ -96,17 +153,17 @@
             max-width: 100%;
             border-radius: 8px;
             margin-top: 10px;
-            max-height: 200px;
+            max-height: 250px;
             object-fit: cover;
         }
-        /* الكتب */
+        /* ===== الكتب ===== */
         .book-item a {
             color: #85c1e9;
             text-decoration: none;
             font-weight: 600;
             display: inline-block;
             margin-top: 8px;
-            padding: 8px 16px;
+            padding: 8px 18px;
             background: rgba(255,255,255,0.05);
             border-radius: 8px;
             transition: 0.3s;
@@ -122,7 +179,7 @@
             max-height: 200px;
             object-fit: cover;
         }
-        /* الفيديوهات */
+        /* ===== الفيديوهات ===== */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -141,53 +198,52 @@
             height: 100%;
             border: none;
         }
-        .video-item {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .video-item h3 {
-            color: #f4d03f;
-            margin-top: 0;
-        }
-        /* الصوتيات */
+        /* ===== الصوتيات ===== */
         audio {
             width: 100%;
             margin-top: 8px;
             border-radius: 30px;
             background: rgba(0, 0, 0, 0.3);
         }
-        /* معرض الصور */
+        /* ===== معرض الصور ===== */
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
             margin-top: 10px;
         }
         .image-item {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid rgba(255,255,255,0.05);
             text-align: center;
         }
         .image-item img {
             width: 100%;
-            height: 180px;
+            height: 160px;
             object-fit: cover;
             border-radius: 8px;
         }
         .image-item h4 {
             color: #f4d03f;
-            margin: 10px 0 5px;
+            margin: 10px 0 4px;
+            font-size: 0.95rem;
         }
         .image-item p {
             color: #e6edf5;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-        /* زر النظام */
+        /* ===== الصفحة الرئيسية ===== */
+        .main-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin: 15px 0;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+        /* ===== زر النظام ===== */
         .btn-container {
             text-align: center;
             margin: 20px 0 10px;
@@ -203,13 +259,12 @@
             display: inline-block;
             box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
             transition: all 0.3s ease;
-            letter-spacing: 0.5px;
         }
         .portal-btn:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 30px rgba(39, 174, 96, 0.5);
         }
-        /* الفوتر */
+        /* ===== الفوتر ===== */
         .site-footer {
             text-align: center;
             padding: 25px 20px;
@@ -229,11 +284,40 @@
         .site-footer a:hover {
             text-decoration: underline;
         }
-        @media (max-width: 600px) {
-            .site-header h1 { font-size: 1.9rem; }
+        /* ===== استجابة للشاشات الصغيرة ===== */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: relative;
+                top: 0;
+                max-height: none;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 15px;
+            }
+            .sidebar h3 {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            .sidebar button {
+                flex: 1 0 auto;
+                width: auto;
+                padding: 8px 14px;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+            }
             .card { padding: 18px; }
             .card h2 { font-size: 1.3rem; }
             .image-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+        @media (max-width: 480px) {
+            .site-header h1 { font-size: 1.7rem; }
+            .sidebar button { font-size: 0.75rem; padding: 6px 10px; }
         }
     </style>
 </head>
@@ -244,60 +328,62 @@
         <p>إعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
     </header>
 
-    <main class="container">
+    <div class="main-wrapper">
 
-        <!-- ===== كلمة الدار (ثابتة) ===== -->
-        <section class="card">
-            <h2>كلمة الدار</h2>
-            <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير. مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه، وتخريج جيل من المعلمين المؤهلين بأعلى معايير الإتقان والتجويد.</p>
-        </section>
+        <!-- ===== القائمة الجانبية (اليمين) ===== -->
+        <aside class="sidebar">
+            <h3>📋 القائمة</h3>
+            <button class="active" data-section="home">🏠 الرئيسية</button>
+            <button data-section="articles">📝 أحدث المقالات</button>
+            <button data-section="books">📚 مكتبة الكتب</button>
+            <button data-section="videos">🎬 دروس الفيديو</button>
+            <button data-section="audio">🎧 المكتبة الصوتية</button>
+            <button data-section="images">🖼️ معرض الصور</button>
+        </aside>
 
-        <!-- ===== قسم المقالات (ديناميكي) ===== -->
-        <section class="card" id="articlesSection">
-            <h2>📝 أحدث المقالات</h2>
-            <div id="articlesList">
-                <div class="loading">جاري تحميل المقالات...</div>
+        <!-- ===== المحتوى الرئيسي (النص) ===== -->
+        <main class="content">
+
+            <!-- ===== قسم الرئيسية (سيتم تعبئته من الجدول) ===== -->
+            <section id="homeSection" class="card">
+                <div id="homeContent">
+                    <div class="loading">جاري تحميل المحتوى...</div>
+                </div>
+            </section>
+
+            <!-- ===== أقسام أخرى (مخفية مؤقتاً) ===== -->
+            <div id="articlesSection" style="display:none;" class="card">
+                <h2>📝 أحدث المقالات</h2>
+                <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
             </div>
-        </section>
 
-        <!-- ===== قسم الكتب PDF (ديناميكي) ===== -->
-        <section class="card" id="booksSection">
-            <h2>📚 مكتبة الكتب (PDF)</h2>
-            <div id="booksList">
-                <div class="loading">جاري تحميل الكتب...</div>
+            <div id="booksSection" style="display:none;" class="card">
+                <h2>📚 مكتبة الكتب (PDF)</h2>
+                <div id="booksList"><div class="loading">جاري التحميل...</div></div>
             </div>
-        </section>
 
-        <!-- ===== قسم الفيديوهات (ديناميكي) ===== -->
-        <section class="card" id="videosSection">
-            <h2>🎬 دروس الفيديو</h2>
-            <div id="videosList">
-                <div class="loading">جاري تحميل الفيديوهات...</div>
+            <div id="videosSection" style="display:none;" class="card">
+                <h2>🎬 دروس الفيديو</h2>
+                <div id="videosList"><div class="loading">جاري التحميل...</div></div>
             </div>
-        </section>
 
-        <!-- ===== قسم الصوتيات (ديناميكي) ===== -->
-        <section class="card" id="audioSection">
-            <h2>🎧 المكتبة الصوتية</h2>
-            <div id="audioList">
-                <div class="loading">جاري تحميل الصوتيات...</div>
+            <div id="audioSection" style="display:none;" class="card">
+                <h2>🎧 المكتبة الصوتية</h2>
+                <div id="audioList"><div class="loading">جاري التحميل...</div></div>
             </div>
-        </section>
 
-        <!-- ===== قسم الصور (ديناميكي) ===== -->
-        <section class="card" id="imagesSection">
-            <h2>🖼️ معرض الصور</h2>
-            <div id="imagesList">
-                <div class="loading">جاري تحميل الصور...</div>
+            <div id="imagesSection" style="display:none;" class="card">
+                <h2>🖼️ معرض الصور</h2>
+                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
             </div>
-        </section>
 
-        <!-- ===== زر النظام التعليمي ===== -->
-        <div class="btn-container">
-            <a href="#" class="portal-btn">الدخول إلى النظام التعليمي</a>
-        </div>
+            <!-- ===== زر النظام التعليمي ===== -->
+            <div class="btn-container">
+                <a href="#" class="portal-btn">الدخول إلى النظام التعليمي</a>
+            </div>
 
-    </main>
+        </main>
+    </div>
 
     <footer class="site-footer">
         <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
@@ -306,48 +392,70 @@
 
     <script>
         // ============================================================
-        // 1. ضع هنا معرف جدول Google Sheets بتاعك
+        // 1. معرف جدول Google Sheets
         // ============================================================
-        const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo'; // تم التحديث برقمك
+        const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
         // ============================================================
-        // 2. دالة لجلب البيانات من أي ورقة
+        // 2. دالة جلب البيانات
         // ============================================================
         async function fetchSheetData(sheetName) {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                // استخراج JSON من النص
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
             } catch (error) {
-                console.error('خطأ في جلب البيانات:', error);
+                console.error('خطأ:', error);
                 return [];
             }
         }
 
         // ============================================================
-        // 3. عرض المقالات
+        // 3. تحميل المحتوى الرئيسي (من تاب "الصفحة الرئيسية")
+        // ============================================================
+        async function loadHome() {
+            const container = document.getElementById('homeContent');
+            const data = await fetchSheetData('الصفحة الرئيسية');
+            
+            if (data.length < 2) {
+                container.innerHTML = `
+                    <h2>🏠 كلمة الدار</h2>
+                    <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير. مؤسسة تعليمية متخصصة في تحفيظ القرآن الكريم وعلومه، وتخريج جيل من المعلمين المؤهلين بأعلى معايير الإتقان والتجويد.</p>
+                `;
+                return;
+            }
+
+            // أول صف هو العناوين، الصف الثاني هو المحتوى
+            const row = data[1];
+            const title = row[0] || 'كلمة الدار';
+            const content = row[1] || 'مرحباً بكم في الموقع الرسمي لدار الحصري الصغير...';
+            const image = row[2] || '';
+
+            let html = `<h2>🏠 ${title}</h2>`;
+            if (image) {
+                html += `<img src="${image}" alt="${title}" class="main-image" loading="lazy">`;
+            }
+            html += `<p>${content}</p>`;
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // 4. دوال تحميل المحتوى (مقالات، كتب، فيديوهات، صوتيات، صور)
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
             const data = await fetchSheetData('مقالات');
-            if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد مقالات حالياً.</p>';
-                return;
-            }
-            const articles = data.slice(1).filter(row => row[0] && row[0].trim() !== '');
-            if (articles.length === 0) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد مقالات حالياً.</p>';
-                return;
-            }
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
+            const items = data.slice(1).filter(r => r[0] && r[0].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
             let html = '';
-            articles.forEach(row => {
-                const title = row[0] || 'بدون عنوان';
-                const content = row[1] || '';
-                const date = row[2] || '';
-                const image = row[3] || '';
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const content = r[1] || '';
+                const date = r[2] || '';
+                const image = r[3] || '';
                 html += `
                     <div class="article-item">
                         <h3>${title}</h3>
@@ -360,26 +468,17 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 4. عرض الكتب PDF
-        // ============================================================
         async function loadBooks() {
             const container = document.getElementById('booksList');
             const data = await fetchSheetData('كتب PDF');
-            if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد كتب حالياً.</p>';
-                return;
-            }
-            const books = data.slice(1).filter(row => row[0] && row[0].trim() !== '');
-            if (books.length === 0) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد كتب حالياً.</p>';
-                return;
-            }
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
+            const items = data.slice(1).filter(r => r[0] && r[0].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
             let html = '';
-            books.forEach(row => {
-                const title = row[0] || 'بدون عنوان';
-                const link = row[1] || '#';
-                const cover = row[2] || '';
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const link = r[1] || '#';
+                const cover = r[2] || '';
                 html += `
                     <div class="book-item">
                         <h3>📄 ${title}</h3>
@@ -391,35 +490,21 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 5. عرض الفيديوهات
-        // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
-            if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد فيديوهات حالياً.</p>';
-                return;
-            }
-            const videos = data.slice(1).filter(row => row[0] && row[0].trim() !== '' && row[1] && row[1].trim() !== '');
-            if (videos.length === 0) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد فيديوهات حالياً.</p>';
-                return;
-            }
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
             let html = '';
-            videos.forEach(row => {
-                const title = row[0] || 'فيديو';
-                const videoId = row[1] || '';
+            items.forEach(r => {
+                const title = r[0] || 'فيديو';
+                const videoId = r[1] || '';
                 html += `
                     <div class="video-item">
                         <h3>🎬 ${title}</h3>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/${videoId}" 
-                                    title="${title}" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                            </iframe>
+                            <iframe src="https://www.youtube.com/embed/${videoId}" title="${title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                 `;
@@ -427,65 +512,44 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 6. عرض الصوتيات (MP3)
-        // ============================================================
         async function loadAudio() {
             const container = document.getElementById('audioList');
             const data = await fetchSheetData('صوتيات');
-            if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد ملفات صوتية حالياً.</p>';
-                return;
-            }
-            const audios = data.slice(1).filter(row => row[0] && row[0].trim() !== '' && row[1] && row[1].trim() !== '');
-            if (audios.length === 0) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد ملفات صوتية حالياً.</p>';
-                return;
-            }
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
+            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
             let html = '';
-            audios.forEach(row => {
-                const title = row[0] || 'بدون عنوان';
-                const src = row[1] || '';
-                const reader = row[2] || '';
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const src = r[1] || '';
+                const reader = r[2] || '';
                 html += `
                     <div class="audio-item">
                         <h3>🎵 ${title}</h3>
-                        ${reader ? `<p style="color: #85c1e9; margin-bottom: 8px;">🎤 ${reader}</p>` : ''}
-                        <audio controls>
-                            <source src="${src}" type="audio/mpeg">
-                            متصفحك لا يدعم المشغل الصوتي.
-                        </audio>
+                        ${reader ? `<p style="color: #85c1e9;">🎤 ${reader}</p>` : ''}
+                        <audio controls><source src="${src}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 7. عرض الصور
-        // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
             const data = await fetchSheetData('صور');
-            if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور حالياً.</p>';
-                return;
-            }
-            const images = data.slice(1).filter(row => row[0] && row[0].trim() !== '' && row[1] && row[1].trim() !== '');
-            if (images.length === 0) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور حالياً.</p>';
-                return;
-            }
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
+            const items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
             let html = '<div class="image-grid">';
-            images.forEach(row => {
-                const title = row[0] || 'بدون عنوان';
-                const src = row[1] || '';
-                const description = row[2] || '';
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const src = r[1] || '';
+                const desc = r[2] || '';
                 html += `
                     <div class="image-item">
                         <img src="${src}" alt="${title}" loading="lazy">
                         <h4>${title}</h4>
-                        ${description ? `<p>${description}</p>` : ''}
+                        ${desc ? `<p>${desc}</p>` : ''}
                     </div>
                 `;
             });
@@ -494,20 +558,65 @@
         }
 
         // ============================================================
-        // 8. تحميل كل البيانات عند فتح الصفحة
+        // 5. التنقل بين الأقسام (من القائمة الجانبية)
         // ============================================================
-        async function loadAllContent() {
-            await Promise.all([
-                loadArticles(),
-                loadBooks(),
-                loadVideos(),
-                loadAudio(),
-                loadImages()
-            ]);
+        function showSection(sectionId) {
+            // إخفاء الكل
+            document.querySelectorAll('.content > div, .content > section').forEach(el => {
+                el.style.display = 'none';
+            });
+            // إظهار القسم المطلوب
+            const target = document.getElementById(sectionId);
+            if (target) target.style.display = 'block';
+
+            // تحديث الزر النشط
+            document.querySelectorAll('.sidebar button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section === sectionId.replace('Section', '').toLowerCase()) {
+                    btn.classList.add('active');
+                }
+                // معالجة خاصة للرئيسية
+                if (sectionId === 'homeSection' && btn.dataset.section === 'home') {
+                    btn.classList.add('active');
+                }
+            });
         }
 
-        // تشغيل التحميل
-        loadAllContent();
+        // ============================================================
+        // 6. تحميل كل المحتوى عند بدء التشغيل
+        // ============================================================
+        async function loadAllContent() {
+            await loadHome();
+            await loadArticles();
+            await loadBooks();
+            await loadVideos();
+            await loadAudio();
+            await loadImages();
+
+            // عرض الرئيسية افتراضياً
+            showSection('homeSection');
+        }
+
+        // ============================================================
+        // 7. ربط أزرار القائمة
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // ربط الأزرار
+            document.querySelectorAll('.sidebar button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    if (section === 'home') showSection('homeSection');
+                    else if (section === 'articles') showSection('articlesSection');
+                    else if (section === 'books') showSection('booksSection');
+                    else if (section === 'videos') showSection('videosSection');
+                    else if (section === 'audio') showSection('audioSection');
+                    else if (section === 'images') showSection('imagesSection');
+                });
+            });
+
+            // تحميل المحتوى
+            loadAllContent();
+        });
     </script>
 
 </body>
