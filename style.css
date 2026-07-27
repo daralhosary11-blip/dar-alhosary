@@ -1,79 +1,75 @@
-* {
-    box-sizing: border-box;
+body {
     margin: 0;
     padding: 0;
-}
-
-body {
-    font-family: 'Tahoma', 'Segoe UI', sans-serif;
-    /* تأكد أنك غيرت اسم الصورة هنا إلى bg.jpg مثلاً أو اسم صورتك بالإنجليزية */
-    background: linear-gradient(rgba(11, 46, 89, 0.88), rgba(26, 77, 122, 0.88)), 
-                url('bg.jpg') no-repeat center center fixed;
+    font-family: 'Cairo', Tahoma, sans-serif;
+    background: linear-gradient(rgba(15, 30, 45, 0.9), rgba(15, 30, 45, 0.9)), url('bg.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #ffffff;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    min-height: 100vh;
 }
 
-/* هيدر الموقع من فوق */
 .site-header {
     text-align: center;
-    padding: 40px 20px 20px 20px;
+    padding: 35px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 3px solid rgba(244, 208, 63, 0.3);
 }
 
 .site-header h1 {
-    font-size: 38px;
+    margin: 0;
+    font-size: 2.5rem;
     color: #f4d03f;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 .site-header p {
-    font-size: 18px;
-    color: #d4e6f1;
+    margin: 10px 0 0;
+    font-size: 1.2rem;
+    color: #e0e0e0;
 }
 
-/* حاوية المحتوى العريضة والمريحة */
 .container {
-    width: 90%;
     max-width: 850px;
-    margin: 20px auto;
+    margin: 30px auto;
+    padding: 0 20px;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* الأقسام الداخلية (كل قسم في كارد منظم) */
-.content-section {
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(8px);
+.card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
     padding: 25px;
-    border-radius: 15px;
     margin-bottom: 25px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.content-section h2 {
-    color: #f4d03f;
-    font-size: 22px;
+.card h2 {
+    margin-top: 0;
     margin-bottom: 15px;
+    color: #f4d03f;
+    font-size: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
-.content-section p {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #f0f0f0;
+audio {
+    width: 100%;
+    margin-top: 5px;
 }
 
-/* تنسيق مشغل فيديو اليوتيوب ليكون متجاوب وواضح */
+/* تنسيق مشغل الفيديو المباشر جوه الموقع */
 .video-container {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* نسبة عرض لارتفاع 16:9 */
+    padding-bottom: 56.25%; /* نسبة 16:9 */
     height: 0;
-    border-radius: 10px;
+    background: #000;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -83,71 +79,77 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    border: none;
 }
 
-/* أزرار ملفات الـ PDF */
-.files-list {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-.btn-file {
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
+/* تنسيق قائمة الدروس الجديدة والشيكة */
+.lessons-list {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* مسافات كبيرة ومريحة بين كل رابط والتاني */
+}
+
+.lessons-list a {
+    display: block;
+    color: #85c1e9; /* لون فاتح ومقروء للروابط */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
     transition: 0.3s;
-    font-size: 15px;
+    border-right: 4px solid transparent; /* تأثير شيك عند الوقوف بالماوس */
 }
 
-.btn-file:hover {
-    background: #f4d03f;
-    color: #000;
+.lessons-list a:hover {
+    background: rgba(244, 208, 63, 0.2);
+    color: #f4d03f;
+    border-right: 4px solid #f4d03f;
+    padding-right: 20px;
 }
 
-/* الزر الأساسي */
-.btn-system {
-    display: inline-block;
+.btn-container {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.portal-btn {
     background-color: #27ae60;
     color: white;
-    padding: 15px 40px;
-    font-size: 20px;
+    padding: 14px 40px;
+    border-radius: 35px;
     text-decoration: none;
-    border-radius: 50px;
+    font-size: 1.3rem;
     font-weight: bold;
-    transition: all 0.3s ease;
-    border: 2px solid #2ecc71;
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+    box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+    display: inline-block;
+    transition: 0.3s;
 }
 
-.btn-system:hover {
-    background-color: #2ecc71;
+.portal-btn:hover {
+    background-color: #219653;
     transform: translateY(-3px);
 }
 
-/* الفوتر السفلي */
 .site-footer {
     text-align: center;
-    padding: 20px;
-    margin-top: auto;
-    background: rgba(0, 0, 0, 0.8);
-    width: 100%;
-    font-size: 13px;
-    color: #85c1e9;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    color: #ccc;
 }
 
-.fb-link {
-    color: #aed6f1;
+.site-footer a {
+    color: #f4d03f;
     text-decoration: none;
-    display: block;
-    margin-bottom: 8px;
 }
 
-.fb-link:hover {
-    color: white;
+.site-footer a:hover {
+    text-decoration: underline;
 }
