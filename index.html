@@ -376,10 +376,34 @@
             }
         }
 
-        // دالة لمعالجة روابط الصور المباشرة (مثل Google Drive أو روابط أخرى لو احتجت)
+        // ============================================================
+        // دالة تحويل رابط الصورة (تدعم أي رابط جوجل درايف تلقائياً)
+        // ============================================================
         function cleanImageUrl(url) {
             if (!url) return '';
-            return url.trim();
+            url = url.trim();
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://lh3.googleusercontent.com/d/${match[1]}=s800`;
+                }
+            }
+            return url;
+        }
+
+        // ============================================================
+        // دالة تحويل رابط يوتيوب لفيديو (سواء رابط كامل أو كود)
+        // ============================================================
+        function cleanVideoId(input) {
+            if (!input) return '';
+            input = input.trim();
+            // لو المستخدم حط رابط يوتيوب كامل
+            if (input.includes('youtube.com') || input.includes('youtu.be')) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = input.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : input;
+            }
+            return input; // لو هو حط الـ ID مباشرة
         }
 
         // ============================================================
@@ -449,7 +473,7 @@
             }
 
             if (!items.length) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. تأكد من إضافة العنوان ورابط الصورة الصحيح في تاب "صور".</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. تأكد من إضافة العنوان والرابط في تاب "صور".</p>';
                 return;
             }
 
@@ -537,7 +561,7 @@
         }
 
         // ============================================================
-        // الفيديوهات
+        // الفيديوهات (الآن يقبل رابط يوتيوب كاملاً أو المعرف)
         // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
@@ -548,7 +572,7 @@
             for (let i = 1; i < data.length; i++) {
                 const r = data[i];
                 const title = r[0] ? String(r[0]).trim() : '';
-                const videoId = r[1] ? String(r[1]).trim() : '';
+                const videoId = cleanVideoId(r[1]);
                 if (!title || !videoId) continue;
                 count++;
                 html += `
