@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دار الحصري الصغير</title>
     <link rel="stylesheet" href="style.css">
+    <!-- خط Cairo من Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- الهيدر أو رأس الصفحة -->
     <header class="site-header">
         <h1>دار الحصري الصغير</h1>
         <p>إعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
     </header>
 
-    <!-- المحتوى الرئيسي للموقع -->
     <main class="container">
-        
+
         <!-- كلمة الدار -->
         <section class="card">
             <h2>كلمة الدار</h2>
@@ -33,7 +33,7 @@
             </audio>
         </section>
 
-        <!-- مشغل الفيديو المباشر جوه الموقع (بدون الخروج ليوتيوب) -->
+        <!-- مشغل الفيديو المباشر (نموذج ثابت) -->
         <section class="card">
             <h2>📺 حصة مرئية / شرح مباشر</h2>
             <div class="video-container">
@@ -41,30 +41,37 @@
             </div>
         </section>
 
-        <!-- سلسلة دروس شرح المتون (قائمة مرتبة تحت بعضها بدون تداخل) -->
+        <!-- سلسلة دروس شرح المتون (مع مشغل مدمج) -->
         <section class="card">
             <h2>📚 سلسلة دروس شرح المتون (20 حلقة)</h2>
-            <div class="links-box">
-                <a href="https://youtu.be/ubUKZKNNIfs" target="_blank">🎬 الحلقة (1): مدخل إلى التعريف بمنظومة تحفة الأطفال</a>
-                <a href="https://youtu.be/t0DnTXdTn_0" target="_blank">🎬 الحلقة (2): شرح مقدمة تحفة الأطفال</a>
-                <a href="https://youtu.be/eaU99RuX5os" target="_blank">🎬 الحلقة (3): تعريف النون الساكنة</a>
-                <a href="https://youtu.be/RW7GUIXVHM0" target="_blank">🎬 الحلقة (4): الفرق بين النون الساكنة والتنوين</a>
-                <a href="https://youtu.be/D0gSmgeAVIc" target="_blank">🎬 الحلقة (5): شرح حكم الإظهار في منظومة تحفة الأطفال</a>
-                <a href="https://youtu.be/J962Qu77x-w" target="_blank">🎬 الحلقة (6): شرح حكم الإدغام في منظومة تحفة الأطفال</a>
-                <a href="https://youtu.be/eRjY1JyGlI4" target="_blank">🎬 الحلقة (7): شرح حكم الإقلاب في منظومة تحفة الأطفال</a>
-                <a href="https://youtu.be/VyxxAAsNVYs" target="_blank">🎬 الحلقة (8): شرح حكم الإخفاء في منظومة تحفة الأطفال</a>
-                <a href="https://youtu.be/ubUKZKNNIfs" target="_blank">🎬 الحلقة (9): أحكام النون والميم المشددتين</a>
-                <a href="https://youtu.be/t0DnTXdTn_0" target="_blank">🎬 الحلقة (10): أحكام الميم الساكنة - الإخفاء الشفوي</a>
-                <a href="https://youtu.be/eaU99RuX5os" target="_blank">🎬 الحلقة (11): أحكام الميم الساكنة - الإدغام الشفوي</a>
-                <a href="https://youtu.be/RW7GUIXVHM0" target="_blank">🎬 الحلقة (12): أحكام الميم الساكنة - الإظهار الشفوي</a>
-                <a href="https://youtu.be/D0gSmgeAVIc" target="_blank">🎬 الحلقة (13): أحكام لام أل ولام الفعل</a>
-                <a href="https://youtu.be/J962Qu77x-w" target="_blank">🎬 الحلقة (14): المثلين والمتقاربين والمتجانسين</a>
-                <a href="https://youtu.be/eRjY1JyGlI4" target="_blank">🎬 الحلقة (15): أقسام المد الفرعي</a>
-                <a href="https://youtu.be/VyxxAAsNVYs" target="_blank">🎬 الحلقة (16): المد المتصل والمنفصل</a>
-                <a href="https://youtu.be/ubUKZKNNIfs" target="_blank">🎬 الحلقة (17): المد اللازم وأقسامه</a>
-                <a href="https://youtu.be/t0DnTXdTn_0" target="_blank">🎬 الحلقة (18): مد الصلة الصغرى والكبرى</a>
-                <a href="https://youtu.be/eaU99RuX5os" target="_blank">🎬 الحلقة (19): مد العوض واللين</a>
-                <a href="https://youtu.be/RW7GUIXVHM0" target="_blank">🎬 الحلقة (20): خاتمة منظومة تحفة الأطفال</a>
+            <!-- مشغل الفيديو التفاعلي -->
+            <div id="videoPlayerContainer" class="video-container" style="margin-top: 15px;">
+                <iframe id="videoPlayer" src="https://www.youtube.com/embed/ubUKZKNNIfs" title="مشغل الدروس" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p id="currentLessonTitle" style="color: #f4d03f; margin: 10px 0 5px; font-weight: bold;">الحلقة (1): مدخل إلى التعريف بمنظومة تحفة الأطفال</p>
+
+            <!-- قائمة الحلقات (كل حلقة زر) -->
+            <div class="links-box" id="lessonsList">
+                <button data-video="ubUKZKNNIfs" data-title="الحلقة (1): مدخل إلى التعريف بمنظومة تحفة الأطفال">🎬 الحلقة (1): مدخل إلى التعريف بمنظومة تحفة الأطفال</button>
+                <button data-video="t0DnTXdTn_0" data-title="الحلقة (2): شرح مقدمة تحفة الأطفال">🎬 الحلقة (2): شرح مقدمة تحفة الأطفال</button>
+                <button data-video="eaU99RuX5os" data-title="الحلقة (3): تعريف النون الساكنة">🎬 الحلقة (3): تعريف النون الساكنة</button>
+                <button data-video="RW7GUIXVHM0" data-title="الحلقة (4): الفرق بين النون الساكنة والتنوين">🎬 الحلقة (4): الفرق بين النون الساكنة والتنوين</button>
+                <button data-video="D0gSmgeAVIc" data-title="الحلقة (5): شرح حكم الإظهار في منظومة تحفة الأطفال">🎬 الحلقة (5): شرح حكم الإظهار</button>
+                <button data-video="J962Qu77x-w" data-title="الحلقة (6): شرح حكم الإدغام في منظومة تحفة الأطفال">🎬 الحلقة (6): شرح حكم الإدغام</button>
+                <button data-video="eRjY1JyGlI4" data-title="الحلقة (7): شرح حكم الإقلاب في منظومة تحفة الأطفال">🎬 الحلقة (7): شرح حكم الإقلاب</button>
+                <button data-video="VyxxAAsNVYs" data-title="الحلقة (8): شرح حكم الإخفاء في منظومة تحفة الأطفال">🎬 الحلقة (8): شرح حكم الإخفاء</button>
+                <button data-video="ubUKZKNNIfs" data-title="الحلقة (9): أحكام النون والميم المشددتين">🎬 الحلقة (9): أحكام النون والميم المشددتين</button>
+                <button data-video="t0DnTXdTn_0" data-title="الحلقة (10): أحكام الميم الساكنة - الإخفاء الشفوي">🎬 الحلقة (10): الإخفاء الشفوي</button>
+                <button data-video="eaU99RuX5os" data-title="الحلقة (11): أحكام الميم الساكنة - الإدغام الشفوي">🎬 الحلقة (11): الإدغام الشفوي</button>
+                <button data-video="RW7GUIXVHM0" data-title="الحلقة (12): أحكام الميم الساكنة - الإظهار الشفوي">🎬 الحلقة (12): الإظهار الشفوي</button>
+                <button data-video="D0gSmgeAVIc" data-title="الحلقة (13): أحكام لام أل ولام الفعل">🎬 الحلقة (13): أحكام لام أل ولام الفعل</button>
+                <button data-video="J962Qu77x-w" data-title="الحلقة (14): المثلين والمتقاربين والمتجانسين">🎬 الحلقة (14): المثلين والمتقاربين والمتجانسين</button>
+                <button data-video="eRjY1JyGlI4" data-title="الحلقة (15): أقسام المد الفرعي">🎬 الحلقة (15): أقسام المد الفرعي</button>
+                <button data-video="VyxxAAsNVYs" data-title="الحلقة (16): المد المتصل والمنفصل">🎬 الحلقة (16): المد المتصل والمنفصل</button>
+                <button data-video="ubUKZKNNIfs" data-title="الحلقة (17): المد اللازم وأقسامه">🎬 الحلقة (17): المد اللازم وأقسامه</button>
+                <button data-video="t0DnTXdTn_0" data-title="الحلقة (18): مد الصلة الصغرى والكبرى">🎬 الحلقة (18): مد الصلة الصغرى والكبرى</button>
+                <button data-video="eaU99RuX5os" data-title="الحلقة (19): مد العوض واللين">🎬 الحلقة (19): مد العوض واللين</button>
+                <button data-video="RW7GUIXVHM0" data-title="الحلقة (20): خاتمة منظومة تحفة الأطفال">🎬 الحلقة (20): خاتمة منظومة تحفة الأطفال</button>
             </div>
         </section>
 
@@ -85,11 +92,37 @@
 
     </main>
 
-    <!-- حقوق النشر في أسفل الصفحة تماماً -->
     <footer class="site-footer">
         <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
         <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
     </footer>
+
+    <script>
+        (function() {
+            const player = document.getElementById('videoPlayer');
+            const titleEl = document.getElementById('currentLessonTitle');
+            const buttons = document.querySelectorAll('#lessonsList button');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const videoId = this.getAttribute('data-video');
+                    const title = this.getAttribute('data-title');
+                    // تغيير مصدر الفيديو
+                    player.src = 'https://www.youtube.com/embed/' + videoId;
+                    // تحديث العنوان
+                    titleEl.textContent = title;
+                    // إزالة التحديد من جميع الأزرار
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // تعيين الزر الأول كـ active افتراضياً
+            if (buttons.length > 0) {
+                buttons[0].classList.add('active');
+            }
+        })();
+    </script>
 
 </body>
 </html>
