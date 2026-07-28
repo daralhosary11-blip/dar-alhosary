@@ -194,30 +194,6 @@
             max-height: 200px;
             object-fit: cover;
         }
-        .series-item {
-            background: rgba(255,255,255,0.04);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .series-item h3 {
-            color: #f4d03f;
-            margin-top: 0;
-            font-size: 1.1rem;
-        }
-        .series-item .child-item {
-            margin-right: 15px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-        }
-        .series-item .child-item p {
-            color: #85c1e9;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
-        }
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -269,6 +245,52 @@
         .image-item p {
             color: #e6edf5;
             font-size: 0.8rem;
+        }
+        /* ===== أزرار السلاسل ===== */
+        .series-toggle {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(244, 208, 63, 0.1);
+            border: 1px solid rgba(244, 208, 63, 0.2);
+            border-radius: 12px;
+            color: #f4d03f;
+            font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .series-toggle:hover {
+            background: rgba(244, 208, 63, 0.2);
+            border-color: #f4d03f;
+            transform: translateX(-4px);
+        }
+        .series-toggle.active {
+            background: rgba(244, 208, 63, 0.25);
+            border-color: #f4d03f;
+            box-shadow: 0 0 20px rgba(244, 208, 63, 0.1);
+        }
+        .series-content {
+            display: none;
+            padding-right: 15px;
+            margin-bottom: 12px;
+        }
+        .series-content.open {
+            display: block;
+        }
+        .child-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .child-item p {
+            color: #85c1e9;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
         }
         .btn-container {
             text-align: center;
@@ -475,27 +497,6 @@
         }
 
         // ============================================================
-        // دالة عامة لتنظيم البيانات على شكل سلاسل
-        // ============================================================
-        function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
-            const seriesMap = {};
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i];
-                const series = row[seriesColumnIndex] ? row[seriesColumnIndex].trim() : 'عام';
-                const title = row[titleIndex] ? row[titleIndex].trim() : '';
-                const content = row[contentIndex] ? row[contentIndex].trim() : '';
-                const extra1 = (extraIndex1 !== undefined && row[extraIndex1]) ? row[extraIndex1].trim() : '';
-                const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
-
-                if (!title && !content) continue;
-
-                if (!seriesMap[series]) seriesMap[series] = [];
-                seriesMap[series].push({ title, content, extra1, extra2 });
-            }
-            return seriesMap;
-        }
-
-        // ============================================================
         // الصفحة الرئيسية
         // ============================================================
         async function loadHome() {
@@ -532,6 +533,85 @@
         }
 
         // ============================================================
+        // دالة عامة لتنظيم البيانات على شكل سلاسل
+        // ============================================================
+        function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
+            const seriesMap = {};
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const series = row[seriesColumnIndex] ? row[seriesColumnIndex].trim() : 'عام';
+                const title = row[titleIndex] ? row[titleIndex].trim() : '';
+                const content = row[contentIndex] ? row[contentIndex].trim() : '';
+                const extra1 = (extraIndex1 !== undefined && row[extraIndex1]) ? row[extraIndex1].trim() : '';
+                const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
+
+                if (!title && !content) continue;
+
+                if (!seriesMap[series]) seriesMap[series] = [];
+                seriesMap[series].push({ title, content, extra1, extra2 });
+            }
+            return seriesMap;
+        }
+
+        // ============================================================
+        // الفيديوهات (مع أزرار السلاسل)
+        // ============================================================
+        async function loadVideos() {
+            const container = document.getElementById('videosList');
+            const data = await fetchSheetData('فيديوهات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="series-${index}">🎬 ${name}</button>
+                    <div id="series-${index}" class="series-content">
+                `;
+                items.forEach(item => {
+                    let videoId = item.content;
+                    if (videoId.includes('youtu.be/')) {
+                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
+                    } else if (videoId.includes('watch?v=')) {
+                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+                    }
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'فيديو'}</p>
+                            <div class="video-container" style="max-width:400px;">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+
+            // ربط الأزرار بالـ toggle
+            document.querySelectorAll('.series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        // ============================================================
         // المقالات
         // ============================================================
         async function loadArticles() {
@@ -550,11 +630,11 @@
             }
 
             let html = '';
-            seriesNames.forEach(name => {
+            seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
+                    <button class="series-toggle" data-target="articles-${index}">📝 ${name}</button>
+                    <div id="articles-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     html += `
@@ -568,6 +648,17 @@
                 html += `</div>`;
             });
             container.innerHTML = html;
+
+            document.querySelectorAll('.series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
         }
 
         // ============================================================
@@ -589,11 +680,11 @@
             }
 
             let html = '';
-            seriesNames.forEach(name => {
+            seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
+                    <button class="series-toggle" data-target="books-${index}">📚 ${name}</button>
+                    <div id="books-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     html += `
@@ -607,52 +698,17 @@
                 html += `</div>`;
             });
             container.innerHTML = html;
-        }
 
-        // ============================================================
-        // الفيديوهات
-        // ============================================================
-        async function loadVideos() {
-            const container = document.getElementById('videosList');
-            const data = await fetchSheetData('فيديوهات');
-            if (data.length < 2) {
-                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
-                return;
-            }
-
-            const seriesMap = organizeIntoSeries(data, 3, 0, 1);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) {
-                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
-                return;
-            }
-
-            let html = '';
-            seriesNames.forEach(name => {
-                const items = seriesMap[name];
-                html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
-                `;
-                items.forEach(item => {
-                    let videoId = item.content;
-                    if (videoId.includes('youtu.be/')) {
-                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
-                    } else if (videoId.includes('watch?v=')) {
-                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+            document.querySelectorAll('.series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
                     }
-                    html += `
-                        <div class="child-item">
-                            <p>${item.title || 'فيديو'}</p>
-                            <div class="video-container" style="max-width:400px;">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                    `;
                 });
-                html += `</div>`;
             });
-            container.innerHTML = html;
         }
 
         // ============================================================
@@ -674,11 +730,11 @@
             }
 
             let html = '';
-            seriesNames.forEach(name => {
+            seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
+                    <button class="series-toggle" data-target="audio-${index}">🎧 ${name}</button>
+                    <div id="audio-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     html += `
@@ -691,6 +747,17 @@
                 html += `</div>`;
             });
             container.innerHTML = html;
+
+            document.querySelectorAll('.series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
         }
 
         // ============================================================
@@ -712,11 +779,11 @@
             }
 
             let html = '';
-            seriesNames.forEach(name => {
+            seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
+                    <button class="series-toggle" data-target="images-${index}">🖼️ ${name}</button>
+                    <div id="images-${index}" class="series-content">
                         <div class="image-grid">
                 `;
                 items.forEach(item => {
@@ -731,6 +798,17 @@
                 html += `</div></div>`;
             });
             container.innerHTML = html;
+
+            document.querySelectorAll('.series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
         }
 
         // ============================================================
