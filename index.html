@@ -45,7 +45,58 @@
             flex: 1;
             align-items: flex-start;
         }
-        /* ===== العمود الجانبي الأيسر ===== */
+        /* ===== القائمة الجانبية (الشمال) ===== */
+        .sidebar {
+            flex: 0 0 200px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            /* ✅ القائمة في الشمال */
+            order: -2;
+        }
+        .sidebar h3 {
+            color: #f4d03f;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(244,208,63,0.2);
+            padding-bottom: 8px;
+            text-align: center;
+        }
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #d4e2f0;
+            font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .sidebar button:hover {
+            background: rgba(244, 208, 63, 0.12);
+            border-color: #f4d03f;
+            color: #fff;
+            transform: translateX(-4px);
+        }
+        .sidebar button.active {
+            background: rgba(244, 208, 63, 0.18);
+            border-color: #f4d03f;
+            color: #f4d03f;
+            box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
+        }
+        /* ===== العمود الجانبي الأيسر (معلومات جانبية - على اليمين) ===== */
         .left-sidebar {
             flex: 0 0 220px;
             background: rgba(255, 255, 255, 0.06);
@@ -57,8 +108,8 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            /* ✅ ده بيخلي العمود على الشمال */
-            order: -1;
+            /* ✅ العمود الجانبي على اليمين */
+            order: 2;
         }
         .left-sidebar h3 {
             color: #f4d03f;
@@ -96,55 +147,6 @@
             max-height: 120px;
             object-fit: cover;
             border-radius: 8px;
-        }
-        /* ===== القائمة الجانبية اليمنى ===== */
-        .sidebar {
-            flex: 0 0 200px;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
-        }
-        .sidebar h3 {
-            color: #f4d03f;
-            font-size: 1rem;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(244,208,63,0.2);
-            padding-bottom: 8px;
-            text-align: center;
-        }
-        .sidebar button {
-            display: block;
-            width: 100%;
-            padding: 10px 14px;
-            margin-bottom: 6px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            color: #d4e2f0;
-            font-family: 'Cairo', Tahoma, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-align: right;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-        .sidebar button:hover {
-            background: rgba(244, 208, 63, 0.12);
-            border-color: #f4d03f;
-            color: #fff;
-            transform: translateX(-4px);
-        }
-        .sidebar button.active {
-            background: rgba(244, 208, 63, 0.18);
-            border-color: #f4d03f;
-            color: #f4d03f;
-            box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
         }
         .content {
             flex: 1;
@@ -193,6 +195,51 @@
             margin-top: 8px;
             max-height: 200px;
             object-fit: cover;
+        }
+        .series-toggle {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(244, 208, 63, 0.1);
+            border: 1px solid rgba(244, 208, 63, 0.2);
+            border-radius: 12px;
+            color: #f4d03f;
+            font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .series-toggle:hover {
+            background: rgba(244, 208, 63, 0.2);
+            border-color: #f4d03f;
+            transform: translateX(-4px);
+        }
+        .series-toggle.active {
+            background: rgba(244, 208, 63, 0.25);
+            border-color: #f4d03f;
+            box-shadow: 0 0 20px rgba(244, 208, 63, 0.1);
+        }
+        .series-content {
+            display: none;
+            padding-right: 15px;
+            margin-bottom: 12px;
+        }
+        .series-content.open {
+            display: block;
+        }
+        .child-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .child-item p {
+            color: #85c1e9;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
         }
         .video-container {
             position: relative;
@@ -245,52 +292,6 @@
         .image-item p {
             color: #e6edf5;
             font-size: 0.8rem;
-        }
-        /* ===== أزرار السلاسل ===== */
-        .series-toggle {
-            display: block;
-            width: 100%;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            background: rgba(244, 208, 63, 0.1);
-            border: 1px solid rgba(244, 208, 63, 0.2);
-            border-radius: 12px;
-            color: #f4d03f;
-            font-family: 'Cairo', Tahoma, sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: right;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-        .series-toggle:hover {
-            background: rgba(244, 208, 63, 0.2);
-            border-color: #f4d03f;
-            transform: translateX(-4px);
-        }
-        .series-toggle.active {
-            background: rgba(244, 208, 63, 0.25);
-            border-color: #f4d03f;
-            box-shadow: 0 0 20px rgba(244, 208, 63, 0.1);
-        }
-        .series-content {
-            display: none;
-            padding-right: 15px;
-            margin-bottom: 12px;
-        }
-        .series-content.open {
-            display: block;
-        }
-        .child-item {
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-        }
-        .child-item p {
-            color: #85c1e9;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
         }
         .btn-container {
             text-align: center;
@@ -346,6 +347,7 @@
                 flex-wrap: wrap;
                 gap: 4px;
                 padding: 12px;
+                order: 0;
             }
             .sidebar h3 { width: 100%; margin-bottom: 4px; }
             .sidebar button {
@@ -374,12 +376,7 @@
 
     <div class="main-wrapper">
 
-        <!-- ===== العمود الجانبي الأيسر ===== -->
-        <aside class="left-sidebar" id="leftSidebar">
-            <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
-        </aside>
-
-        <!-- ===== القائمة الجانبية اليمنى ===== -->
+        <!-- ===== القائمة الجانبية (الشمال) ===== -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -388,6 +385,11 @@
             <button data-section="videos">🎬 فيديو</button>
             <button data-section="audio">🎧 صوتيات</button>
             <button data-section="images">🖼️ صور</button>
+        </aside>
+
+        <!-- ===== العمود الجانبي (معلومات جانبية - على اليمين) ===== -->
+        <aside class="left-sidebar" id="leftSidebar">
+            <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
         </aside>
 
         <!-- ===== المحتوى الرئيسي ===== -->
@@ -451,7 +453,7 @@
         }
 
         // ============================================================
-        // العمود الجانبي الأيسر
+        // العمود الجانبي (معلومات جانبية)
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -598,7 +600,6 @@
             });
             container.innerHTML = html;
 
-            // ربط الأزرار بالـ toggle
             document.querySelectorAll('.series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
