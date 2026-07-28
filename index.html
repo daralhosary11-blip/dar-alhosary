@@ -57,7 +57,6 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            /* ✅ القائمة في الشمال */
             order: -2;
         }
         .sidebar h3 {
@@ -96,7 +95,7 @@
             color: #f4d03f;
             box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
         }
-        /* ===== العمود الجانبي الأيسر (معلومات جانبية - على اليمين) ===== */
+        /* ===== العمود الجانبي (معلومات جانبية - على اليمين) ===== */
         .left-sidebar {
             flex: 0 0 220px;
             background: rgba(255, 255, 255, 0.06);
@@ -108,7 +107,6 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            /* ✅ العمود الجانبي على اليمين */
             order: 2;
         }
         .left-sidebar h3 {
@@ -556,7 +554,7 @@
         }
 
         // ============================================================
-        // الفيديوهات (مع أزرار السلاسل)
+        // الفيديوهات
         // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
@@ -577,8 +575,8 @@
             seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <button class="series-toggle" data-target="series-${index}">🎬 ${name}</button>
-                    <div id="series-${index}" class="series-content">
+                    <button class="series-toggle" data-target="videos-${index}">🎬 ${name}</button>
+                    <div id="videos-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     let videoId = item.content;
@@ -600,7 +598,7 @@
             });
             container.innerHTML = html;
 
-            document.querySelectorAll('.series-toggle').forEach(btn => {
+            document.querySelectorAll('#videosList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -650,7 +648,7 @@
             });
             container.innerHTML = html;
 
-            document.querySelectorAll('.series-toggle').forEach(btn => {
+            document.querySelectorAll('#articlesList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -700,7 +698,7 @@
             });
             container.innerHTML = html;
 
-            document.querySelectorAll('.series-toggle').forEach(btn => {
+            document.querySelectorAll('#booksList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -713,7 +711,7 @@
         }
 
         // ============================================================
-        // الصوتيات
+        // الصوتيات (مع التعديل)
         // ============================================================
         async function loadAudio() {
             const container = document.getElementById('audioList');
@@ -749,7 +747,8 @@
             });
             container.innerHTML = html;
 
-            document.querySelectorAll('.series-toggle').forEach(btn => {
+            // ✅ ربط الأزرار بالـ toggle
+            document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -800,7 +799,7 @@
             });
             container.innerHTML = html;
 
-            document.querySelectorAll('.series-toggle').forEach(btn => {
+            document.querySelectorAll('#imagesList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -853,14 +852,4 @@
                     if (section === 'home') showSection('homeSection');
                     else if (section === 'articles') showSection('articlesSection');
                     else if (section === 'books') showSection('booksSection');
-                    else if (section === 'videos') showSection('videosSection');
-                    else if (section === 'audio') showSection('audioSection');
-                    else if (section === 'images') showSection('imagesSection');
-                });
-            });
-            loadAllContent();
-        });
-    </script>
-
-</body>
-</html>
+                    else if (section
