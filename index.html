@@ -123,38 +123,23 @@
             color: #85c1e9;
             font-size: 1.2rem;
         }
-        .home-item, .article-item {
+        .home-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .home-item h3, .article-item h3 {
+        .home-item h3 {
             color: #f4d03f;
             margin-top: 0;
-            margin-bottom: 8px;
-        }
-        .home-item img, .article-item img, .image-item img {
-            max-width: 100%;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-        .home-item img:hover, .article-item img:hover, .image-item img:hover {
-            opacity: 0.9;
-            transform: scale(1.01);
         }
         .home-item img {
+            max-width: 100%;
+            border-radius: 8px;
             margin-top: 10px;
-            max-height: 300px;
-            object-fit: contain;
-            display: block;
-        }
-        .article-item .date {
-            font-size: 0.85rem;
-            color: #85c1e9;
-            margin-bottom: 8px;
+            max-height: 250px;
+            object-fit: cover;
         }
         .image-grid {
             display: grid;
@@ -173,6 +158,7 @@
             width: 100%;
             height: 160px;
             object-fit: cover;
+            border-radius: 8px;
         }
         .image-item h4 {
             color: #f4d03f;
@@ -183,40 +169,52 @@
             color: #e6edf5;
             font-size: 0.85rem;
         }
-        .book-item, .video-item, .audio-item {
+        .article-item, .book-item, .audio-item, .video-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .book-item h3, .video-item h3, .audio-item h3 {
+        .article-item h3, .book-item h3, .audio-item h3, .video-item h3 {
             color: #f4d03f;
-            margin-bottom: 10px;
+            margin-top: 0;
         }
-        .book-item img {
-            max-height: 150px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            display: block;
+        .article-item .date {
+            color: #85c1e9;
+            font-size: 0.85rem;
+        }
+        .article-item img, .book-item img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-height: 200px;
+            object-fit: cover;
         }
         .book-item a {
-            display: inline-block;
-            background: #27ae60;
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 6px;
+            color: #85c1e9;
             text-decoration: none;
             font-weight: 600;
+            display: inline-block;
             margin-top: 8px;
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .book-item a:hover {
+            background: rgba(244,208,63,0.15);
+            color: #f4d03f;
         }
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
-            border-radius: 8px;
-            margin-top: 10px;
+            border-radius: 16px;
+            background: #000;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
         }
         .video-container iframe {
             position: absolute;
@@ -224,10 +222,13 @@
             left: 0;
             width: 100%;
             height: 100%;
+            border: none;
         }
         audio {
             width: 100%;
             margin-top: 8px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.3);
         }
         .btn-container {
             text-align: center;
@@ -249,64 +250,6 @@
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 30px rgba(39, 174, 96, 0.5);
         }
-
-        /* --- تصميم نافذة تكبير الصور (Lightbox) --- */
-        #lightboxModal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-        }
-        #lightboxModal img {
-            max-width: 85%;
-            max-height: 85vh;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            object-fit: contain;
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            left: 30px;
-            color: #fff;
-            font-size: 2.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            background: rgba(0,0,0,0.4);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .lightbox-close:hover { background: rgba(244, 208, 63, 0.8); color: #000; }
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            border: none;
-            font-size: 2rem;
-            padding: 12px 20px;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: background 0.2s;
-            user-select: none;
-        }
-        .lightbox-nav:hover { background: #f4d03f; color: #000; }
-        #lightboxPrev { right: 30px; } /* اتجاه معكوس للعربية الـ RTL */
-        #lightboxNext { left: 30px; }
-
         .site-footer {
             text-align: center;
             padding: 25px 20px;
@@ -326,7 +269,6 @@
         .site-footer a:hover {
             text-decoration: underline;
         }
-
         @media (max-width: 768px) {
             .main-wrapper { flex-direction: column; }
             .sidebar {
@@ -351,7 +293,10 @@
             .card { padding: 18px; }
             .card h2 { font-size: 1.3rem; }
             .image-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-            .lightbox-nav { font-size: 1.5rem; padding: 8px 14px; }
+        }
+        @media (max-width: 480px) {
+            .site-header h1 { font-size: 1.7rem; }
+            .sidebar button { font-size: 0.75rem; padding: 6px 10px; }
         }
     </style>
 </head>
@@ -372,43 +317,43 @@
             <button data-section="videos">🎬 دروس الفيديو</button>
             <button data-section="audio">🎧 المكتبة الصوتية</button>
             <button data-section="images">🖼️ معرض الصور</button>
+            <button data-section="series">📚 سلاسل المحتوى</button>
         </aside>
 
         <main class="content">
 
-            <!-- الصفحة الرئيسية -->
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <!-- معرض الصور -->
-            <div id="imagesSection" style="display:none;" class="card">
-                <h2>🖼️ معرض الصور</h2>
-                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
-            </div>
-
-            <!-- المقالات -->
             <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 أحدث المقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- الكتب -->
             <div id="booksSection" style="display:none;" class="card">
                 <h2>📚 مكتبة الكتب (PDF)</h2>
                 <div id="booksList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- الفيديوهات -->
             <div id="videosSection" style="display:none;" class="card">
                 <h2>🎬 دروس الفيديو</h2>
                 <div id="videosList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
-            <!-- الصوتيات -->
             <div id="audioSection" style="display:none;" class="card">
                 <h2>🎧 المكتبة الصوتية</h2>
                 <div id="audioList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+
+            <div id="imagesSection" style="display:none;" class="card">
+                <h2>🖼️ معرض الصور</h2>
+                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+
+            <div id="seriesSection" style="display:none;" class="card">
+                <h2>📚 سلاسل المحتوى</h2>
+                <div id="seriesList"><div class="loading">جاري التحميل...</div></div>
             </div>
 
             <div class="btn-container">
@@ -416,14 +361,6 @@
             </div>
 
         </main>
-    </div>
-
-    <!-- نافذة تكبير وعرض الصور (Lightbox Modal) -->
-    <div id="lightboxModal">
-        <span class="lightbox-close" id="lightboxClose">&times;</span>
-        <button class="lightbox-nav" id="lightboxPrev">&#10095;</button>
-        <img id="lightboxImg" src="" alt="صورة مكبرة">
-        <button class="lightbox-nav" id="lightboxNext">&#10094;</button>
     </div>
 
     <footer class="site-footer">
@@ -440,91 +377,11 @@
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                return json.table.rows.map(row => row.c ? row.c.map(cell => cell ? (cell.v !== null ? cell.v : '') : '') : []);
+                return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
             } catch (error) {
-                console.error('خطأ في جلب البيانات من الـ Sheet:', error);
+                console.error('خطأ:', error);
                 return [];
             }
-        }
-
-        // دالة تنظيف روابط الصور (تتعامل مع جوجل درايف والروابط العادية)
-        function cleanImageUrl(url) {
-            if (!url) return '';
-            url = url.trim();
-            if (url.includes('drive.google.com')) {
-                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://lh3.googleusercontent.com/d/${match[1]}=s800`;
-                }
-            }
-            return url;
-        }
-
-        // دالة تنظيف روابط يوتيوب
-        function cleanVideoId(input) {
-            if (!input) return '';
-            input = input.trim();
-            if (input.includes('youtube.com') || input.includes('youtu.be')) {
-                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                const match = input.match(regExp);
-                return (match && match[2].length === 11) ? match[2] : input;
-            }
-            return input;
-        }
-
-        // ============================================================
-        // نظام معرض الصور التفاعلي (Lightbox) وتتبع الصور في الصفحة
-        // ============================================================
-        let currentImageIndex = 0;
-        let allPageImages = [];
-
-        function initLightbox() {
-            const modal = document.getElementById('lightboxModal');
-            const modalImg = document.getElementById('lightboxImg');
-            const closeBtn = document.getElementById('lightboxClose');
-            const prevBtn = document.getElementById('lightboxPrev');
-            const nextBtn = document.getElementById('lightboxNext');
-
-            // جمع كل الصور المعروضة في الصفحة ديناميكياً
-            allPageImages = Array.from(document.querySelectorAll('.content img'));
-
-            allPageImages.forEach((img, index) => {
-                // منع التكرار لو تم ربط الحدث مسبقاً
-                img.onclick = function() {
-                    currentImageIndex = index;
-                    modal.style.display = 'flex';
-                    modalImg.src = this.src;
-                };
-            });
-
-            function showImage(index) {
-                if (allPageImages.length === 0) return;
-                if (index >= allPageImages.length) currentImageIndex = 0;
-                if (index < 0) currentImageIndex = allPageImages.length - 1;
-                modalImg.src = allPageImages[currentImageIndex].src;
-            }
-
-            nextBtn.onclick = function(e) {
-                e.stopPropagation();
-                currentImageIndex++;
-                showImage(currentImageIndex);
-            };
-
-            prevBtn.onclick = function(e) {
-                e.stopPropagation();
-                currentImageIndex--;
-                showImage(currentImageIndex);
-            };
-
-            closeBtn.onclick = function() {
-                modal.style.display = 'none';
-            };
-
-            modal.onclick = function(e) {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            };
         }
 
         // ============================================================
@@ -547,56 +404,58 @@
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? String(row[0]).trim() : '';
-                const content = row[1] ? String(row[1]).trim() : '';
-                const image = cleanImageUrl(row[2]);
+                const title = row[0] ? row[0].trim() : '';
+                const content = row[1] ? row[1].trim() : '';
+                const image = row[2] ? row[2].trim() : '';
 
                 if (!title && !content && !image) continue;
 
                 hasContent = true;
                 html += `
                     <div class="home-item">
-                        ${title ? `<h3>${title}</h3>` : ''}
-                        ${content ? `<p>${content}</p>` : ''}
+                        <h3>${title || 'بدون عنوان'}</h3>
+                        <p>${content || ''}</p>
                         ${image ? `<img src="${image}" alt="${title || 'صورة'}" loading="lazy">` : ''}
                     </div>
                 `;
             }
 
             if (!hasContent) {
-                html += '<p>لا يوجد محتوى في الصفحة الرئيسية حالياً.</p>';
+                html += '<p>لا يوجد محتوى في الصفحة الرئيسية. أضف محتوى في تاب "الصفحة الرئيسية".</p>';
             }
 
             container.innerHTML = html;
         }
 
         // ============================================================
-        // معرض الصور
+        // معرض الصور (مع عكس الترتيب)
         // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
             const data = await fetchSheetData('صور');
             
             if (data.length < 2) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض حالياً.</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
                 return;
             }
 
-            const items = [];
+            let items = [];
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? String(row[0]).trim() : '';
-                const src = cleanImageUrl(row[1]);
-                const desc = row[2] ? String(row[2]).trim() : '';
+                const title = row[0] ? row[0].trim() : '';
+                const src = row[1] ? row[1].trim() : '';
+                const desc = row[2] ? row[2].trim() : '';
                 if (title && src) {
                     items.push({ title, src, desc });
                 }
             }
 
             if (!items.length) {
-                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض. تأكد من إضافة العنوان والرابط في تاب "صور".</p>';
+                container.innerHTML = '<p style="color:#85c1e9;">لا توجد صور في المعرض.</p>';
                 return;
             }
+
+            items = items.reverse();
 
             let html = '<div class="image-grid">';
             items.forEach(item => {
@@ -613,62 +472,54 @@
         }
 
         // ============================================================
-        // المقالات
+        // المقالات (مع عكس الترتيب)
         // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
             const data = await fetchSheetData('مقالات');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
             
-            if (data.length < 2) { 
-                container.innerHTML = '<p>لا توجد مقالات حالياً.</p>'; 
-                return; 
-            }
+            let items = data.slice(1).filter(r => r[0] && r[0].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
+            
+            items = items.reverse();
             
             let html = '';
-            let count = 0;
-            for (let i = 1; i < data.length; i++) {
-                const r = data[i];
-                const title = r[0] ? String(r[0]).trim() : '';
-                const content = r[1] ? String(r[1]).trim() : '';
-                const date = r[2] ? String(r[2]).trim() : '';
-                const image = cleanImageUrl(r[3]);
-
-                if (!title && !content) continue;
-
-                count++;
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const content = r[1] || '';
+                const date = r[2] || '';
+                const image = r[3] || '';
                 html += `
                     <div class="article-item">
-                        <h3>${title || 'بدون عنوان'}</h3>
+                        <h3>${title}</h3>
                         ${date ? `<div class="date">📅 ${date}</div>` : ''}
-                        ${content ? `<p>${content}</p>` : ''}
+                        <p>${content}</p>
                         ${image ? `<img src="${image}" alt="${title}" loading="lazy">` : ''}
                     </div>
                 `;
-            }
-
-            if (count === 0) {
-                container.innerHTML = '<p>لا توجد مقالات.</p>';
-                return;
-            }
+            });
             container.innerHTML = html;
         }
 
         // ============================================================
-        // الكتب
+        // الكتب (مع عكس الترتيب)
         // ============================================================
         async function loadBooks() {
             const container = document.getElementById('booksList');
             const data = await fetchSheetData('كتب PDF');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
+            
+            let items = data.slice(1).filter(r => r[0] && r[0].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
+            
+            items = items.reverse();
+            
             let html = '';
-            let count = 0;
-            for (let i = 1; i < data.length; i++) {
-                const r = data[i];
-                const title = r[0] ? String(r[0]).trim() : '';
-                const link = r[1] ? String(r[1]).trim() : '#';
-                const cover = cleanImageUrl(r[2]);
-                if (!title) continue;
-                count++;
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const link = r[1] || '#';
+                const cover = r[2] || '';
                 html += `
                     <div class="book-item">
                         <h3>📄 ${title}</h3>
@@ -676,26 +527,27 @@
                         <a href="${link}" target="_blank">📥 تحميل الكتاب (PDF)</a>
                     </div>
                 `;
-            }
-            if (count === 0) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
+            });
             container.innerHTML = html;
         }
 
         // ============================================================
-        // الفيديوهات
+        // الفيديوهات (مع عكس الترتيب)
         // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            
+            let items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            
+            items = items.reverse();
+            
             let html = '';
-            let count = 0;
-            for (let i = 1; i < data.length; i++) {
-                const r = data[i];
-                const title = r[0] ? String(r[0]).trim() : '';
-                const videoId = cleanVideoId(r[1]);
-                if (!title || !videoId) continue;
-                count++;
+            items.forEach(r => {
+                const title = r[0] || 'فيديو';
+                const videoId = r[1] || '';
                 html += `
                     <div class="video-item">
                         <h3>🎬 ${title}</h3>
@@ -704,41 +556,135 @@
                         </div>
                     </div>
                 `;
-            }
-            if (count === 0) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            });
             container.innerHTML = html;
         }
 
         // ============================================================
-        // الصوتيات
+        // الصوتيات (مع عكس الترتيب)
         // ============================================================
         async function loadAudio() {
             const container = document.getElementById('audioList');
             const data = await fetchSheetData('صوتيات');
             if (data.length < 2) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
+            
+            let items = data.slice(1).filter(r => r[0] && r[0].trim() && r[1] && r[1].trim());
+            if (!items.length) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
+            
+            items = items.reverse();
+            
             let html = '';
-            let count = 0;
-            for (let i = 1; i < data.length; i++) {
-                const r = data[i];
-                const title = r[0] ? String(r[0]).trim() : '';
-                const src = r[1] ? String(r[1]).trim() : '';
-                const reader = r[2] ? String(r[2]).trim() : '';
-                if (!title || !src) continue;
-                count++;
+            items.forEach(r => {
+                const title = r[0] || 'بدون عنوان';
+                const src = r[1] || '';
+                const reader = r[2] || '';
                 html += `
                     <div class="audio-item">
                         <h3>🎵 ${title}</h3>
-                        ${reader ? `<p style="color: #85c1e9;">🎤 الشيخ / القارئ: ${reader}</p>` : ''}
+                        ${reader ? `<p style="color: #85c1e9;">🎤 ${reader}</p>` : ''}
                         <audio controls><source src="${src}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
                     </div>
                 `;
-            }
-            if (count === 0) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
+            });
             container.innerHTML = html;
         }
 
         // ============================================================
-        // التنقل بين الأقسام
+        // السلاسل (جديد)
+        // ============================================================
+        async function loadSeries() {
+            const container = document.getElementById('seriesList');
+            const data = await fetchSheetData('سلاسل');
+            
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد سلاسل حالياً.</p>';
+                return;
+            }
+
+            const seriesMap = {};
+
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const title = row[0] ? row[0].trim() : '';
+                const type = row[1] ? row[1].trim().toLowerCase() : '';
+                const link = row[2] ? row[2].trim() : '';
+                const desc = row[3] ? row[3].trim() : '';
+
+                if (!title || !link) continue;
+
+                if (!seriesMap[title]) {
+                    seriesMap[title] = [];
+                }
+                seriesMap[title].push({ type, link, desc });
+            }
+
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد سلاسل حالياً.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                        <h3 style="color: #f4d03f; margin-top: 0; font-size: 1.3rem;">📚 ${name}</h3>
+                        <div style="margin-right: 15px;">
+                `;
+
+                items.forEach(item => {
+                    if (item.type === 'فيديو' || item.type === 'video') {
+                        let videoId = item.link;
+                        if (videoId.includes('youtu.be/')) {
+                            videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
+                        } else if (videoId.includes('watch?v=')) {
+                            videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+                        }
+                        html += `
+                            <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                <p style="color: #85c1e9; margin-bottom: 6px;">${item.desc || 'فيديو'}</p>
+                                <div class="video-container" style="max-width: 400px;">
+                                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        `;
+                    } else if (item.type === 'صوت' || item.type === 'audio') {
+                        html += `
+                            <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                <p style="color: #85c1e9; margin-bottom: 6px;">${item.desc || 'ملف صوتي'}</p>
+                                <audio controls style="width: 100%;">
+                                    <source src="${item.link}" type="audio/mpeg">
+                                    متصفحك لا يدعم الصوت.
+                                </audio>
+                            </div>
+                        `;
+                    } else if (item.type === 'كتاب' || item.type === 'book') {
+                        html += `
+                            <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                <p style="color: #85c1e9; margin-bottom: 6px;">${item.desc || 'كتاب'}</p>
+                                <a href="${item.link}" target="_blank" style="color: #f4d03f; text-decoration: none; font-weight: 600;">📥 تحميل الكتاب</a>
+                            </div>
+                        `;
+                    } else {
+                        // أي نوع تاني (رابط عادي)
+                        html += `
+                            <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                <p style="color: #85c1e9; margin-bottom: 6px;">${item.desc || 'رابط'}</p>
+                                <a href="${item.link}" target="_blank" style="color: #f4d03f; text-decoration: none; font-weight: 600;">🔗 فتح الرابط</a>
+                            </div>
+                        `;
+                    }
+                });
+
+                html += `</div></div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // التنقل
         // ============================================================
         function showSection(sectionId) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
@@ -751,18 +697,16 @@
                 btn.classList.remove('active');
                 const btnSection = btn.dataset.section;
                 let targetSection = sectionId.replace('Section', '').toLowerCase();
-                if (btnSection === targetSection || (sectionId === 'homeSection' && btnSection === 'home')) {
+                if (targetSection === 'home') targetSection = 'home';
+                if (btnSection === targetSection) {
+                    btn.classList.add('active');
+                }
+                if (sectionId === 'homeSection' && btnSection === 'home') {
                     btn.classList.add('active');
                 }
             });
-
-            // تحديث الصور المتاحة للتنقل عند تغيير القسم
-            initLightbox();
         }
 
-        // ============================================================
-        // تحميل كل المحتوى وتشغيل الميزات
-        // ============================================================
         async function loadAllContent() {
             try {
                 await loadHome();
@@ -771,8 +715,8 @@
                 await loadVideos();
                 await loadAudio();
                 await loadImages();
+                await loadSeries();
                 showSection('homeSection');
-                initLightbox(); // تفعيل العرض المكبر عند الضغط على أي صورة
             } catch (error) {
                 console.error('خطأ في تحميل المحتوى:', error);
             }
@@ -788,9 +732,9 @@
                     else if (section === 'videos') showSection('videosSection');
                     else if (section === 'audio') showSection('audioSection');
                     else if (section === 'images') showSection('imagesSection');
+                    else if (section === 'series') showSection('seriesSection');
                 });
             });
-
             loadAllContent();
         });
     </script>
