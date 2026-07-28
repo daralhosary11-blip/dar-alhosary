@@ -45,7 +45,7 @@
             flex: 1;
             align-items: flex-start;
         }
-        /* ===== العمود الجانبي الأيسر (الجديد) ===== */
+        /* ===== العمود الجانبي الأيسر ===== */
         .left-sidebar {
             flex: 0 0 220px;
             background: rgba(255, 255, 255, 0.06);
@@ -57,7 +57,8 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            order: -1; /* عشان يبقى على الشمال */
+            /* ✅ ده بيخلي العمود على الشمال */
+            order: -1;
         }
         .left-sidebar h3 {
             color: #f4d03f;
@@ -98,7 +99,7 @@
         }
         /* ===== القائمة الجانبية اليمنى ===== */
         .sidebar {
-            flex: 0 0 220px;
+            flex: 0 0 200px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -193,30 +194,6 @@
             max-height: 200px;
             object-fit: cover;
         }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 16px;
-            background: #000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            margin: 8px 0;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        audio {
-            width: 100%;
-            margin-top: 6px;
-            border-radius: 30px;
-            background: rgba(0, 0, 0, 0.3);
-        }
         .series-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
@@ -240,6 +217,30 @@
             color: #85c1e9;
             margin-bottom: 4px;
             font-size: 0.9rem;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #000;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            margin: 8px 0;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        audio {
+            width: 100%;
+            margin-top: 6px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.3);
         }
         .image-grid {
             display: grid;
@@ -351,7 +352,7 @@
 
     <div class="main-wrapper">
 
-        <!-- ===== العمود الجانبي الأيسر (معلومات جانبية) ===== -->
+        <!-- ===== العمود الجانبي الأيسر ===== -->
         <aside class="left-sidebar" id="leftSidebar">
             <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
         </aside>
@@ -428,7 +429,7 @@
         }
 
         // ============================================================
-        // 1. العمود الجانبي الأيسر (معلومات جانبية)
+        // العمود الجانبي الأيسر
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -474,98 +475,28 @@
         }
 
         // ============================================================
-        // 2. دوال عرض السلاسل (من تاب "سلاسل")
+        // دالة عامة لتنظيم البيانات على شكل سلاسل
         // ============================================================
-        async function loadSeriesByType(type, containerId, title) {
-            const container = document.getElementById(containerId);
-            const data = await fetchSheetData('سلاسل');
-            
-            if (data.length < 2) {
-                container.innerHTML = `<p>لا توجد ${title} حالياً.</p>`;
-                return;
-            }
-
+        function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const seriesTitle = row[0] ? row[0].trim() : '';
-                const itemType = row[1] ? row[1].trim().toLowerCase() : '';
-                const link = row[2] ? row[2].trim() : '';
-                const desc = row[3] ? row[3].trim() : '';
+                const series = row[seriesColumnIndex] ? row[seriesColumnIndex].trim() : 'عام';
+                const title = row[titleIndex] ? row[titleIndex].trim() : '';
+                const content = row[contentIndex] ? row[contentIndex].trim() : '';
+                const extra1 = (extraIndex1 !== undefined && row[extraIndex1]) ? row[extraIndex1].trim() : '';
+                const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
 
-                if (itemType !== type) continue;
-                if (!seriesTitle || !link) continue;
+                if (!title && !content) continue;
 
-                if (!seriesMap[seriesTitle]) seriesMap[seriesTitle] = [];
-                seriesMap[seriesTitle].push({ link, desc });
+                if (!seriesMap[series]) seriesMap[series] = [];
+                seriesMap[series].push({ title, content, extra1, extra2 });
             }
-
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) {
-                container.innerHTML = `<p>لا توجد ${title} حالياً.</p>`;
-                return;
-            }
-
-            let html = '';
-            seriesNames.forEach(name => {
-                const items = seriesMap[name];
-                html += `
-                    <div class="series-item">
-                        <h3>${name}</h3>
-                `;
-                items.forEach(item => {
-                    if (type === 'فيديو' || type === 'video') {
-                        let videoId = item.link;
-                        if (videoId.includes('youtu.be/')) {
-                            videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
-                        } else if (videoId.includes('watch?v=')) {
-                            videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
-                        }
-                        html += `
-                            <div class="child-item">
-                                <p>${item.desc || 'فيديو'}</p>
-                                <div class="video-container" style="max-width:400px;">
-                                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        `;
-                    } else if (type === 'صوت' || type === 'audio') {
-                        html += `
-                            <div class="child-item">
-                                <p>${item.desc || 'ملف صوتي'}</p>
-                                <audio controls><source src="${item.link}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
-                            </div>
-                        `;
-                    } else if (type === 'صورة' || type === 'image') {
-                        html += `
-                            <div class="child-item">
-                                <p>${item.desc || 'صورة'}</p>
-                                <img src="${item.link}" alt="${item.desc || 'صورة'}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;">
-                            </div>
-                        `;
-                    } else if (type === 'كتاب' || type === 'book') {
-                        html += `
-                            <div class="child-item">
-                                <p>${item.desc || 'كتاب'}</p>
-                                <a href="${item.link}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>
-                            </div>
-                        `;
-                    } else if (type === 'مقال' || type === 'article') {
-                        html += `
-                            <div class="child-item">
-                                <p>${item.desc || 'مقال'}</p>
-                                <a href="${item.link}" target="_blank" style="color:#85c1e9; text-decoration:none;">🔗 قراءة المقال</a>
-                            </div>
-                        `;
-                    }
-                });
-                html += `</div>`;
-            });
-            container.innerHTML = html;
+            return seriesMap;
         }
 
         // ============================================================
-        // 3. دوال العرض
+        // الصفحة الرئيسية
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
@@ -600,14 +531,210 @@
             container.innerHTML = html;
         }
 
-        async function loadArticles() { await loadSeriesByType('مقال', 'articlesList', 'مقالات'); }
-        async function loadBooks() { await loadSeriesByType('كتاب', 'booksList', 'كتب'); }
-        async function loadVideos() { await loadSeriesByType('فيديو', 'videosList', 'فيديوهات'); }
-        async function loadAudio() { await loadSeriesByType('صوت', 'audioList', 'ملفات صوتية'); }
-        async function loadImages() { await loadSeriesByType('صورة', 'imagesList', 'صور'); }
+        // ============================================================
+        // المقالات
+        // ============================================================
+        async function loadArticles() {
+            const container = document.getElementById('articlesList');
+            const data = await fetchSheetData('مقالات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد مقالات.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 4, 0, 1, 2, 3);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد مقالات.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div class="series-item">
+                        <h3>${name}</h3>
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p>
+                            <p>${item.content || ''}</p>
+                            ${item.extra2 ? `<img src="${item.extra2}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;">` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
 
         // ============================================================
-        // 4. التنقل
+        // الكتب
+        // ============================================================
+        async function loadBooks() {
+            const container = document.getElementById('booksList');
+            const data = await fetchSheetData('كتب PDF');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد كتب.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد كتب.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div class="series-item">
+                        <h3>${name}</h3>
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>
+                            ${item.extra1 ? `<img src="${item.extra1}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px;">` : ''}
+                            <a href="${item.content}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // الفيديوهات
+        // ============================================================
+        async function loadVideos() {
+            const container = document.getElementById('videosList');
+            const data = await fetchSheetData('فيديوهات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div class="series-item">
+                        <h3>${name}</h3>
+                `;
+                items.forEach(item => {
+                    let videoId = item.content;
+                    if (videoId.includes('youtu.be/')) {
+                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
+                    } else if (videoId.includes('watch?v=')) {
+                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+                    }
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'فيديو'}</p>
+                            <div class="video-container" style="max-width:400px;">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // الصوتيات
+        // ============================================================
+        async function loadAudio() {
+            const container = document.getElementById('audioList');
+            const data = await fetchSheetData('صوتيات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div class="series-item">
+                        <h3>${name}</h3>
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p>
+                            <audio controls><source src="${item.content}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // الصور
+        // ============================================================
+        async function loadImages() {
+            const container = document.getElementById('imagesList');
+            const data = await fetchSheetData('صور');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد صور.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد صور.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach(name => {
+                const items = seriesMap[name];
+                html += `
+                    <div class="series-item">
+                        <h3>${name}</h3>
+                        <div class="image-grid">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="image-item">
+                            <img src="${item.content}" alt="${item.title || 'صورة'}" loading="lazy">
+                            <h4>${item.title || 'بدون عنوان'}</h4>
+                            ${item.extra1 ? `<p>${item.extra1}</p>` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // التنقل
         // ============================================================
         function showSection(sectionId) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => {
