@@ -575,8 +575,8 @@
             seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <button class="series-toggle" data-target="videos-${index}">🎬 ${name}</button>
-                    <div id="videos-${index}" class="series-content">
+                    <button class="series-toggle" data-target="video-${index}">🎬 ${name}</button>
+                    <div id="video-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     let videoId = item.content;
@@ -611,6 +611,56 @@
         }
 
         // ============================================================
+        // الصوتيات (مع إصلاح الـ toggle)
+        // ============================================================
+        async function loadAudio() {
+            const container = document.getElementById('audioList');
+            const data = await fetchSheetData('صوتيات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="audio-${index}">🎧 ${name}</button>
+                    <div id="audio-${index}" class="series-content">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p>
+                            <audio controls><source src="${item.content}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+
+            // ✅ ربط الأزرار بالـ toggle (نفس طريقة الفيديو)
+            document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        // ============================================================
         // المقالات
         // ============================================================
         async function loadArticles() {
@@ -632,8 +682,8 @@
             seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <button class="series-toggle" data-target="articles-${index}">📝 ${name}</button>
-                    <div id="articles-${index}" class="series-content">
+                    <button class="series-toggle" data-target="article-${index}">📝 ${name}</button>
+                    <div id="article-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     html += `
@@ -682,8 +732,8 @@
             seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <button class="series-toggle" data-target="books-${index}">📚 ${name}</button>
-                    <div id="books-${index}" class="series-content">
+                    <button class="series-toggle" data-target="book-${index}">📚 ${name}</button>
+                    <div id="book-${index}" class="series-content">
                 `;
                 items.forEach(item => {
                     html += `
@@ -699,56 +749,6 @@
             container.innerHTML = html;
 
             document.querySelectorAll('#booksList .series-toggle').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const targetId = this.dataset.target;
-                    const content = document.getElementById(targetId);
-                    if (content) {
-                        content.classList.toggle('open');
-                        this.classList.toggle('active');
-                    }
-                });
-            });
-        }
-
-        // ============================================================
-        // الصوتيات (مع التعديل)
-        // ============================================================
-        async function loadAudio() {
-            const container = document.getElementById('audioList');
-            const data = await fetchSheetData('صوتيات');
-            if (data.length < 2) {
-                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
-                return;
-            }
-
-            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) {
-                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
-                return;
-            }
-
-            let html = '';
-            seriesNames.forEach((name, index) => {
-                const items = seriesMap[name];
-                html += `
-                    <button class="series-toggle" data-target="audio-${index}">🎧 ${name}</button>
-                    <div id="audio-${index}" class="series-content">
-                `;
-                items.forEach(item => {
-                    html += `
-                        <div class="child-item">
-                            <p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p>
-                            <audio controls><source src="${item.content}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            });
-            container.innerHTML = html;
-
-            // ✅ ربط الأزرار بالـ toggle
-            document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -782,8 +782,8 @@
             seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
                 html += `
-                    <button class="series-toggle" data-target="images-${index}">🖼️ ${name}</button>
-                    <div id="images-${index}" class="series-content">
+                    <button class="series-toggle" data-target="image-${index}">🖼️ ${name}</button>
+                    <div id="image-${index}" class="series-content">
                         <div class="image-grid">
                 `;
                 items.forEach(item => {
@@ -852,4 +852,14 @@
                     if (section === 'home') showSection('homeSection');
                     else if (section === 'articles') showSection('articlesSection');
                     else if (section === 'books') showSection('booksSection');
-                    else if (section
+                    else if (section === 'videos') showSection('videosSection');
+                    else if (section === 'audio') showSection('audioSection');
+                    else if (section === 'images') showSection('imagesSection');
+                });
+            });
+            loadAllContent();
+        });
+    </script>
+
+</body>
+</html>
