@@ -131,8 +131,8 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             position: sticky;
             top: 20px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
+            max-height: none;
+            overflow-y: visible;
             order: 2;
         }
         .left-sidebar h3 {
@@ -150,11 +150,13 @@
             border-radius: 8px;
             text-align: center;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .left-sidebar .info-item p {
             color: #e6edf5;
             font-size: 0.85rem;
             line-height: 1.6;
+            word-break: break-word;
         }
         .left-sidebar .info-item a {
             color: #85c1e9;
@@ -163,21 +165,20 @@
             display: block;
             padding: 6px 0;
             transition: 0.3s;
+            word-break: break-word;
         }
-        .left-sidebar .info-item a:hover { color: #f4d03f; }
+        .left-sidebar .info-item a:hover {
+            color: #f4d03f;
+        }
         .left-sidebar .info-item img {
             width: 100%;
             max-height: 120px;
             object-fit: cover;
             border-radius: 8px;
-            cursor: pointer;
         }
         .content {
             flex: 1;
             min-width: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
         }
         .card {
             background: rgba(255, 255, 255, 0.07);
@@ -195,101 +196,62 @@
             border-right: 4px solid #f4d03f;
             padding-right: 12px;
         }
-        .card p { color: #e6edf5; line-height: 1.9; }
-        .loading { text-align: center; padding: 30px; color: #85c1e9; font-size: 1.1rem; }
-        
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            margin: 10px 0;
-            width: 100%;
+        .card p {
+            color: #e6edf5;
+            line-height: 1.9;
         }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            width: 100%;
-        }
-        .carousel-slide {
-            min-width: 100%;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .loading {
             text-align: center;
-            flex-shrink: 0;
+            padding: 30px;
+            color: #85c1e9;
+            font-size: 1.1rem;
         }
-        .carousel-slide h3 { color: #f4d03f; margin-top: 0; margin-bottom: 10px; }
-        .carousel-slide p { color: #e6edf5; line-height: 1.8; max-width: 90%; }
-        
-        .slide-images-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 10px 0;
-            width: 100%;
+        /* ===== عرض الأخبار عمودي (تحت بعض) ===== */
+        .home-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: 0.3s;
         }
-        .carousel-slide img, .child-item img, .image-item img {
+        .home-item:hover {
+            background: rgba(255,255,255,0.07);
+        }
+        .home-item h3 {
+            color: #f4d03f;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        .home-item p {
+            color: #e6edf5;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        .home-item img {
             max-width: 100%;
-            max-height: 280px;
+            max-height: 300px;
             border-radius: 12px;
             object-fit: contain;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin-top: 10px;
+            display: block;
         }
-        .carousel-slide img:hover { opacity: 0.9; transform: scale(1.01); }
-
-        .carousel-slide .video-container { width: 100%; max-width: 560px; margin: 10px auto; }
-        .carousel-slide .link-btn {
+        .home-item .link-btn {
             display: inline-block;
-            padding: 10px 25px;
+            padding: 8px 20px;
             background: #27ae60;
             color: #fff;
             border-radius: 30px;
             text-decoration: none;
             font-weight: 700;
             transition: 0.3s;
+            margin-top: 6px;
         }
-        .carousel-slide .link-btn:hover { background: #2ecc71; transform: scale(1.05); }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            border: none;
-            font-size: 2rem;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: 0.3s;
-            z-index: 10;
+        .home-item .link-btn:hover {
+            background: #2ecc71;
+            transform: scale(1.02);
         }
-        .carousel-btn:hover { background: #f4d03f; color: #0b1a2e; }
-        .carousel-btn.prev { left: 10px; }
-        .carousel-btn.next { right: 10px; }
-        .carousel-dots { text-align: center; margin-top: 12px; }
-        .carousel-dots span {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin: 0 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .carousel-dots span.active { background: #f4d03f; width: 14px; }
-        
+        /* ===== باقي الأقسام ===== */
         .series-toggle {
             display: block;
             width: 100%;
@@ -316,10 +278,23 @@
             border-color: #f4d03f;
             box-shadow: 0 0 20px rgba(244, 208, 63, 0.1);
         }
-        .series-content { display: none; padding-right: 15px; margin-bottom: 12px; }
+        .series-content {
+            display: none;
+            padding-right: 15px;
+            margin-bottom: 12px;
+        }
         .series-content.open { display: block; }
-        .child-item { padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .child-item p { color: #e6edf5; margin-bottom: 6px; font-size: 0.95rem; }
+        .child-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .child-item p {
+            color: #85c1e9;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -330,47 +305,53 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
             margin: 8px 0;
         }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        audio { width: 100%; margin-top: 6px; border-radius: 30px; background: rgba(0, 0, 0, 0.3); }
-        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 8px; }
-        .image-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .image-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; cursor: pointer; }
-        .image-item h4 { color: #f4d03f; margin: 8px 0 2px; font-size: 0.85rem; }
-        .image-item p { color: #e6edf5; font-size: 0.8rem; }
-        
-        #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
+        .video-container iframe {
+            position: absolute;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            border: none;
         }
-        #imageModal img {
-            max-width: 90%;
-            max-height: 80vh;
+        audio {
+            width: 100%;
+            margin-top: 6px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .image-item {
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            object-fit: contain;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
         }
-        #imageModal span {
-            position: absolute;
-            top: 20px;
-            left: 30px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        .image-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
         }
-        #imageModal span:hover { color: #f4d03f; }
-
+        .image-item h4 {
+            color: #f4d03f;
+            margin: 8px 0 2px;
+            font-size: 0.85rem;
+        }
+        .image-item p {
+            color: #e6edf5;
+            font-size: 0.8rem;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 15px 0 8px;
+        }
+        .portal-btn { display: none; }
         .site-footer {
             text-align: center;
             padding: 20px;
@@ -382,23 +363,55 @@
             font-size: 0.9rem;
             color: #b8c9dd;
         }
-        .site-footer a { color: #f4d03f; text-decoration: none; font-weight: 600; }
+        .site-footer a {
+            color: #f4d03f;
+            text-decoration: none;
+            font-weight: 600;
+        }
         .site-footer a:hover { text-decoration: underline; }
-        @media (max-width: 992px) { .left-sidebar { display: none; } }
+        @media (max-width: 992px) {
+            .left-sidebar { display: none; }
+        }
         @media (max-width: 768px) {
             .main-wrapper { flex-direction: column; }
             .sidebar {
-                flex: none; width: 100%; position: relative; top: 0; max-height: none;
-                display: flex; flex-wrap: wrap; gap: 4px; padding: 12px; order: 0;
+                flex: none;
+                width: 100%;
+                position: relative;
+                top: 0;
+                max-height: none;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: 12px;
+                order: 0;
             }
             .sidebar h3 { width: 100%; margin-bottom: 4px; }
-            .sidebar button { flex: 1 0 auto; width: auto; padding: 6px 10px; font-size: 0.8rem; margin-bottom: 0; }
+            .sidebar button {
+                flex: 1 0 auto;
+                width: auto;
+                padding: 6px 10px;
+                font-size: 0.8rem;
+                margin-bottom: 0;
+            }
             .card { padding: 15px; }
             .card h2 { font-size: 1.1rem; }
             .image-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
-            .site-header { flex-direction: column; align-items: stretch; text-align: center; }
-            .site-header .header-left { flex-direction: column; align-items: center; }
+            .site-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .site-header .header-left {
+                flex-direction: column;
+                align-items: center;
+            }
             .portal-btn-header { align-self: center; }
+            .home-item img { max-height: 200px; }
+        }
+        @media (max-width: 480px) {
+            .site-header h1 { font-size: 1.5rem; }
+            .sidebar button { font-size: 0.7rem; padding: 4px 8px; }
         }
     </style>
 </head>
@@ -413,14 +426,15 @@
     </header>
 
     <div class="main-wrapper">
+
         <aside class="sidebar">
-            <h3>📋 انتقال سريع</h3>
-            <button onclick="scrollToSection('homeSection')">🏠 الرئيسية</button>
-            <button onclick="scrollToSection('articlesSection')">📝 مقالات</button>
-            <button onclick="scrollToSection('booksSection')">📚 كتب</button>
-            <button onclick="scrollToSection('videosSection')">🎬 فيديو</button>
-            <button onclick="scrollToSection('audioSection')">🎧 صوتيات</button>
-            <button onclick="scrollToSection('imagesSection')">🖼️ صور</button>
+            <h3>📋 القائمة</h3>
+            <button class="active" data-section="home">🏠 الرئيسية</button>
+            <button data-section="articles">📝 مقالات</button>
+            <button data-section="books">📚 كتب</button>
+            <button data-section="videos">🎬 فيديو</button>
+            <button data-section="audio">🎧 صوتيات</button>
+            <button data-section="images">🖼️ صور</button>
         </aside>
 
         <aside class="left-sidebar" id="leftSidebar">
@@ -428,40 +442,41 @@
         </aside>
 
         <main class="content">
+
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <section id="articlesSection" class="card">
+            <div id="articlesSection" style="display:none;" class="card">
                 <h2>📝 مقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
-            </section>
+            </div>
 
-            <section id="booksSection" class="card">
+            <div id="booksSection" style="display:none;" class="card">
                 <h2>📚 كتب</h2>
                 <div id="booksList"><div class="loading">جاري التحميل...</div></div>
-            </section>
+            </div>
 
-            <section id="videosSection" class="card">
+            <div id="videosSection" style="display:none;" class="card">
                 <h2>🎬 فيديو</h2>
                 <div id="videosList"><div class="loading">جاري التحميل...</div></div>
-            </section>
+            </div>
 
-            <section id="audioSection" class="card">
+            <div id="audioSection" style="display:none;" class="card">
                 <h2>🎧 صوتيات</h2>
                 <div id="audioList"><div class="loading">جاري التحميل...</div></div>
-            </section>
+            </div>
 
-            <section id="imagesSection" class="card">
+            <div id="imagesSection" style="display:none;" class="card">
                 <h2>🖼️ صور</h2>
                 <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
-            </section>
-        </main>
-    </div>
+            </div>
 
-    <div id="imageModal" onclick="closeModal()">
-        <span onclick="closeModal()">&times;</span>
-        <img id="modalImg" src="" alt="صورة مكبرة">
+            <div class="btn-container">
+                <a href="#" class="portal-btn">الدخول إلى النظام التعليمي</a>
+            </div>
+
+        </main>
     </div>
 
     <footer class="site-footer">
@@ -472,243 +487,158 @@
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
-        function openModal(imgSrc) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImg');
-            modalImg.src = imgSrc;
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = 'none';
-        }
-
-        function scrollToSection(sectionId) {
-            const el = document.getElementById(sectionId);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
         async function fetchSheetData(sheetName) {
-            const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                return json.table.rows.map(function(row) {
-                    return row.c ? row.c.map(function(cell) { return cell ? cell.v : ''; }) : [];
-                });
+                return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
             } catch (error) {
-                console.error('خطأ في جلب البيانات:', error);
+                console.error('خطأ:', error);
                 return [];
             }
         }
 
+        // ============================================================
+        // العمود الجانبي (معلومات جانبية)
+        // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
             const data = await fetchSheetData('معلومات جانبية');
             
-            if (!data || data.length < 2) {
-                container.innerHTML = '<h3>📌 معلومات</h3><div class="info-item"><p>لا توجد معلومات حالياً.</p></div>';
+            if (data.length < 2) {
+                container.innerHTML = `
+                    <h3>📌 معلومات</h3>
+                    <div class="info-item"><p>لا توجد معلومات حالياً.</p></div>
+                `;
                 return;
             }
 
-            let html = '<h3>📌 معلومات</h3>';
+            let html = `<h3>📌 معلومات</h3>`;
             let hasContent = false;
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (!row || row.length === 0) continue;
-                
-                const title = row[0] ? String(row[0]).trim() : '';
-                const content = row[1] ? String(row[1]).trim() : '';
-                const type = row[2] ? String(row[2]).trim().toLowerCase() : '';
+                const title = row[0] ? row[0].trim() : '';
+                const content = row[1] ? row[1].trim() : '';
+                const type = row[2] ? row[2].trim().toLowerCase() : '';
 
                 if (!title && !content) continue;
                 hasContent = true;
 
-                html += '<div class="info-item">';
-                if (type === 'صورة' || type === 'image' || type === 'صور' || isImageUrl(content)) {
-                    html += '<img src="' + content + '" alt="' + title + '" loading="lazy" onclick="openModal(\'' + content + '\')">';
-                    if (title) html += '<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">' + title + '</p>';
-                } else if (type === 'رابط' || type === 'link' || type === 'ربط') {
-                    html += '<a href="' + content + '" target="_blank">🔗 ' + (title || 'رابط') + '</a>';
+                html += `<div class="info-item">`;
+                if (type === 'صورة' || type === 'image') {
+                    html += `<img src="${content}" alt="${title}" loading="lazy">`;
+                    if (title) html += `<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">${title}</p>`;
+                } else if (type === 'رابط' || type === 'link') {
+                    html += `<a href="${content}" target="_blank">🔗 ${title || 'رابط'}</a>`;
                 } else {
-                    if (title) html += '<p style="font-weight:bold; color:#f4d03f; margin-bottom:4px;">' + title + '</p>';
-                    if (content) html += '<p>' + content + '</p>';
+                    html += `<p>${content}</p>`;
                 }
-                html += '</div>';
+                html += `</div>`;
             }
 
             if (!hasContent) {
-                html += '<div class="info-item"><p>لا توجد معلومات حالياً.</p></div>';
+                html += `<div class="info-item"><p>لا توجد معلومات حالياً.</p></div>`;
             }
 
             container.innerHTML = html;
         }
 
-        let currentSlide = 0;
-        let slidesData = [];
-
-        function getYouTubeId(url) {
-            if (!url) return null;
-            let videoId = url;
-            if (videoId.includes('youtu.be/')) {
-                videoId = videoId.split('youtu.be/')[1].split('?')[0];
-            } else if (videoId.includes('watch?v=')) {
-                videoId = videoId.split('watch?v=')[1].split('&')[0];
-            } else if (videoId.includes('embed/')) {
-                videoId = videoId.split('embed/')[1].split('?')[0];
-            }
-            return videoId;
-        }
-
-        function isImageUrl(url) {
-            if (!url) return false;
-            const cleanUrl = url.trim().toLowerCase();
-            return cleanUrl.match(/\.(jpeg|jpg|png|gif|webp|bmp|svg)($|\?)/i) || cleanUrl.includes('drive.google.com') || cleanUrl.includes('imgur.com') || cleanUrl.includes('cloudinary') || cleanUrl.includes('googleusercontent.com');
-        }
-
-        // دالة مساعدة لتوليد كود لعرض الصور بشكل صحيح تماماً دون إظهارها كرابط نصي
-        function renderImagesHtml(imageString, title) {
-            if (!imageString) return '';
-            let imagesList = [];
-            imageString.split(',').forEach(function(img) {
-                const trimmed = img.trim();
-                if (trimmed) imagesList.push(trimmed);
-            });
-            
-            if (imagesList.length === 0) return '';
-
-            let html = '<div class="slide-images-container" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:10px 0; width:100%;">';
-            imagesList.forEach(function(src) {
-                html += '<img src="' + src + '" alt="' + (title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + src + '\')" style="max-width:100%; max-height:280px; border-radius:12px; object-fit:contain; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.3);">';
-            });
-            html += '</div>';
-            return html;
-        }
-
-        function renderCarousel() {
-            const container = document.getElementById('homeContent');
-            if (!slidesData || slidesData.length === 0) {
-                container.innerHTML = '<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى في الصفحة الرئيسية.</p>';
-                return;
-            }
-
-            let html = '<h2>🏠 الرئيسية</h2>' +
-                '<div class="carousel-container">' +
-                '<button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>' +
-                '<div class="carousel-track" id="carouselTrack" style="transform: translateX(0%);">';
-
-            slidesData.forEach(function(item) {
-                html += '<div class="carousel-slide">';
-                if (item.title) html += '<h3>' + item.title + '</h3>';
-
-                // فحص ما إذا كان المحتوى رابط صورة أو نصاً عادياً
-                let contentIsImage = isImageUrl(item.content);
-                
-                if (item.image) {
-                    html += renderImagesHtml(item.image, item.title);
-                }
-
-                if (contentIsImage) {
-                    html += renderImagesHtml(item.content, item.title);
-                } else if (item.type === 'فيديو' || item.type === 'video') {
-                    const videoId = getYouTubeId(item.content || item.image);
-                    if (videoId) {
-                        html += '<div class="video-container"><iframe src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe></div>';
-                    } else {
-                        html += '<p>⚠️ رابط فيديو غير صحيح</p>';
-                    }
-                } else if (item.type === 'رابط' || item.type === 'link' || item.type === 'ربط') {
-                    html += '<a href="' + item.content + '" target="_blank" class="link-btn">🔗 ' + (item.title || item.content) + '</a>';
-                } else if (item.content) {
-                    html += '<p>' + item.content + '</p>';
-                }
-
-                html += '</div>';
-            });
-
-            html += '</div>' +
-                '<button class="carousel-btn next" onclick="changeSlide(1)">❯</button>' +
-                '</div>' +
-                '<div class="carousel-dots" id="carouselDots"></div>';
-
-            container.innerHTML = html;
-            updateDots();
-        }
-
-        function changeSlide(direction) {
-            if (!slidesData || slidesData.length === 0) return;
-            const track = document.getElementById('carouselTrack');
-            if (!track) return;
-            currentSlide = (currentSlide + direction + slidesData.length) % slidesData.length;
-            track.style.transform = 'translateX(' + (currentSlide * 100) + '%)';
-            updateDots();
-        }
-
-        function updateDots() {
-            const dotsContainer = document.getElementById('carouselDots');
-            if (!dotsContainer) return;
-            if (!slidesData || slidesData.length === 0) {
-                dotsContainer.innerHTML = '';
-                return;
-            }
-            let html = '';
-            slidesData.forEach(function(_, index) {
-                html += '<span class="' + (index === currentSlide ? 'active' : '') + '" onclick="goToSlide(' + index + ')"></span>';
-            });
-            dotsContainer.innerHTML = html;
-        }
-
-        function goToSlide(index) {
-            if (!slidesData || slidesData.length === 0) return;
-            const track = document.getElementById('carouselTrack');
-            if (!track) return;
-            currentSlide = index;
-            track.style.transform = 'translateX(' + (currentSlide * 100) + '%)';
-            updateDots();
-        }
-
+        // ============================================================
+        // الصفحة الرئيسية - عرض عمودي (تحت بعض) مع دعم الصور
+        // ============================================================
         async function loadHome() {
-            let data = await fetchSheetData('الصفحة الرئيسية');
-            if (!data || data.length < 2) {
-                data = await fetchSheetData('آخر الأخبار');
-            }
+            const container = document.getElementById('homeContent');
+            const data = await fetchSheetData('الصفحة الرئيسية');
             
-            slidesData = [];
-            if (!data || data.length < 2) {
-                renderCarousel();
+            // ترتيب الأعمدة: A = عنوان (0), B = محتوى (1), C = نوع (2), D = صورة (3)
+            if (data.length < 2) {
+                container.innerHTML = `
+                    <h2>🏠 الرئيسية</h2>
+                    <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير.</p>
+                `;
                 return;
             }
+
+            let html = `<h2>🏠 الرئيسية</h2>`;
+            let hasContent = false;
+
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (!row || row.length === 0) continue;
-                const title = row[0] ? String(row[0]).trim() : '';
-                const content = row[1] ? String(row[1]).trim() : '';
-                const type = row[2] ? String(row[2]).trim().toLowerCase() : 'نص';
-                const image = row[3] ? String(row[3]).trim() : '';
+                const title = row[0] ? row[0].trim() : '';
+                const content = row[1] ? row[1].trim() : '';
+                const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
+                const image = row[3] ? row[3].trim() : '';
+
+                // نتأكد إن الصف مش فاضي
                 if (!title && !content && !image) continue;
-                slidesData.push({ title: title, content: content, type: type, image: image });
+                hasContent = true;
+
+                html += `<div class="home-item">`;
+                if (title) html += `<h3>${title}</h3>`;
+
+                // عرض المحتوى حسب النوع
+                if (type === 'صورة' || type === 'image') {
+                    // لو النوع صورة، المحتوى هو رابط الصورة
+                    html += `<img src="${content}" alt="${title || 'صورة'}" loading="lazy">`;
+                } else if (type === 'فيديو' || type === 'video') {
+                    let videoId = content;
+                    if (videoId.includes('youtu.be/')) {
+                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
+                    } else if (videoId.includes('watch?v=')) {
+                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+                    } else if (videoId.includes('embed/')) {
+                        videoId = videoId.split('embed/')[1]?.split('?')[0] || videoId;
+                    }
+                    if (videoId) {
+                        html += `
+                            <div class="video-container" style="max-width: 560px;">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        `;
+                    } else {
+                        html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
+                    }
+                } else if (type === 'ربط' || type === 'رابط' || type === 'link') {
+                    html += `<a href="${content}" target="_blank" class="link-btn">🔗 ${content}</a>`;
+                } else {
+                    // نص عادي
+                    html += `<p>${content || ''}</p>`;
+                    // لو في صورة في العمود D، اعرضها (حتى لو النوع نص)
+                    if (image) {
+                        html += `<img src="${image}" alt="${title || 'صورة'}" loading="lazy">`;
+                    }
+                }
+
+                html += `</div>`;
             }
-            renderCarousel();
+
+            if (!hasContent) {
+                html += `<p>لا يوجد محتوى في الصفحة الرئيسية.</p>`;
+            }
+
+            container.innerHTML = html;
         }
 
-        function organizeIntoSeries(data, seriesCol, titleCol, contentCol, extra1Col, extra2Col) {
+        // ============================================================
+        // باقي الدوال (نفس الكود السابق)
+        // ============================================================
+        function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (!row || row.length === 0) continue;
-                const series = (row[seriesCol] !== undefined && row[seriesCol] !== '') ? String(row[seriesCol]).trim() : 'عام';
-                const title = row[titleCol] !== undefined ? String(row[titleCol]).trim() : '';
-                const content = row[contentCol] !== undefined ? String(row[contentCol]).trim() : '';
-                const extra1 = (extra1Col !== undefined && row[extra1Col] !== undefined) ? String(row[extra1Col]).trim() : '';
-                const extra2 = (extra2Col !== undefined && row[extra2Col] !== undefined) ? String(row[extra2Col]).trim() : '';
+                const series = row[seriesColumnIndex] ? row[seriesColumnIndex].trim() : 'عام';
+                const title = row[titleIndex] ? row[titleIndex].trim() : '';
+                const content = row[contentIndex] ? row[contentIndex].trim() : '';
+                const extra1 = (extraIndex1 !== undefined && row[extraIndex1]) ? row[extraIndex1].trim() : '';
+                const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
 
                 if (!title && !content) continue;
+
                 if (!seriesMap[series]) seriesMap[series] = [];
-                seriesMap[series].push({ title: title, content: content, extra1: extra1, extra2: extra2 });
+                seriesMap[series].push({ title, content, extra1, extra2 });
             }
             return seriesMap;
         }
@@ -716,140 +646,46 @@
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
-            if (!data || data.length < 2) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
+
             const seriesMap = organizeIntoSeries(data, 3, 0, 1);
             const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) { container.innerHTML = '<p>لا توجد فيديوهات.</p>'; return; }
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد فيديوهات.</p>';
+                return;
+            }
 
             let html = '';
-            seriesNames.forEach(function(name, index) {
+            seriesNames.forEach((name, index) => {
                 const items = seriesMap[name];
-                html += '<button class="series-toggle" data-target="video-' + index + '">🎬 ' + name + '</button>' +
-                        '<div id="video-' + index + '" class="series-content">';
-                items.forEach(function(item) {
+                html += `
+                    <button class="series-toggle" data-target="video-${index}">🎬 ${name}</button>
+                    <div id="video-${index}" class="series-content">
+                `;
+                items.forEach(item => {
                     let videoId = item.content;
                     if (videoId.includes('youtu.be/')) {
-                        videoId = videoId.split('youtu.be/')[1].split('?')[0];
+                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
                     } else if (videoId.includes('watch?v=')) {
-                        videoId = videoId.split('watch?v=')[1].split('&')[0];
+                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
                     }
-                    html += '<div class="child-item">' +
-                            '<p>' + (item.title || 'فيديو') + '</p>' +
-                            '<div class="video-container" style="max-width:400px;">' +
-                            '<iframe src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe>' +
-                            '</div></div>';
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'فيديو'}</p>
+                            <div class="video-container" style="max-width:400px;">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    `;
                 });
-                html += '</div>';
+                html += `</div>`;
             });
             container.innerHTML = html;
-            initToggles('#videosList');
-        }
 
-        async function loadAudio() {
-            const container = document.getElementById('audioList');
-            const data = await fetchSheetData('صوتيات');
-            if (!data || data.length < 2) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
-            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) { container.innerHTML = '<p>لا توجد ملفات صوتية.</p>'; return; }
-
-            let html = '';
-            seriesNames.forEach(function(name, index) {
-                const items = seriesMap[name];
-                html += '<button class="series-toggle" data-target="audio-' + index + '">🎧 ' + name + '</button>' +
-                        '<div id="audio-' + index + '" class="series-content">';
-                items.forEach(function(item) {
-                    html += '<div class="child-item">' +
-                            '<p>' + (item.title || 'ملف صوتي') + (item.extra1 ? ' 🎤 ' + item.extra1 : '') + '</p>' +
-                            '<audio controls><source src="' + item.content + '" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>' +
-                            '</div>';
-                });
-                html += '</div>';
-            });
-            container.innerHTML = html;
-            initToggles('#audioList');
-        }
-
-        async function loadArticles() {
-            const container = document.getElementById('articlesList');
-            const data = await fetchSheetData('مقالات');
-            if (!data || data.length < 2) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
-            const seriesMap = organizeIntoSeries(data, 4, 0, 1, 2, 3);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) { container.innerHTML = '<p>لا توجد مقالات.</p>'; return; }
-
-            let html = '';
-            seriesNames.forEach(function(name, index) {
-                const items = seriesMap[name];
-                html += '<button class="series-toggle" data-target="article-' + index + '">📝 ' + name + '</button>' +
-                        '<div id="article-' + index + '" class="series-content">';
-                items.forEach(function(item) {
-                    html += '<div class="child-item">' +
-                            '<p><strong>' + (item.title || 'بدون عنوان') + '</strong>' + (item.extra1 ? ' 📅 ' + item.extra1 : '') + '</p>' +
-                            '<p>' + (item.content || '') + '</p>' +
-                            (item.extra2 ? renderImagesHtml(item.extra2, item.title) : '') +
-                            '</div>';
-                });
-                html += '</div>';
-            });
-            container.innerHTML = html;
-            initToggles('#articlesList');
-        }
-
-        async function loadBooks() {
-            const container = document.getElementById('booksList');
-            const data = await fetchSheetData('كتب PDF');
-            if (!data || data.length < 2) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
-            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) { container.innerHTML = '<p>لا توجد كتب.</p>'; return; }
-
-            let html = '';
-            seriesNames.forEach(function(name, index) {
-                const items = seriesMap[name];
-                html += '<button class="series-toggle" data-target="book-' + index + '">📚 ' + name + '</button>' +
-                        '<div id="book-' + index + '" class="series-content">';
-                items.forEach(function(item) {
-                    html += '<div class="child-item">' +
-                            '<p><strong>📄 ' + (item.title || 'بدون عنوان') + '</strong></p>' +
-                            (item.extra1 ? renderImagesHtml(item.extra1, item.title) : '') +
-                            '<br><a href="' + item.content + '" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600; display:inline-block; margin-top:5px;">📥 تحميل الكتاب</a>' +
-                            '</div>';
-                });
-                html += '</div>';
-            });
-            container.innerHTML = html;
-            initToggles('#booksList');
-        }
-
-        async function loadImages() {
-            const container = document.getElementById('imagesList');
-            const data = await fetchSheetData('صور');
-            if (!data || data.length < 2) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
-            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
-            const seriesNames = Object.keys(seriesMap);
-            if (!seriesNames.length) { container.innerHTML = '<p>لا توجد صور.</p>'; return; }
-
-            let html = '';
-            seriesNames.forEach(function(name, index) {
-                const items = seriesMap[name];
-                html += '<button class="series-toggle" data-target="image-' + index + '">🖼️ ' + name + '</button>' +
-                        '<div id="image-' + index + '" class="series-content"><div class="image-grid">';
-                items.forEach(function(item) {
-                    html += '<div class="image-item">' +
-                            '<img src="' + item.content + '" alt="' + (item.title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + item.content + '\')">' +
-                            '<h4>' + (item.title || 'بدون عنوان') + '</h4>' +
-                            (item.extra1 ? '<p>' + item.extra1 + '</p>' : '') +
-                            '</div>';
-                });
-                html += '</div></div>';
-            });
-            container.innerHTML = html;
-            initToggles('#imagesList');
-        }
-
-        function initToggles(selector) {
-            document.querySelectorAll(selector + ' .series-toggle').forEach(function(btn) {
+            document.querySelectorAll('#videosList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.dataset.target;
                     const content = document.getElementById(targetId);
@@ -858,6 +694,213 @@
                         this.classList.toggle('active');
                     }
                 });
+            });
+        }
+
+        async function loadAudio() {
+            const container = document.getElementById('audioList');
+            const data = await fetchSheetData('صوتيات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد ملفات صوتية.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="audio-${index}">🎧 ${name}</button>
+                    <div id="audio-${index}" class="series-content">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p>
+                            <audio controls><source src="${item.content}" type="audio/mpeg">متصفحك لا يدعم الصوت.</audio>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+
+            document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        async function loadArticles() {
+            const container = document.getElementById('articlesList');
+            const data = await fetchSheetData('مقالات');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد مقالات.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 4, 0, 1, 2, 3);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد مقالات.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="article-${index}">📝 ${name}</button>
+                    <div id="article-${index}" class="series-content">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p>
+                            <p>${item.content || ''}</p>
+                            ${item.extra2 ? `<img src="${item.extra2}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;">` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+
+            document.querySelectorAll('#articlesList .series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        async function loadBooks() {
+            const container = document.getElementById('booksList');
+            const data = await fetchSheetData('كتب PDF');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد كتب.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد كتب.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="book-${index}">📚 ${name}</button>
+                    <div id="book-${index}" class="series-content">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="child-item">
+                            <p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>
+                            ${item.extra1 ? `<img src="${item.extra1}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px;">` : ''}
+                            <a href="${item.content}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+
+            document.querySelectorAll('#booksList .series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        async function loadImages() {
+            const container = document.getElementById('imagesList');
+            const data = await fetchSheetData('صور');
+            if (data.length < 2) {
+                container.innerHTML = '<p>لا توجد صور.</p>';
+                return;
+            }
+
+            const seriesMap = organizeIntoSeries(data, 3, 0, 1, 2);
+            const seriesNames = Object.keys(seriesMap);
+            if (!seriesNames.length) {
+                container.innerHTML = '<p>لا توجد صور.</p>';
+                return;
+            }
+
+            let html = '';
+            seriesNames.forEach((name, index) => {
+                const items = seriesMap[name];
+                html += `
+                    <button class="series-toggle" data-target="image-${index}">🖼️ ${name}</button>
+                    <div id="image-${index}" class="series-content">
+                        <div class="image-grid">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="image-item">
+                            <img src="${item.content}" alt="${item.title || 'صورة'}" loading="lazy">
+                            <h4>${item.title || 'بدون عنوان'}</h4>
+                            ${item.extra1 ? `<p>${item.extra1}</p>` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+
+            document.querySelectorAll('#imagesList .series-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        content.classList.toggle('open');
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // التنقل
+        // ============================================================
+        function showSection(sectionId) {
+            document.querySelectorAll('.content > div, .content > section').forEach(el => {
+                el.style.display = 'none';
+            });
+            const target = document.getElementById(sectionId);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('.sidebar button').forEach(btn => {
+                btn.classList.remove('active');
+                const btnSection = btn.dataset.section;
+                let targetSection = sectionId.replace('Section', '').toLowerCase();
+                if (btnSection === targetSection) btn.classList.add('active');
+                if (sectionId === 'homeSection' && btnSection === 'home') btn.classList.add('active');
             });
         }
 
@@ -870,12 +913,27 @@
                 await loadVideos();
                 await loadAudio();
                 await loadImages();
+                showSection('homeSection');
             } catch (error) {
-                console.error('خطأ عام في التحميل:', error);
+                console.error('خطأ:', error);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadAllContent);
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.sidebar button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    if (section === 'home') showSection('homeSection');
+                    else if (section === 'articles') showSection('articlesSection');
+                    else if (section === 'books') showSection('booksSection');
+                    else if (section === 'videos') showSection('videosSection');
+                    else if (section === 'audio') showSection('audioSection');
+                    else if (section === 'images') showSection('imagesSection');
+                });
+            });
+            loadAllContent();
+        });
     </script>
+
 </body>
 </html>
