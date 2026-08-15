@@ -1,294 +1,683 @@
-/* إعدادات عامة - بلمسة إسلامية */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دار الحصري الصغير</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- مكتبة Swiper للسلايدر -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', Tahoma, sans-serif;
+            background-color: #fdfcf0; /* خلفية بيج كريمي هادئة */
+            color: #5e4b20; /* لون بني داكن للنصوص */
+            min-height: 100vh;
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.7;
+        }
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 25px 20px;
+            background-color: #fbf9e4;
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid #d9c99f;
+            border-radius: 0 0 20px 20px;
+            margin: 0 -15px 20px;
+        }
+        .site-header .logo h1 { font-size: 2rem; color: #bf9b30; margin: 0; text-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .site-header .logo p { font-size: 1.05rem; color: #8c7a4a; margin: 0; font-weight: 500; }
+        .portal-btn-header {
+            background: linear-gradient(145deg, #bf9b30, #a88a2a); color: #fff; padding: 10px 24px; border-radius: 50px;
+            text-decoration: none; font-weight: 700; font-size: 0.95rem;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(191, 155, 48, 0.3);
+            white-space: nowrap;
+        }
+        .portal-btn-header:hover { background: linear-gradient(145deg, #d9b443, #bf9b30); transform: scale(1.02); }
+        .modal {
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            justify-content: center; align-items: center;
+        }
+        .modal.open { display: flex; }
+        .modal img { max-width: 90%; max-height: 90%; border-radius: 12px; }
+        .modal-close {
+            position: absolute; top: 20px; left: 30px; color: #fff;
+            font-size: 3rem; cursor: pointer; background: none; border: none;
+        }
+        .modal-close:hover { color: #bf9b30; }
+        .main-wrapper {
+            display: flex; gap: 20px; max-width: 1200px; margin: 0 auto 30px;
+            width: 100%; flex: 1;
+        }
+        .sidebar {
+            flex: 0 0 200px; background: #ffffff;
+            border-radius: 20px; padding: 20px 15px;
+            border: 1px solid #f0e6cc; position: sticky; top: 20px;
+            max-height: calc(100vh - 120px); overflow-y: auto; order: -2;
+            box-shadow: 0 4px 15px rgba(185, 175, 140, 0.15);
+        }
+        .sidebar h3 {
+            color: #bf9b30; text-align: center; border-bottom: 1px solid #f0e6cc;
+            padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .sidebar button {
+            display: block; width: 100%; padding: 10px 14px; margin-bottom: 6px;
+            background: #fbf9e4; border: 1px solid #f0e6cc;
+            border-radius: 10px; color: #6b5a33; font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 0.9rem; font-weight: 600; text-align: right; cursor: pointer;
+            transition: 0.25s;
+        }
+        .sidebar button:hover {
+            background: #fefdf5; border-color: #bf9b30; color: #bf9b30;
+            transform: translateX(-4px);
+        }
+        .sidebar button.active {
+            background: #f0e6cc; border-color: #bf9b30; color: #bf9b30;
+        }
+        .right-sidebar {
+            flex: 0 0 220px; background: #ffffff;
+            border-radius: 20px; padding: 20px 15px;
+            border: 1px solid #f0e6cc; position: sticky; top: 20px;
+            max-height: calc(100vh - 120px); overflow-y: auto; order: 2;
+            box-shadow: 0 4px 15px rgba(185, 175, 140, 0.15);
+        }
+        .right-sidebar h3 {
+            color: #bf9b30; text-align: center; border-bottom: 1px solid #f0e6cc;
+            padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .right-sidebar .info-item {
+            margin-bottom: 12px; padding: 8px; background: #fbf9e4;
+            border-radius: 8px; text-align: center; word-wrap: break-word;
+            border: 1px solid #f0e6cc;
+        }
+        .right-sidebar .info-item p { color: #6b5a33; font-size: 0.9rem; word-break: break-word; }
+        .right-sidebar .info-item a {
+            color: #bf9b30; text-decoration: none; font-weight: 600; display: block;
+            word-break: break-word;
+        }
+        .right-sidebar .info-item a:hover { color: #a88a2a; }
+        .right-sidebar .info-item img {
+            max-width: 100%; max-height: 120px; object-fit: cover; border-radius: 8px;
+            cursor: pointer;
+        }
+        .content { flex: 1; min-width: 0; }
+        .card {
+            background: #ffffff;
+            border: 1px solid #f0e6cc; border-radius: 20px;
+            padding: 25px 28px; box-shadow: 0 4px 20px rgba(185, 175, 140, 0.2);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #bf9b30; font-size: 1.5rem; border-right: 4px solid #bf9b30;
+            padding-right: 12px; margin-bottom: 15px;
+        }
+        
+        /* تنسيقات السلايدر الرئيسي */
+        .swiper {
+            width: 100%;
+            padding-bottom: 40px;
+        }
+        .swiper-slide {
+            background: #fbf9e4;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #f0e6cc;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .home-item h3 { color: #bf9b30; margin-bottom: 8px; }
+        .home-item p { color: #6b5a33; line-height: 1.8; }
+        .home-item img {
+            max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: contain;
+            margin-top: 10px; display: block; cursor: pointer; margin-left: auto; margin-right: auto;
+        }
+        .swiper-pagination-bullet {
+            background: #d9c99f;
+            opacity: 0.6;
+        }
+        .swiper-pagination-bullet-active {
+            background: #bf9b30;
+            opacity: 1;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: #bf9b30;
+        }
 
-body {
-    font-family: 'Cairo', 'Amiri', serif; /* تم إضافة Amiri للخطوط المزخرفة */
-    background-color: #fdfcf0; /* لون خلفية كريمي هادي */
-    color: #5e4b20; /* لون بني داكن للنصوص الأساسية */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    line-height: 1.7;
-    padding: 0 15px;
-}
+        .video-container {
+            position: relative; padding-bottom: 56.25%; height: 0; border-radius: 16px;
+            background: #000; margin: 8px 0; max-width: 560px; width: 100%;
+            border: 3px solid #f0e6cc;
+        }
+        .video-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: none; border-radius: 14px;
+        }
+        .loading { text-align: center; padding: 30px; color: #8c7a4a; }
+        .series-toggle {
+            display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px;
+            background: #fbf9e4; border: 1px solid #f0e6cc;
+            border-radius: 12px; color: #bf9b30; font-family: 'Cairo', Tahoma, sans-serif;
+            font-size: 1rem; font-weight: 700; text-align: right; cursor: pointer;
+            transition: 0.25s; position: relative; padding-right: 45px;
+        }
+        .series-toggle::before {
+            content: '۞';
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #bf9b30;
+            font-size: 1.1rem;
+        }
+        .series-toggle:hover { background: #fefdf5; border-color: #bf9b30; }
+        .series-toggle.active { background: #f0e6cc; border-color: #bf9b30; }
+        .series-content { display: none; padding-right: 15px; margin-bottom: 12px; }
+        .series-content.open { display: block; }
+        .child-item {
+            padding: 10px; margin-bottom: 10px; background: #fbf9e4;
+            border-radius: 8px; border: 1px solid #f0e6cc;
+        }
+        .child-item p { color: #6b5a33; margin-bottom: 4px; }
+        .image-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px; margin-top: 8px;
+        }
+        .image-item {
+            background: #fbf9e4; border-radius: 12px; padding: 8px;
+            text-align: center; border: 1px solid #f0e6cc;
+        }
+        .image-item img {
+            width: 100%; height: 140px; object-fit: cover; border-radius: 8px;
+            cursor: pointer;
+        }
+        .image-item h4 { color: #bf9b30; margin: 8px 0 2px; font-size: 0.85rem; }
+        .image-item p { color: #6b5a33; font-size: 0.8rem; }
+        audio { width: 100%; margin-top: 6px; border-radius: 30px; background: #fbf9e4; }
+        .btn-container { text-align: center; margin: 15px 0; }
+        .portal-btn { display: none; }
+        .site-footer {
+            text-align: center; padding: 25px; background: #fbf9e4;
+            border-top: 2px solid #d9c99f;
+            margin: 0 -15px -15px; border-radius: 20px 20px 0 0; font-size: 0.95rem;
+            color: #8c7a4a;
+        }
+        .site-footer a { color: #bf9b30; text-decoration: none; font-weight: 600; }
+        .site-footer a:hover { text-decoration: underline; color: #a88a2a; }
+        @media (max-width: 992px) { .right-sidebar { display: none; } }
+        @media (max-width: 768px) {
+            .main-wrapper { flex-direction: column; }
+            .sidebar {
+                flex: none; width: 100%; position: relative; top: 0; max-height: none;
+                display: flex; flex-wrap: wrap; gap: 4px; padding: 12px; order: 0;
+            }
+            .sidebar h3 { width: 100%; margin-bottom: 4px; }
+            .sidebar button {
+                flex: 1 0 auto; width: auto; padding: 6px 10px; font-size: 0.8rem;
+                margin-bottom: 0;
+            }
+            .site-header { flex-direction: column; text-align: center; }
+            .portal-btn-header { align-self: center; }
+        }
+    </style>
+</head>
+<body>
 
-/* الهيدر - فخم وزخرفي */
-.site-header {
-    text-align: center;
-    padding: 50px 20px 40px;
-    background-color: #fbf9e4; /* لون أفتح قليلاً */
-    border-bottom: 2px solid #d9c99f; /* إطار ذهبي سفلي */
-    margin: 0 -15px 30px;
-    position: relative;
-}
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img id="modalImage" src="" alt="صورة مكبرة" />
+    </div>
 
-.site-header::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='20' viewBox='0 0 100 20'%3E%3Cpath fill='%3E' d='M11 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm50 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM11 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm50 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' fill='%23d9c99f' fill-opacity='0.4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-}
+    <header class="site-header">
+        <div class="logo">
+            <h1>دار الحصري الصغير</h1>
+            <p>إعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
+        </div>
+        <a href="#" class="portal-btn-header">الدخول إلى النظام التعليمي</a>
+    </header>
 
-.site-header h1 {
-    font-size: 3rem;
-    color: #bf9b30; /* لون ذهبي غني */
-    letter-spacing: 1px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+    <div class="main-wrapper">
 
-.site-header p {
-    font-size: 1.3rem;
-    color: #8c7a4a; /* لون بني ذهبي للفرعي */
-    margin-top: 10px;
-    font-weight: 500;
-}
+        <aside class="sidebar">
+            <h3>📋 القائمة</h3>
+            <button class="active" data-section="home">🏠 الرئيسية</button>
+            <button data-section="articles">📝 مقالات</button>
+            <button data-section="books">📚 كتب</button>
+            <button data-section="videos">🎬 فيديو</button>
+            <button data-section="audio">🎧 صوتيات</button>
+            <button data-section="images">🖼️ صور</button>
+        </aside>
 
-/* الحاوية الرئيسية */
-.container {
-    max-width: 860px;
-    margin: 0 auto 40px;
-    width: 100%;
-    flex: 1;
-}
+        <aside class="right-sidebar" id="rightSidebar">
+            <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
+        </aside>
 
-/* البطاقات - بيضاء مع ظل ناعم */
-.card {
-    background: #ffffff;
-    border: 1px solid #f0e6cc; /* إطار فاتح جداً */
-    border-radius: 16px;
-    padding: 30px 32px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(185, 175, 140, 0.2); /* ظل بلون البيج */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+        <main class="content">
+            <section id="homeSection" class="card">
+                <h2>🏠 الرئيسية</h2>
+                <div id="homeContent"><div class="loading">جاري التحميل...</div></div>
+            </section>
+            <div id="articlesSection" style="display:none;" class="card">
+                <h2>📝 مقالات</h2>
+                <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+            <div id="booksSection" style="display:none;" class="card">
+                <h2>📚 كتب</h2>
+                <div id="booksList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+            <div id="videosSection" style="display:none;" class="card">
+                <h2>🎬 فيديو</h2>
+                <div id="videosList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+            <div id="audioSection" style="display:none;" class="card">
+                <h2>🎧 صوتيات</h2>
+                <div id="audioList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+            <div id="imagesSection" style="display:none;" class="card">
+                <h2>🖼️ صور</h2>
+                <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
+            </div>
+            <div class="btn-container">
+                <a href="#" class="portal-btn">الدخول إلى النظام التعليمي</a>
+            </div>
+        </main>
+    </div>
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(185, 175, 140, 0.4);
-}
+    <footer class="site-footer">
+        <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
+        <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
+    </footer>
 
-.card h2 {
-    color: #bf9b30;
-    font-size: 1.8rem;
-    margin-top: 0;
-    margin-bottom: 20px;
-    border-right: 4px solid #bf9b30;
-    padding-right: 15px;
-}
+    <!-- سكريبت مكتبة Swiper -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
-.card p {
-    color: #6b5a33; /* بني متوسط للنص */
-    margin-bottom: 15px;
-}
+        async function fetchSheetData(sheetName) {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                return json.table.rows.map(row => row.c.map(cell => (cell !== null && cell !== undefined) ? cell.v : ''));
+            } catch (error) {
+                console.error('خطأ:', error);
+                return [];
+            }
+        }
 
-.sub-text {
-    color: #bf9b30 !important;
-    font-weight: 700;
-}
+        function safeString(value) {
+            if (value === null || value === undefined) return '';
+            return String(value).trim();
+        }
 
-/* مشغل الصوت - بستايل إسلامي */
-audio {
-    width: 100%;
-    margin-top: 15px;
-    border-radius: 50px;
-    background-color: #fbf9e4;
-    border: 1px solid #f0e6cc;
-    /* التحكم في ألوان المشغل نفسه صعب بالـ CSS، لكن الخلفية والحدود هتظبطه */
-}
+        function getDirectImageUrl(url) {
+            if (!url) return url;
+            const str = safeString(url);
+            if (str.includes('drive.google.com')) {
+                const match = str.match(/\/d\/([^\/]+)/);
+                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                const idMatch = str.match(/[?&]id=([^&]+)/);
+                if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+            }
+            return str;
+        }
 
-/* مشغل الفيديو - إطار ذهبي */
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 16px;
-    background-color: #000;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    margin: 15px 0;
-    border: 3px solid #f0e6cc; /* إطار سميك بلون بيج */
-}
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            if (!modal || !img) return;
+            img.src = src;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
-.video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            if (modal) modal.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
 
-/* قائمة الحلقات (أزرار) - أيقونات إسلامية وألوان ذهبية */
-.links-box {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    max-height: 450px;
-    overflow-y: auto;
-    padding-left: 5px;
-}
+        // =================== العمود الجانبي (معلومات) ===================
+        async function loadSidebarInfo() {
+            const container = document.getElementById('sidebarInfo');
+            const data = await fetchSheetData('معلومات جانبية');
+            
+            if (data.length < 2) {
+                container.innerHTML = `<h3>📌 معلومات</h3><div class="info-item"><p>⚠️ لا توجد بيانات. أضف بيانات في الصف الثاني.</p></div>`;
+                return;
+            }
 
-.links-box::-webkit-scrollbar {
-    width: 6px;
-}
-.links-box::-webkit-scrollbar-track {
-    background: #fdfcf0;
-}
-.links-box::-webkit-scrollbar-thumb {
-    background: #d9c99f; /* لون ذهبي فاتح للشريط */
-    border-radius: 3px;
-}
+            let html = `<h3>📌 معلومات</h3>`;
+            let hasContent = false;
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const title = safeString(row[0]);
+                const content = safeString(row[1]);
+                const type = safeString(row[2]).toLowerCase();
+                if (!title && !content) continue;
+                hasContent = true;
+                html += `<div class="info-item">`;
+                if (type === 'صورة' || type === 'image') {
+                    const imgSrc = getDirectImageUrl(content);
+                    html += `<img src="${imgSrc}" alt="${title}" loading="lazy" onclick="openModal('${imgSrc}')">`;
+                    if (title) html += `<p>${title}</p>`;
+                } else if (type === 'رابط' || type === 'link') {
+                    html += `<a href="${content}" target="_blank">🔗 ${title || content}</a>`;
+                } else {
+                    html += `<p>${content}</p>`;
+                }
+                html += `</div>`;
+            }
+            if (!hasContent) html += `<div class="info-item"><p>⚠️ لا توجد بيانات مكتوبة.</p></div>`;
+            container.innerHTML = html;
+        }
 
-.links-box button,
-.links-box a {
-    display: block;
-    padding: 12px 20px;
-    background-color: #fbf9e4;
-    border: 1px solid #f0e6cc;
-    border-radius: 50px; /* أزرار دائرية الأطراف */
-    color: #6b5a33;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-align: right;
-    font-family: 'Cairo', sans-serif;
-    position: relative;
-    padding-right: 50px; /* مكان للأيقونة */
-}
+        // =================== الصفحة الرئيسية (سلايدر) ===================
+        async function loadHome() {
+            const container = document.getElementById('homeContent');
+            const data = await fetchSheetData('الصفحة الرئيسية');
+            
+            if (data.length < 2) {
+                container.innerHTML = `<p>مرحباً بكم في دار الحصري الصغير.</p>`;
+                return;
+            }
 
-/* إضافة أيقونة إسلامية صغيرة (نجمة إسلامية مبسطة) */
-.links-box button::before,
-.links-box a::before {
-    content: '۞';
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #bf9b30;
-    font-size: 1.2rem;
-}
+            let items = [];
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const title = safeString(row[0]);
+                const content = safeString(row[1]);
+                const type = safeString(row[2]).toLowerCase();
+                const image = safeString(row[3]);
+                if (!title && !content && !image) continue;
+                items.push({ title, content, type, image });
+            }
 
-.links-box button:hover,
-.links-box a:hover {
-    background-color: #fefdf5;
-    border-color: #d9c99f;
-    color: #bf9b30;
-    transform: translateX(-5px);
-}
+            if (items.length === 0) {
+                container.innerHTML = `<p>لا يوجد محتوى مكتوب في الجدول.</p>`;
+                return;
+            }
 
-.links-box button.active {
-    background-color: #f0e6cc;
-    border-color: #bf9b30;
-    color: #bf9b30;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-}
+            items.reverse();
 
-/* زر النظام التعليمي - زر ذهبي بارز */
-.btn-container {
-    text-align: center;
-    margin: 40px 0 20px;
-}
+            let html = `
+                <div class="swiper homeSwiper">
+                    <div class="swiper-wrapper">
+            `;
+            
+            items.forEach(function(item) {
+                html += `<div class="swiper-slide"><div class="home-item" style="width:100%; border:none; background:none; padding:0; margin:0;">`;
+                if (item.title) html += `<h3>${item.title}</h3>`;
 
-.portal-btn {
-    background: linear-gradient(145deg, #bf9b30, #a88a2a); /* تدرج ذهبي */
-    color: #ffffff;
-    padding: 18px 50px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-size: 1.4rem;
-    font-weight: 800;
-    display: inline-block;
-    box-shadow: 0 6px 15px rgba(191, 155, 48, 0.4);
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-    border: none;
-}
+                if (item.content) {
+                    if (item.content.includes('drive.google.com') || item.content.match(/\.(jpg|jpeg|png|gif|webp|svg)/i)) {
+                        const src = getDirectImageUrl(item.content);
+                        html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
+                    } else if (item.content.includes('youtu.be') || item.content.includes('youtube.com')) {
+                        let vid = item.content;
+                        if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
+                        else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
+                        if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
+                        else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
+                    } else {
+                        html += `<p>${item.content}</p>`;
+                    }
+                }
 
-.portal-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(191, 155, 48, 0.5);
-    background: linear-gradient(145deg, #d9b443, #bf9b30);
-}
+                if (item.image) {
+                    const src = getDirectImageUrl(item.image);
+                    html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
+                }
 
-/* الفوتر - هاديء ومزخرف */
-.site-footer {
-    text-align: center;
-    padding: 30px 20px;
-    background-color: #fbf9e4;
-    border-top: 2px solid #d9c99f;
-    margin: 0 -15px -15px;
-    font-size: 1rem;
-    color: #8c7a4a;
-    position: relative;
-}
+                html += `</div></div>`;
+            });
 
-.site-footer::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 30px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='30' viewBox='0 0 150 30'%3E%3Cpath fill='%3E' d='M75 0c10 0 18 8 18 18s-8 18-18 18-18-8-18-18 8-18 18-18zM6.5 3c4 0 6.5 3 6.5 6.5S10.5 16 6.5 16 0 13 0 9.5 2.5 3 6.5 3zm137 0c4 0 6.5 3 6.5 6.5S147.5 16 143.5 16 137 13 137 9.5 139.5 3 143.5 3z' fill='%23d9c99f' fill-opacity='0.4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-}
+            html += `
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            `;
 
-.site-footer a {
-    color: #bf9b30;
-    text-decoration: none;
-    font-weight: 700;
-    margin: 0 5px;
-}
+            container.innerHTML = html;
 
-.site-footer a:hover {
-    text-decoration: underline;
-    color: #a88a2a;
-}
+            new Swiper('.homeSwiper', {
+                loop: true,
+                rtl: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+            });
+        }
 
-/* تحسين للهواتف - لضمان ثبات التصميم */
-@media (max-width: 600px) {
-    .site-header {
-        padding: 30px 20px;
-    }
-    .site-header h1 {
-        font-size: 2.2rem;
-    }
-    .site-header p {
-        font-size: 1.1rem;
-    }
-    .card {
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .card h2 {
-        font-size: 1.5rem;
-    }
-    .links-box button,
-    .links-box a {
-        font-size: 0.9rem;
-        padding: 10px 16px;
-        padding-right: 45px;
-    }
-    .links-box button::before,
-    .links-box a::before {
-        right: 15px;
-        font-size: 1rem;
-    }
-    .portal-btn {
-        padding: 14px 30px;
-        font-size: 1.2rem;
-    }
-}
+        // =================== دوال الأقسام الأخرى ===================
+        function organizeSeries(data, seriesCol, titleCol, contentCol, extra1, extra2) {
+            const map = {};
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const series = safeString(row[seriesCol]) || 'عام';
+                const title = safeString(row[titleCol]);
+                const content = safeString(row[contentCol]);
+                const e1 = (extra1 !== undefined) ? safeString(row[extra1]) : '';
+                const e2 = (extra2 !== undefined) ? safeString(row[extra2]) : '';
+                if (!title && !content) continue;
+                if (!map[series]) map[series] = [];
+                map[series].push({ title: title, content: content, extra1: e1, extra2: e2 });
+            }
+            return map;
+        }
+
+        async function loadVideos() {
+            const container = document.getElementById('videosList');
+            const data = await fetchSheetData('فيديوهات');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد فيديوهات</p>'; return; }
+            const map = organizeSeries(data, 3, 0, 1);
+            const names = Object.keys(map);
+            if (!names.length) { container.innerHTML = '<p>لا توجد فيديوهات</p>'; return; }
+            let html = '';
+            names.forEach(function(name, idx) {
+                const items = map[name];
+                html += '<button class="series-toggle" data-target="vid-' + idx + '">🎬 ' + name + '</button><div id="vid-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    let vid = item.content;
+                    if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
+                    else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
+                    html += '<div class="child-item"><p>' + (item.title || 'فيديو') + '</p><div class="video-container" style="max-width:400px;"><iframe src="https://www.youtube.com/embed/' + vid + '" allowfullscreen></iframe></div></div>';
+                });
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#videosList .series-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = document.getElementById(this.dataset.target);
+                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                });
+            });
+        }
+
+        async function loadAudio() {
+            const container = document.getElementById('audioList');
+            const data = await fetchSheetData('صوتيات');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد ملفات صوتية</p>'; return; }
+            const map = organizeSeries(data, 3, 0, 1, 2);
+            const names = Object.keys(map);
+            if (!names.length) { container.innerHTML = '<p>لا توجد ملفات صوتية</p>'; return; }
+            let html = '';
+            names.forEach(function(name, idx) {
+                const items = map[name];
+                html += '<button class="series-toggle" data-target="aud-' + idx + '">🎧 ' + name + '</button><div id="aud-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    html += '<div class="child-item"><p>' + (item.title || 'ملف صوتي') + (item.extra1 ? ' 🎤 ' + item.extra1 : '') + '</p><audio controls><source src="' + item.content + '" type="audio/mpeg"></audio></div>';
+                });
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#audioList .series-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = document.getElementById(this.dataset.target);
+                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                });
+            });
+        }
+
+        async function loadArticles() {
+            const container = document.getElementById('articlesList');
+            const data = await fetchSheetData('مقالات');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد مقالات</p>'; return; }
+            const map = organizeSeries(data, 4, 0, 1, 2, 3);
+            const names = Object.keys(map);
+            if (!names.length) { container.innerHTML = '<p>لا توجد مقالات</p>'; return; }
+            let html = '';
+            names.forEach(function(name, idx) {
+                const items = map[name];
+                html += '<button class="series-toggle" data-target="art-' + idx + '">📝 ' + name + '</button><div id="art-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    var img = item.extra2 ? getDirectImageUrl(item.extra2) : '';
+                    html += '<div class="child-item"><p><strong>' + (item.title || 'بدون عنوان') + '</strong> ' + (item.extra1 ? '📅 ' + item.extra1 : '') + '</p><p>' + (item.content || '') + '</p>';
+                    if (img) html += '<img src="' + img + '" alt="' + item.title + '" style="max-width:100%; max-height:200px; border-radius:8px; cursor:pointer;" onclick="openModal(\'' + img + '\')">';
+                    html += '</div>';
+                });
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#articlesList .series-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = document.getElementById(this.dataset.target);
+                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                });
+            });
+        }
+
+        async function loadBooks() {
+            const container = document.getElementById('booksList');
+            const data = await fetchSheetData('كتب PDF');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد كتب</p>'; return; }
+            const map = organizeSeries(data, 3, 0, 1, 2);
+            const names = Object.keys(map);
+            if (!names.length) { container.innerHTML = '<p>لا توجد كتب</p>'; return; }
+            let html = '';
+            names.forEach(function(name, idx) {
+                const items = map[name];
+                html += '<button class="series-toggle" data-target="bok-' + idx + '">📚 ' + name + '</button><div id="bok-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    var img = item.extra1 ? getDirectImageUrl(item.extra1) : '';
+                    html += '<div class="child-item"><p><strong>📄 ' + (item.title || 'بدون عنوان') + '</strong></p>';
+                    if (img) html += '<img src="' + img + '" alt="' + item.title + '" style="max-width:100%; max-height:150px; border-radius:8px; margin-bottom:6px; cursor:pointer;" onclick="openModal(\'' + img + '\')">';
+                    html += '<a href="' + item.content + '" target="_blank" style="color:#bf9b30; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#booksList .series-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = document.getElementById(this.dataset.target);
+                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                });
+            });
+        }
+
+        async function loadImages() {
+            const container = document.getElementById('imagesList');
+            const data = await fetchSheetData('صور');
+            if (data.length < 2) { container.innerHTML = '<p>لا توجد صور</p>'; return; }
+            const map = organizeSeries(data, 3, 0, 1, 2);
+            const names = Object.keys(map);
+            if (!names.length) { container.innerHTML = '<p>لا توجد صور</p>'; return; }
+            let html = '';
+            names.forEach(function(name, idx) {
+                const items = map[name];
+                html += '<button class="series-toggle" data-target="img-' + idx + '">🖼️ ' + name + '</button><div id="img-' + idx + '" class="series-content"><div class="image-grid">';
+                items.forEach(function(item) {
+                    var src = getDirectImageUrl(item.content);
+                    html += '<div class="image-item"><img src="' + src + '" alt="' + item.title + '" loading="lazy" onclick="openModal(\'' + src + '\')"><h4>' + (item.title || 'بدون عنوان') + '</h4>' + (item.extra1 ? '<p>' + item.extra1 + '</p>' : '') + '</div>';
+                });
+                html += '</div></div>';
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#imagesList .series-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = document.getElementById(this.dataset.target);
+                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                });
+            });
+        }
+
+        // =================== التنقل ===================
+        function showSection(id) {
+            var sections = document.querySelectorAll('.content > div, .content > section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.display = 'none';
+            }
+            var target = document.getElementById(id);
+            if (target) target.style.display = 'block';
+            
+            var buttons = document.querySelectorAll('.sidebar button');
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].classList.remove('active');
+                var section = id.replace('Section', '').toLowerCase();
+                if (buttons[j].dataset.section === section) buttons[j].classList.add('active');
+                if (id === 'homeSection' && buttons[j].dataset.section === 'home') buttons[j].classList.add('active');
+            }
+        }
+
+        // =================== تحميل كل المحتوى ===================
+        async function loadAllContent() {
+            try {
+                await loadSidebarInfo();
+                await loadHome();
+                await loadArticles();
+                await loadBooks();
+                await loadVideos();
+                await loadAudio();
+                await loadImages();
+                showSection('homeSection');
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+            }
+        }
+
+        // =================== تشغيل الكود ===================
+        document.addEventListener('DOMContentLoaded', function() {
+            var buttons = document.querySelectorAll('.sidebar button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    var sec = this.dataset.section;
+                    if (sec === 'home') showSection('homeSection');
+                    else if (sec === 'articles') showSection('articlesSection');
+                    else if (sec === 'books') showSection('booksSection');
+                    else if (sec === 'videos') showSection('videosSection');
+                    else if (sec === 'audio') showSection('audioSection');
+                    else if (sec === 'images') showSection('imagesSection');
+                });
+            }
+            
+            loadAllContent();
+        });
+    </script>
+
+</body>
+</html>
