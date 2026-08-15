@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دار الحصري الصغير</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- مكتبة Swiper للسلايدر -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -113,24 +115,43 @@
             color: #f4d03f; font-size: 1.5rem; border-right: 4px solid #f4d03f;
             padding-right: 12px; margin-bottom: 15px;
         }
-        .home-item {
-            background: rgba(255,255,255,0.04); border-radius: 12px; padding: 16px;
-            margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06);
+        
+        /* تنسيقات السلايدر الرئيسي */
+        .swiper {
+            width: 100%;
+            padding-bottom: 40px;
+        }
+        .swiper-slide {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .home-item h3 { color: #f4d03f; margin-bottom: 8px; }
         .home-item p { color: #e6edf5; line-height: 1.8; }
         .home-item img {
             max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: contain;
-            margin-top: 10px; display: block; cursor: pointer;
+            margin-top: 10px; display: block; cursor: pointer; margin-left: auto; margin-right: auto;
         }
-        .home-item .link-btn {
-            display: inline-block; padding: 8px 20px; background: #27ae60; color: #fff;
-            border-radius: 30px; text-decoration: none; font-weight: 700; margin-top: 6px;
+        .swiper-pagination-bullet {
+            background: #d4e2f0;
+            opacity: 0.5;
         }
-        .home-item .link-btn:hover { background: #2ecc71; }
+        .swiper-pagination-bullet-active {
+            background: #f4d03f;
+            opacity: 1;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: #f4d03f;
+        }
+
         .video-container {
             position: relative; padding-bottom: 56.25%; height: 0; border-radius: 16px;
-            background: #000; margin: 8px 0; max-width: 560px;
+            background: #000; margin: 8px 0; max-width: 560px; width: 100%;
         }
         .video-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -228,6 +249,7 @@
 
         <main class="content">
             <section id="homeSection" class="card">
+                <h2>🏠 الرئيسية</h2>
                 <div id="homeContent"><div class="loading">جاري التحميل...</div></div>
             </section>
             <div id="articlesSection" style="display:none;" class="card">
@@ -261,6 +283,8 @@
         <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
     </footer>
 
+    <!-- سكريبت مكتبة Swiper -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
@@ -302,21 +326,23 @@
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
+
         function closeModal() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.classList.remove('open');
             document.body.style.overflow = 'auto';
         }
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
 
-        // =================== 1. العمود الجانبي ===================
+        // =================== العمود الجانبي (معلومات) ===================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
             const data = await fetchSheetData('معلومات جانبية');
             
-            // لو في صف واحد بس (العناوين) أو مفيش بيانات
             if (data.length < 2) {
-                container.innerHTML = `<h3>📌 معلومات</h3><div class="info-item"><p>⚠️ لا توجد بيانات. أضف بيانات في الصف الثاني (اكتب رقم، نص، أو رابط).</p></div>`;
+                container.innerHTML = `<h3>📌 معلومات</h3><div class="info-item"><p>⚠️ لا توجد بيانات. أضف بيانات في الصف الثاني.</p></div>`;
                 return;
             }
 
@@ -345,14 +371,13 @@
             container.innerHTML = html;
         }
 
-        // =================== 2. الصفحة الرئيسية ===================
+        // =================== الصفحة الرئيسية (سلايدر) ===================
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
             
-            // لو مفيش بيانات خالص
             if (data.length < 2) {
-                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>مرحباً بكم في دار الحصري الصغير. (لا توجد مقالات مضافة)</p>`;
+                container.innerHTML = `<p>مرحباً بكم في دار الحصري الصغير.</p>`;
                 return;
             }
 
@@ -367,56 +392,77 @@
                 items.push({ title, content, type, image });
             }
 
-            // ✅ عرض البيانات في Console عشان تتأكد
-            console.log('📝 بيانات الصفحة الرئيسية:', items);
-
             if (items.length === 0) {
-                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى مكتوب في الجدول.</p>`;
+                container.innerHTML = `<p>لا يوجد محتوى مكتوب في الجدول.</p>`;
                 return;
             }
 
-            items.reverse(); // الأحدث فوق
-            let html = `<h2>🏠 الرئيسية</h2>`;
+            items.reverse();
+
+            // بناء هيكل السلايدر (Swiper HTML structure)
+            let html = `
+                <div class="swiper homeSwiper">
+                    <div class="swiper-wrapper">
+            `;
             
-            items.forEach(item => {
-                html += `<div class="home-item">`;
+            items.forEach(function(item) {
+                html += `<div class="swiper-slide"><div class="home-item" style="width:100%; border:none; background:none; padding:0; margin:0;">`;
                 if (item.title) html += `<h3>${item.title}</h3>`;
 
-                // 🔥 عرض البيانات بشكل تلقائي (بدون تعقيد)
                 if (item.content) {
-                    // لو الرابط صورة
                     if (item.content.includes('drive.google.com') || item.content.match(/\.(jpg|jpeg|png|gif|webp|svg)/i)) {
                         const src = getDirectImageUrl(item.content);
                         html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
-                    } 
-                    // لو الرابط فيديو يوتيوب
-                    else if (item.content.includes('youtu.be') || item.content.includes('youtube.com')) {
+                    } else if (item.content.includes('youtu.be') || item.content.includes('youtube.com')) {
                         let vid = item.content;
                         if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
                         else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
                         if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
                         else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
-                    }
-                    // لو نص عادي
-                    else {
+                    } else {
                         html += `<p>${item.content}</p>`;
                     }
                 }
 
-                // لو في صورة إضافية في العمود D
                 if (item.image) {
                     const src = getDirectImageUrl(item.image);
                     html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
                 }
 
-                html += `</div>`;
+                html += `</div></div>`;
             });
 
+            html += `
+                    </div>
+                    <!-- أزرار التنقل والنقاط -->
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            `;
+
             container.innerHTML = html;
-            console.log('✅ تم تحديث واجهة الصفحة الرئيسية');
+
+            // تفعيل مكتبة Swiper مع اتجاه RTL
+            new Swiper('.homeSwiper', {
+                loop: true,
+                rtl: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+            });
         }
 
-        // =================== 3. باقي الأقسام ===================
+        // =================== دوال الأقسام الأخرى ===================
         function organizeSeries(data, seriesCol, titleCol, contentCol, extra1, extra2) {
             const map = {};
             for (let i = 1; i < data.length; i++) {
@@ -428,12 +474,11 @@
                 const e2 = (extra2 !== undefined) ? safeString(row[extra2]) : '';
                 if (!title && !content) continue;
                 if (!map[series]) map[series] = [];
-                map[series].push({ title, content, extra1: e1, extra2: e2 });
+                map[series].push({ title: title, content: content, extra1: e1, extra2: e2 });
             }
             return map;
         }
 
-        // اختصار الدوال الباقية (مش مهمة دلوقتي لأن الصفحة الرئيسية هي الأساس)
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
@@ -442,21 +487,21 @@
             const names = Object.keys(map);
             if (!names.length) { container.innerHTML = '<p>لا توجد فيديوهات</p>'; return; }
             let html = '';
-            names.forEach((name, idx) => {
+            names.forEach(function(name, idx) {
                 const items = map[name];
-                html += `<button class="series-toggle" data-target="vid-${idx}">🎬 ${name}</button><div id="vid-${idx}" class="series-content">`;
-                items.forEach(item => {
+                html += '<button class="series-toggle" data-target="vid-' + idx + '">🎬 ' + name + '</button><div id="vid-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
                     let vid = item.content;
                     if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
                     else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
-                    html += `<div class="child-item"><p>${item.title || 'فيديو'}</p><div class="video-container" style="max-width:400px;"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div></div>`;
+                    html += '<div class="child-item"><p>' + (item.title || 'فيديو') + '</p><div class="video-container" style="max-width:400px;"><iframe src="https://www.youtube.com/embed/' + vid + '" allowfullscreen></iframe></div></div>';
                 });
-                html += `</div>`;
+                html += '</div>';
             });
             container.innerHTML = html;
-            document.querySelectorAll('#videosList .series-toggle').forEach(btn => {
+            document.querySelectorAll('#videosList .series-toggle').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const target = document.getElementById(this.dataset.target);
+                    var target = document.getElementById(this.dataset.target);
                     if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
                 });
             });
@@ -470,18 +515,18 @@
             const names = Object.keys(map);
             if (!names.length) { container.innerHTML = '<p>لا توجد ملفات صوتية</p>'; return; }
             let html = '';
-            names.forEach((name, idx) => {
+            names.forEach(function(name, idx) {
                 const items = map[name];
-                html += `<button class="series-toggle" data-target="aud-${idx}">🎧 ${name}</button><div id="aud-${idx}" class="series-content">`;
-                items.forEach(item => {
-                    html += `<div class="child-item"><p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p><audio controls><source src="${item.content}" type="audio/mpeg"></audio></div>`;
+                html += '<button class="series-toggle" data-target="aud-' + idx + '">🎧 ' + name + '</button><div id="aud-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    html += '<div class="child-item"><p>' + (item.title || 'ملف صوتي') + (item.extra1 ? ' 🎤 ' + item.extra1 : '') + '</p><audio controls><source src="' + item.content + '" type="audio/mpeg"></audio></div>';
                 });
-                html += `</div>`;
+                html += '</div>';
             });
             container.innerHTML = html;
-            document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
+            document.querySelectorAll('#audioList .series-toggle').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const target = document.getElementById(this.dataset.target);
+                    var target = document.getElementById(this.dataset.target);
                     if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
                 });
             });
@@ -495,19 +540,21 @@
             const names = Object.keys(map);
             if (!names.length) { container.innerHTML = '<p>لا توجد مقالات</p>'; return; }
             let html = '';
-            names.forEach((name, idx) => {
+            names.forEach(function(name, idx) {
                 const items = map[name];
-                html += `<button class="series-toggle" data-target="art-${idx}">📝 ${name}</button><div id="art-${idx}" class="series-content">`;
-                items.forEach(item => {
-                    let img = item.extra2 ? getDirectImageUrl(item.extra2) : '';
-                    html += `<div class="child-item"><p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p><p>${item.content || ''}</p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; cursor:pointer;" onclick="openModal('${img}')">` : ''}</div>`;
+                html += '<button class="series-toggle" data-target="art-' + idx + '">📝 ' + name + '</button><div id="art-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    var img = item.extra2 ? getDirectImageUrl(item.extra2) : '';
+                    html += '<div class="child-item"><p><strong>' + (item.title || 'بدون عنوان') + '</strong> ' + (item.extra1 ? '📅 ' + item.extra1 : '') + '</p><p>' + (item.content || '') + '</p>';
+                    if (img) html += '<img src="' + img + '" alt="' + item.title + '" style="max-width:100%; max-height:200px; border-radius:8px; cursor:pointer;" onclick="openModal(\'' + img + '\')">';
+                    html += '</div>';
                 });
-                html += `</div>`;
+                html += '</div>';
             });
             container.innerHTML = html;
-            document.querySelectorAll('#articlesList .series-toggle').forEach(btn => {
+            document.querySelectorAll('#articlesList .series-toggle').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const target = document.getElementById(this.dataset.target);
+                    var target = document.getElementById(this.dataset.target);
                     if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
                 });
             });
@@ -521,19 +568,22 @@
             const names = Object.keys(map);
             if (!names.length) { container.innerHTML = '<p>لا توجد كتب</p>'; return; }
             let html = '';
-            names.forEach((name, idx) => {
+            names.forEach(function(name, idx) {
                 const items = map[name];
-                html += `<button class="series-toggle" data-target="bok-${idx}">📚 ${name}</button><div id="bok-${idx}" class="series-content">`;
-                items.forEach(item => {
-                    let img = item.extra1 ? getDirectImageUrl(item.extra1) : '';
-                    html += `<div class="child-item"><p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; margin-bottom:6px; cursor:pointer;" onclick="openModal('${img}')">` : ''}<a href="${item.content}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a></div>`;
+                html += '<button class="series-toggle" data-target="bok-' + idx + '">📚 ' + name + '</button><div id="bok-' + idx + '" class="series-content">';
+                items.forEach(function(item) {
+                    var img = item.extra1 ? getDirectImageUrl(item.extra1) : '';
+                    html += '<div class="child-item"><p><strong>📄 ' + (item.title || 'بدون عنوان') + '</strong></p>';
+                    if (img) html += '<img src="' + img + '" alt="' + item.title + '" style="max-width:100%; max-height:150px; border-radius:8px; margin-bottom:6px; cursor:pointer;" onclick="openModal(\'' + img + '\')">';
+                    html += '<a href="' + item.content + '" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>';
+                    html += '</div>';
                 });
-                html += `</div>`;
+                html += '</div>';
             });
             container.innerHTML = html;
-            document.querySelectorAll('#booksList .series-toggle').forEach(btn => {
+            document.querySelectorAll('#booksList .series-toggle').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const target = document.getElementById(this.dataset.target);
+                    var target = document.getElementById(this.dataset.target);
                     if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
                 });
             });
@@ -547,19 +597,19 @@
             const names = Object.keys(map);
             if (!names.length) { container.innerHTML = '<p>لا توجد صور</p>'; return; }
             let html = '';
-            names.forEach((name, idx) => {
+            names.forEach(function(name, idx) {
                 const items = map[name];
-                html += `<button class="series-toggle" data-target="img-${idx}">🖼️ ${name}</button><div id="img-${idx}" class="series-content"><div class="image-grid">`;
-                items.forEach(item => {
-                    const src = getDirectImageUrl(item.content);
-                    html += `<div class="image-item"><img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')"><h4>${item.title || 'بدون عنوان'}</h4>${item.extra1 ? `<p>${item.extra1}</p>` : ''}</div>`;
+                html += '<button class="series-toggle" data-target="img-' + idx + '">🖼️ ' + name + '</button><div id="img-' + idx + '" class="series-content"><div class="image-grid">';
+                items.forEach(function(item) {
+                    var src = getDirectImageUrl(item.content);
+                    html += '<div class="image-item"><img src="' + src + '" alt="' + item.title + '" loading="lazy" onclick="openModal(\'' + src + '\')"><h4>' + (item.title || 'بدون عنوان') + '</h4>' + (item.extra1 ? '<p>' + item.extra1 + '</p>' : '') + '</div>';
                 });
-                html += `</div></div>`;
+                html += '</div></div>';
             });
             container.innerHTML = html;
-            document.querySelectorAll('#imagesList .series-toggle').forEach(btn => {
+            document.querySelectorAll('#imagesList .series-toggle').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const target = document.getElementById(this.dataset.target);
+                    var target = document.getElementById(this.dataset.target);
                     if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
                 });
             });
@@ -567,19 +617,24 @@
 
         // =================== التنقل ===================
         function showSection(id) {
-            document.querySelectorAll('.content > div, .content > section').forEach(el => el.style.display = 'none');
-            const target = document.getElementById(id);
+            var sections = document.querySelectorAll('.content > div, .content > section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.display = 'none';
+            }
+            var target = document.getElementById(id);
             if (target) target.style.display = 'block';
-            document.querySelectorAll('.sidebar button').forEach(btn => {
-                btn.classList.remove('active');
-                const section = id.replace('Section', '').toLowerCase();
-                if (btn.dataset.section === section) btn.classList.add('active');
-                if (id === 'homeSection' && btn.dataset.section === 'home') btn.classList.add('active');
-            });
+            
+            var buttons = document.querySelectorAll('.sidebar button');
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].classList.remove('active');
+                var section = id.replace('Section', '').toLowerCase();
+                if (buttons[j].dataset.section === section) buttons[j].classList.add('active');
+                if (id === 'homeSection' && buttons[j].dataset.section === 'home') buttons[j].classList.add('active');
+            }
         }
 
+        // =================== تحميل كل المحتوى ===================
         async function loadAllContent() {
-            console.log('🚀 بدء تحميل كل المحتوى...');
             try {
                 await loadSidebarInfo();
                 await loadHome();
@@ -589,17 +644,17 @@
                 await loadAudio();
                 await loadImages();
                 showSection('homeSection');
-                console.log('✅ تم تحميل كل المحتوى بنجاح!');
             } catch (error) {
                 console.error('❌ خطأ:', error);
             }
         }
 
+        // =================== تشغيل الكود ===================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 الصفحة جاهزة، بدء التحميل...');
-            document.querySelectorAll('.sidebar button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const sec = this.dataset.section;
+            var buttons = document.querySelectorAll('.sidebar button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    var sec = this.dataset.section;
                     if (sec === 'home') showSection('homeSection');
                     else if (sec === 'articles') showSection('articlesSection');
                     else if (sec === 'books') showSection('booksSection');
@@ -607,7 +662,8 @@
                     else if (sec === 'audio') showSection('audioSection');
                     else if (sec === 'images') showSection('imagesSection');
                 });
-            });
+            }
+            
             loadAllContent();
         });
     </script>
