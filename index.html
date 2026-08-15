@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دار الحصري الصغير</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', Tahoma, sans-serif;
-            background: linear-gradient(145deg, #0b1a2e, #1b3a4b);
+            background: linear-gradient(145deg, #0b1a2e 0%, #1b3a4b 100%);
             color: #f0f4fa;
             min-height: 100vh;
             padding: 0 15px;
             display: flex;
             flex-direction: column;
         }
-        /* الهيدر */
         .site-header {
             display: flex;
             justify-content: space-between;
@@ -60,7 +55,6 @@
             background: #2ecc71;
             transform: scale(1.02);
         }
-        /* المودال */
         .modal {
             display: none;
             position: fixed;
@@ -73,9 +67,7 @@
             justify-content: center;
             align-items: center;
         }
-        .modal.open {
-            display: flex;
-        }
+        .modal.open { display: flex; }
         .modal img {
             max-width: 90%;
             max-height: 90%;
@@ -91,11 +83,7 @@
             background: none;
             border: none;
         }
-        .modal-close:hover {
-            color: #f4d03f;
-        }
-
-        /* الحاوية الرئيسية */
+        .modal-close:hover { color: #f4d03f; }
         .main-wrapper {
             display: flex;
             gap: 20px;
@@ -104,8 +92,7 @@
             width: 100%;
             flex: 1;
         }
-
-        /* القائمة الجانبية (اليمنى) */
+        /* ===== القائمة الرئيسية (الشمال) ===== */
         .sidebar {
             flex: 0 0 200px;
             background: rgba(255, 255, 255, 0.06);
@@ -117,7 +104,7 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            order: 1;
+            order: -2;
         }
         .sidebar h3 {
             color: #f4d03f;
@@ -153,9 +140,8 @@
             border-color: #f4d03f;
             color: #f4d03f;
         }
-
-        /* العمود الجانبي الأيسر (معلومات) */
-        .left-sidebar {
+        /* ===== العمود الجانبي (معلومات - اليمين) ===== */
+        .right-sidebar {
             flex: 0 0 220px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
@@ -166,16 +152,16 @@
             top: 20px;
             max-height: calc(100vh - 120px);
             overflow-y: auto;
-            order: -1;
+            order: 2;
         }
-        .left-sidebar h3 {
+        .right-sidebar h3 {
             color: #f4d03f;
             text-align: center;
             border-bottom: 1px solid rgba(244, 208, 63, 0.2);
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
-        .left-sidebar .info-item {
+        .right-sidebar .info-item {
             margin-bottom: 12px;
             padding: 8px;
             background: rgba(255, 255, 255, 0.03);
@@ -183,28 +169,28 @@
             text-align: center;
             word-wrap: break-word;
         }
-        .left-sidebar .info-item p {
+        .right-sidebar .info-item p {
             color: #e6edf5;
             font-size: 0.9rem;
+            word-break: break-word;
         }
-        .left-sidebar .info-item a {
+        .right-sidebar .info-item a {
             color: #85c1e9;
             text-decoration: none;
             font-weight: 600;
             display: block;
+            word-break: break-word;
         }
-        .left-sidebar .info-item a:hover {
+        .right-sidebar .info-item a:hover {
             color: #f4d03f;
         }
-        .left-sidebar .info-item img {
+        .right-sidebar .info-item img {
             max-width: 100%;
             max-height: 120px;
             object-fit: cover;
             border-radius: 8px;
             cursor: pointer;
         }
-
-        /* المحتوى الرئيسي */
         .content {
             flex: 1;
             min-width: 0;
@@ -314,9 +300,7 @@
             padding-right: 15px;
             margin-bottom: 12px;
         }
-        .series-content.open {
-            display: block;
-        }
+        .series-content.open { display: block; }
         .child-item {
             padding: 10px;
             margin-bottom: 10px;
@@ -365,9 +349,7 @@
             text-align: center;
             margin: 15px 0;
         }
-        .portal-btn {
-            display: none;
-        }
+        .portal-btn { display: none; }
         .site-footer {
             text-align: center;
             padding: 20px;
@@ -384,18 +366,12 @@
             text-decoration: none;
             font-weight: 600;
         }
-        .site-footer a:hover {
-            text-decoration: underline;
-        }
+        .site-footer a:hover { text-decoration: underline; }
         @media (max-width: 992px) {
-            .left-sidebar {
-                display: none;
-            }
+            .right-sidebar { display: none; }
         }
         @media (max-width: 768px) {
-            .main-wrapper {
-                flex-direction: column;
-            }
+            .main-wrapper { flex-direction: column; }
             .sidebar {
                 flex: none;
                 width: 100%;
@@ -423,9 +399,7 @@
                 flex-direction: column;
                 text-align: center;
             }
-            .portal-btn-header {
-                align-self: center;
-            }
+            .portal-btn-header { align-self: center; }
         }
     </style>
 </head>
@@ -446,10 +420,9 @@
         <a href="#" class="portal-btn-header">الدخول إلى النظام التعليمي</a>
     </header>
 
-    <!-- المحتوى الرئيسي -->
     <div class="main-wrapper">
 
-        <!-- القائمة الجانبية (يمين) -->
+        <!-- ===== القائمة الرئيسية (الشمال) ===== -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -460,12 +433,12 @@
             <button data-section="images">🖼️ صور</button>
         </aside>
 
-        <!-- العمود الجانبي (معلومات) - شمال -->
-        <aside class="left-sidebar" id="leftSidebar">
+        <!-- ===== العمود الجانبي (معلومات - اليمين) ===== -->
+        <aside class="right-sidebar" id="rightSidebar">
             <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
         </aside>
 
-        <!-- المحتوى -->
+        <!-- ===== المحتوى الرئيسي ===== -->
         <main class="content">
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
@@ -496,7 +469,6 @@
         </main>
     </div>
 
-    <!-- الفوتر -->
     <footer class="site-footer">
         <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
         <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
@@ -514,7 +486,7 @@
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                return json.table.rows.map(row => row.c.map(cell => (cell ? cell.v : '')));
+                return json.table.rows.map(row => row.c.map(cell => (cell !== null && cell !== undefined) ? cell.v : ''));
             } catch (error) {
                 console.error('خطأ:', error);
                 return [];
@@ -522,17 +494,26 @@
         }
 
         // ============================================================
+        // دالة لتحويل أي قيمة إلى نص (حتى الأرقام)
+        // ============================================================
+        function safeString(value) {
+            if (value === null || value === undefined) return '';
+            return String(value).trim();
+        }
+
+        // ============================================================
         // دوال الصور والمودال
         // ============================================================
         function getDirectImageUrl(url) {
             if (!url) return url;
-            if (typeof url === 'string' && url.includes('drive.google.com')) {
-                const match = url.match(/\/d\/([^\/]+)/);
+            const str = safeString(url);
+            if (str.includes('drive.google.com')) {
+                const match = str.match(/\/d\/([^\/]+)/);
                 if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
-                const idMatch = url.match(/[?&]id=([^&]+)/);
+                const idMatch = str.match(/[?&]id=([^&]+)/);
                 if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
             }
-            return url;
+            return str;
         }
 
         function openModal(src) {
@@ -552,7 +533,7 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
         // ============================================================
-        // 1. تحميل العمود الجانبي (معلومات جانبية)
+        // 1. العمود الجانبي (معلومات جانبية) - اليمين
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -565,9 +546,9 @@
             let hasContent = false;
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? String(row[0]).trim() : '';
-                const content = row[1] ? String(row[1]).trim() : '';
-                const type = row[2] ? String(row[2]).trim().toLowerCase() : '';
+                const title = safeString(row[0]);
+                const content = safeString(row[1]);
+                const type = safeString(row[2]).toLowerCase();
                 if (!title && !content) continue;
                 hasContent = true;
                 html += `<div class="info-item">`;
@@ -599,10 +580,10 @@
             let items = [];
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? String(row[0]).trim() : '';
-                const content = row[1] ? String(row[1]).trim() : '';
-                const type = row[2] ? String(row[2]).trim().toLowerCase() : 'نص';
-                const image = row[3] ? String(row[3]).trim() : '';
+                const title = safeString(row[0]);
+                const content = safeString(row[1]);
+                const type = safeString(row[2]).toLowerCase();
+                const image = safeString(row[3]);
                 if (!title && !content && !image) continue;
                 items.push({ title, content, type, image });
             }
@@ -647,17 +628,17 @@
         }
 
         // ============================================================
-        // دوال الأقسام الأخرى
+        // دوال الأقسام الأخرى (مع safeString)
         // ============================================================
         function organizeSeries(data, seriesCol, titleCol, contentCol, extra1, extra2) {
             const map = {};
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const series = row[seriesCol] ? String(row[seriesCol]).trim() : 'عام';
-                const title = row[titleCol] ? String(row[titleCol]).trim() : '';
-                const content = row[contentCol] ? String(row[contentCol]).trim() : '';
-                const e1 = (extra1 !== undefined && row[extra1]) ? String(row[extra1]).trim() : '';
-                const e2 = (extra2 !== undefined && row[extra2]) ? String(row[extra2]).trim() : '';
+                const series = safeString(row[seriesCol]) || 'عام';
+                const title = safeString(row[titleCol]);
+                const content = safeString(row[contentCol]);
+                const e1 = (extra1 !== undefined) ? safeString(row[extra1]) : '';
+                const e2 = (extra2 !== undefined) ? safeString(row[extra2]) : '';
                 if (!title && !content) continue;
                 if (!map[series]) map[series] = [];
                 map[series].push({ title, content, extra1: e1, extra2: e2 });
@@ -797,49 +778,8 @@
         }
 
         // ============================================================
-        // التنقل بين الأقسام
+        // التنقل
         // ============================================================
         function showSection(id) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => el.style.display = 'none');
-            const target = document.getElementById(id);
-            if (target) target.style.display = 'block';
-            document.querySelectorAll('.sidebar button').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.section === id.replace('Section', '').toLowerCase()) btn.classList.add('active');
-                if (id === 'homeSection' && btn.dataset.section === 'home') btn.classList.add('active');
-            });
-        }
-
-        // ============================================================
-        // تحميل كل المحتوى
-        // ============================================================
-        async function loadAll() {
-            try {
-                await loadSidebarInfo();
-                await loadHome();
-                await loadArticles();
-                await loadBooks();
-                await loadVideos();
-                await loadAudio();
-                await loadImages();
-                showSection('homeSection');
-            } catch (e) { console.error('خطأ:', e); }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.sidebar button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const sec = this.dataset.section;
-                    if (sec === 'home') showSection('homeSection');
-                    else if (sec === 'articles') showSection('articlesSection');
-                    else if (sec === 'books') showSection('booksSection');
-                    else if (sec === 'videos') showSection('videosSection');
-                    else if (sec === 'audio') showSection('audioSection');
-                    else if (sec === 'images') showSection('imagesSection');
-                });
-            });
-            loadAll();
-        });
-    </script>
-</body>
-</html>
+           
