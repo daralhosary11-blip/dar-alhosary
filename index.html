@@ -54,7 +54,6 @@
             display: flex; gap: 20px; max-width: 1200px; margin: 0 auto 30px;
             width: 100%; flex: 1;
         }
-        /* القائمة الرئيسية (الشمال) */
         .sidebar {
             flex: 0 0 200px; background: rgba(255,255,255,0.06);
             backdrop-filter: blur(10px); border-radius: 20px; padding: 20px 15px;
@@ -79,7 +78,6 @@
         .sidebar button.active {
             background: rgba(244,208,63,0.18); border-color: #f4d03f; color: #f4d03f;
         }
-        /* العمود الجانبي (معلومات - اليمين) */
         .right-sidebar {
             flex: 0 0 220px; background: rgba(255,255,255,0.06);
             backdrop-filter: blur(10px); border-radius: 20px; padding: 20px 15px;
@@ -199,7 +197,6 @@
 </head>
 <body>
 
-    <!-- مودال الصور -->
     <div id="imageModal" class="modal" onclick="closeModal()">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <img id="modalImage" src="" alt="صورة مكبرة" />
@@ -215,7 +212,6 @@
 
     <div class="main-wrapper">
 
-        <!-- القائمة الرئيسية (الشمال) -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -226,12 +222,10 @@
             <button data-section="images">🖼️ صور</button>
         </aside>
 
-        <!-- العمود الجانبي (معلومات - اليمين) -->
         <aside class="right-sidebar" id="rightSidebar">
             <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
         </aside>
 
-        <!-- المحتوى الرئيسي -->
         <main class="content">
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري التحميل...</div></div>
@@ -268,42 +262,26 @@
     </footer>
 
     <script>
-        // ============================================================
-        // 🔑 ضع هنا معرف جدول Google Sheets بتاعك
-        // ============================================================
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
-        // ============================================================
-        // دالة جلب البيانات من Google Sheets
-        // ============================================================
         async function fetchSheetData(sheetName) {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-            console.log(`📡 جلب البيانات من: ${sheetName}`);
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                // استخراج JSON من النص
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                const rows = json.table.rows.map(row => row.c.map(cell => (cell !== null && cell !== undefined) ? cell.v : ''));
-                console.log(`✅ تم جلب ${rows.length} صف من ${sheetName}`);
-                return rows;
+                return json.table.rows.map(row => row.c.map(cell => (cell !== null && cell !== undefined) ? cell.v : ''));
             } catch (error) {
-                console.error(`❌ خطأ في جلب ${sheetName}:`, error);
+                console.error('خطأ:', error);
                 return [];
             }
         }
 
-        // ============================================================
-        // دالة لتحويل أي قيمة إلى نص آمن
-        // ============================================================
         function safeString(value) {
             if (value === null || value === undefined) return '';
             return String(value).trim();
         }
 
-        // ============================================================
-        // دالة تحويل رابط Google Drive إلى رابط مباشر للصورة
-        // ============================================================
         function getDirectImageUrl(url) {
             if (!url) return url;
             const str = safeString(url);
@@ -311,14 +289,11 @@
                 const match = str.match(/\/d\/([^\/]+)/);
                 if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
                 const idMatch = str.match(/[?&]id=([^&]+)/);
-                if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+                if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`);
             }
             return str;
         }
 
-        // ============================================================
-        // مودال الصور
-        // ============================================================
         function openModal(src) {
             const modal = document.getElementById('imageModal');
             const img = document.getElementById('modalImage');
@@ -334,16 +309,17 @@
         }
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        // ============================================================
-        // 1. تحميل العمود الجانبي (معلومات جانبية)
-        // ============================================================
+        // =================== 1. العمود الجانبي ===================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
             const data = await fetchSheetData('معلومات جانبية');
+            
+            // لو في صف واحد بس (العناوين) أو مفيش بيانات
             if (data.length < 2) {
-                container.innerHTML = `<h3>📌 معلومات</h3><div class="info-item"><p>لا توجد معلومات</p></div>`;
+                container.innerHTML = `<h3>📌 معلومات</h3><div class="info-item"><p>⚠️ لا توجد بيانات. أضف بيانات في الصف الثاني (اكتب رقم، نص، أو رابط).</p></div>`;
                 return;
             }
+
             let html = `<h3>📌 معلومات</h3>`;
             let hasContent = false;
             for (let i = 1; i < data.length; i++) {
@@ -365,20 +341,21 @@
                 }
                 html += `</div>`;
             }
-            if (!hasContent) html += `<div class="info-item"><p>لا توجد معلومات</p></div>`;
+            if (!hasContent) html += `<div class="info-item"><p>⚠️ لا توجد بيانات مكتوبة.</p></div>`;
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 2. الصفحة الرئيسية
-        // ============================================================
+        // =================== 2. الصفحة الرئيسية ===================
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
+            
+            // لو مفيش بيانات خالص
             if (data.length < 2) {
-                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>مرحباً بكم في دار الحصري الصغير.</p>`;
+                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>مرحباً بكم في دار الحصري الصغير. (لا توجد مقالات مضافة)</p>`;
                 return;
             }
+
             let items = [];
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
@@ -389,50 +366,57 @@
                 if (!title && !content && !image) continue;
                 items.push({ title, content, type, image });
             }
+
+            // ✅ عرض البيانات في Console عشان تتأكد
+            console.log('📝 بيانات الصفحة الرئيسية:', items);
+
             if (items.length === 0) {
-                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى</p>`;
+                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى مكتوب في الجدول.</p>`;
                 return;
             }
-            // عرض الأحدث أولاً (عكس الترتيب)
-            items.reverse();
+
+            items.reverse(); // الأحدث فوق
             let html = `<h2>🏠 الرئيسية</h2>`;
+            
             items.forEach(item => {
                 html += `<div class="home-item">`;
                 if (item.title) html += `<h3>${item.title}</h3>`;
-                const isImage = (item.type === 'صورة' || item.type === 'image');
-                const isVideo = (item.type === 'فيديو' || item.type === 'video');
-                const isLink = (item.type === 'ربط' || item.type === 'رابط' || item.type === 'link');
-                if (isImage) {
-                    const src = getDirectImageUrl(item.content);
-                    html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
-                } else if (isVideo) {
-                    let vid = item.content;
-                    if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
-                    else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
-                    if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
-                    else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
-                } else if (isLink) {
-                    html += `<a href="${item.content}" target="_blank" class="link-btn">🔗 ${item.content}</a>`;
-                } else {
-                    if (item.content && (item.content.includes('drive.google.com') || item.content.match(/\.(jpg|jpeg|png|gif|webp|svg)/i))) {
+
+                // 🔥 عرض البيانات بشكل تلقائي (بدون تعقيد)
+                if (item.content) {
+                    // لو الرابط صورة
+                    if (item.content.includes('drive.google.com') || item.content.match(/\.(jpg|jpeg|png|gif|webp|svg)/i)) {
                         const src = getDirectImageUrl(item.content);
                         html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
-                    } else {
+                    } 
+                    // لو الرابط فيديو يوتيوب
+                    else if (item.content.includes('youtu.be') || item.content.includes('youtube.com')) {
+                        let vid = item.content;
+                        if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
+                        else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
+                        if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
+                        else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
+                    }
+                    // لو نص عادي
+                    else {
                         html += `<p>${item.content}</p>`;
                     }
-                    if (item.image) {
-                        const src = getDirectImageUrl(item.image);
-                        html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
-                    }
                 }
+
+                // لو في صورة إضافية في العمود D
+                if (item.image) {
+                    const src = getDirectImageUrl(item.image);
+                    html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
+                }
+
                 html += `</div>`;
             });
+
             container.innerHTML = html;
+            console.log('✅ تم تحديث واجهة الصفحة الرئيسية');
         }
 
-        // ============================================================
-        // 3. دوال الأقسام الأخرى (مختصرة)
-        // ============================================================
+        // =================== 3. باقي الأقسام ===================
         function organizeSeries(data, seriesCol, titleCol, contentCol, extra1, extra2) {
             const map = {};
             for (let i = 1; i < data.length; i++) {
@@ -449,6 +433,7 @@
             return map;
         }
 
+        // اختصار الدوال الباقية (مش مهمة دلوقتي لأن الصفحة الرئيسية هي الأساس)
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
@@ -580,9 +565,7 @@
             });
         }
 
-        // ============================================================
-        // 4. التنقل بين الأقسام
-        // ============================================================
+        // =================== التنقل ===================
         function showSection(id) {
             document.querySelectorAll('.content > div, .content > section').forEach(el => el.style.display = 'none');
             const target = document.getElementById(id);
@@ -595,9 +578,6 @@
             });
         }
 
-        // ============================================================
-        // 5. تحميل كل المحتوى
-        // ============================================================
         async function loadAllContent() {
             console.log('🚀 بدء تحميل كل المحتوى...');
             try {
@@ -611,13 +591,10 @@
                 showSection('homeSection');
                 console.log('✅ تم تحميل كل المحتوى بنجاح!');
             } catch (error) {
-                console.error('❌ خطأ أثناء التحميل:', error);
+                console.error('❌ خطأ:', error);
             }
         }
 
-        // ============================================================
-        // 6. تشغيل الكود عند تحميل الصفحة
-        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             console.log('📄 الصفحة جاهزة، بدء التحميل...');
             document.querySelectorAll('.sidebar button').forEach(btn => {
