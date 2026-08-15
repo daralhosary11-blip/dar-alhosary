@@ -175,6 +175,9 @@
         .content {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         .card {
             background: rgba(255, 255, 255, 0.07);
@@ -225,7 +228,6 @@
         .carousel-slide h3 { color: #f4d03f; margin-top: 0; margin-bottom: 10px; }
         .carousel-slide p { color: #e6edf5; line-height: 1.8; max-width: 90%; }
         
-        /* تنسيق صور السلايدر (تدعم صورة واحدة أو مجموعة صور) */
         .slide-images-container {
             display: flex;
             flex-wrap: wrap;
@@ -234,7 +236,7 @@
             margin: 10px 0;
             width: 100%;
         }
-        .carousel-slide img {
+        .carousel-slide img, .child-item img, .image-item img {
             max-width: 100%;
             max-height: 280px;
             border-radius: 12px;
@@ -246,7 +248,6 @@
         .carousel-slide img:hover { opacity: 0.9; transform: scale(1.01); }
 
         .carousel-slide .video-container { width: 100%; max-width: 560px; margin: 10px auto; }
-        .carousel-slide .video-container iframe { width: 100%; height: 315px; border-radius: 12px; border: none; }
         .carousel-slide .link-btn {
             display: inline-block;
             padding: 10px 25px;
@@ -317,8 +318,8 @@
         }
         .series-content { display: none; padding-right: 15px; margin-bottom: 12px; }
         .series-content.open { display: block; }
-        .child-item { padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
-        .child-item p { color: #85c1e9; margin-bottom: 4px; font-size: 0.9rem; }
+        .child-item { padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; }
+        .child-item p { color: #e6edf5; margin-bottom: 6px; font-size: 0.95rem; }
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -333,12 +334,10 @@
         audio { width: 100%; margin-top: 6px; border-radius: 30px; background: rgba(0, 0, 0, 0.3); }
         .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 8px; }
         .image-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .image-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .image-item img:hover { opacity: 0.9; }
+        .image-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; cursor: pointer; }
         .image-item h4 { color: #f4d03f; margin: 8px 0 2px; font-size: 0.85rem; }
         .image-item p { color: #e6edf5; font-size: 0.8rem; }
         
-        /* تنسيق النافذة العائمة لتكبير الصور (Lightbox) */
         #imageModal {
             display: none;
             position: fixed;
@@ -372,8 +371,6 @@
         }
         #imageModal span:hover { color: #f4d03f; }
 
-        .btn-container { text-align: center; margin: 15px 0 8px; }
-        .portal-btn { display: none; }
         .site-footer {
             text-align: center;
             padding: 20px;
@@ -402,7 +399,6 @@
             .site-header { flex-direction: column; align-items: stretch; text-align: center; }
             .site-header .header-left { flex-direction: column; align-items: center; }
             .portal-btn-header { align-self: center; }
-            .carousel-slide .video-container iframe { height: 200px; }
         }
     </style>
 </head>
@@ -418,13 +414,13 @@
 
     <div class="main-wrapper">
         <aside class="sidebar">
-            <h3>📋 القائمة</h3>
-            <button class="active" data-section="home">🏠 الرئيسية</button>
-            <button data-section="articles">📝 مقالات</button>
-            <button data-section="books">📚 كتب</button>
-            <button data-section="videos">🎬 فيديو</button>
-            <button data-section="audio">🎧 صوتيات</button>
-            <button data-section="images">🖼️ صور</button>
+            <h3>📋 انتقال سريع</h3>
+            <button onclick="scrollToSection('homeSection')">🏠 الرئيسية</button>
+            <button onclick="scrollToSection('articlesSection')">📝 مقالات</button>
+            <button onclick="scrollToSection('booksSection')">📚 كتب</button>
+            <button onclick="scrollToSection('videosSection')">🎬 فيديو</button>
+            <button onclick="scrollToSection('audioSection')">🎧 صوتيات</button>
+            <button onclick="scrollToSection('imagesSection')">🖼️ صور</button>
         </aside>
 
         <aside class="left-sidebar" id="leftSidebar">
@@ -436,34 +432,33 @@
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
             </section>
 
-            <div id="articlesSection" style="display:none;" class="card">
+            <section id="articlesSection" class="card">
                 <h2>📝 مقالات</h2>
                 <div id="articlesList"><div class="loading">جاري التحميل...</div></div>
-            </div>
+            </section>
 
-            <div id="booksSection" style="display:none;" class="card">
+            <section id="booksSection" class="card">
                 <h2>📚 كتب</h2>
                 <div id="booksList"><div class="loading">جاري التحميل...</div></div>
-            </div>
+            </section>
 
-            <div id="videosSection" style="display:none;" class="card">
+            <section id="videosSection" class="card">
                 <h2>🎬 فيديو</h2>
                 <div id="videosList"><div class="loading">جاري التحميل...</div></div>
-            </div>
+            </section>
 
-            <div id="audioSection" style="display:none;" class="card">
+            <section id="audioSection" class="card">
                 <h2>🎧 صوتيات</h2>
                 <div id="audioList"><div class="loading">جاري التحميل...</div></div>
-            </div>
+            </section>
 
-            <div id="imagesSection" style="display:none;" class="card">
+            <section id="imagesSection" class="card">
                 <h2>🖼️ صور</h2>
                 <div id="imagesList"><div class="loading">جاري التحميل...</div></div>
-            </div>
+            </section>
         </main>
     </div>
 
-    <!-- نافذة عرض الصورة المكبرة (Lightbox Modal) -->
     <div id="imageModal" onclick="closeModal()">
         <span onclick="closeModal()">&times;</span>
         <img id="modalImg" src="" alt="صورة مكبرة">
@@ -486,6 +481,13 @@
 
         function closeModal() {
             document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function scrollToSection(sectionId) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         async function fetchSheetData(sheetName) {
@@ -568,6 +570,25 @@
             return cleanUrl.match(/\.(jpeg|jpg|png|gif|webp|bmp|svg)($|\?)/i) || cleanUrl.includes('drive.google.com') || cleanUrl.includes('imgur.com') || cleanUrl.includes('cloudinary') || cleanUrl.includes('googleusercontent.com');
         }
 
+        // دالة مساعدة لتوليد كود لعرض الصور بشكل صحيح تماماً دون إظهارها كرابط نصي
+        function renderImagesHtml(imageString, title) {
+            if (!imageString) return '';
+            let imagesList = [];
+            imageString.split(',').forEach(function(img) {
+                const trimmed = img.trim();
+                if (trimmed) imagesList.push(trimmed);
+            });
+            
+            if (imagesList.length === 0) return '';
+
+            let html = '<div class="slide-images-container" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:10px 0; width:100%;">';
+            imagesList.forEach(function(src) {
+                html += '<img src="' + src + '" alt="' + (title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + src + '\')" style="max-width:100%; max-height:280px; border-radius:12px; object-fit:contain; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.3);">';
+            });
+            html += '</div>';
+            return html;
+        }
+
         function renderCarousel() {
             const container = document.getElementById('homeContent');
             if (!slidesData || slidesData.length === 0) {
@@ -584,35 +605,16 @@
                 html += '<div class="carousel-slide">';
                 if (item.title) html += '<h3>' + item.title + '</h3>';
 
-                // جمع جميع الصور (سواء من حقل الصورة أو حقل المحتوى إذا كان رابط صورة أو مجموعة صور مفصولة بفاصلة)
-                let imagesList = [];
+                // فحص ما إذا كان المحتوى رابط صورة أو نصاً عادياً
+                let contentIsImage = isImageUrl(item.content);
+                
                 if (item.image) {
-                    item.image.split(',').forEach(function(img) {
-                        const trimmed = img.trim();
-                        if (trimmed) imagesList.push(trimmed);
-                    });
+                    html += renderImagesHtml(item.image, item.title);
                 }
 
-                if (item.content) {
-                    const contentParts = item.content.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
-                    const allAreImages = contentParts.length > 0 && contentParts.every(function(p) { return isImageUrl(p); });
-                    
-                    if (allAreImages || item.type === 'صورة' || item.type === 'image' || item.type === 'صور') {
-                        contentParts.forEach(function(img) { imagesList.push(img); });
-                        item.content = ''; // تفريغ المحتوى النصي لأنه عبارة عن صور
-                    }
-                }
-
-                // عرض الصور إذا وجدت (سواء صورة فردية أو مجموعة صور)
-                if (imagesList.length > 0) {
-                    html += '<div class="slide-images-container">';
-                    imagesList.forEach(function(imgSrc) {
-                        html += '<img src="' + imgSrc + '" alt="' + (item.title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + imgSrc + '\')">';
-                    });
-                    html += '</div>';
-                }
-
-                if (item.type === 'فيديو' || item.type === 'video') {
+                if (contentIsImage) {
+                    html += renderImagesHtml(item.content, item.title);
+                } else if (item.type === 'فيديو' || item.type === 'video') {
                     const videoId = getYouTubeId(item.content || item.image);
                     if (videoId) {
                         html += '<div class="video-container"><iframe src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe></div>';
@@ -670,7 +672,6 @@
         }
 
         async function loadHome() {
-            // محاولة جلب البيانات من شريحة "الصفحة الرئيسية" أو "آخر الأخبار"
             let data = await fetchSheetData('الصفحة الرئيسية');
             if (!data || data.length < 2) {
                 data = await fetchSheetData('آخر الأخبار');
@@ -786,7 +787,7 @@
                     html += '<div class="child-item">' +
                             '<p><strong>' + (item.title || 'بدون عنوان') + '</strong>' + (item.extra1 ? ' 📅 ' + item.extra1 : '') + '</p>' +
                             '<p>' + (item.content || '') + '</p>' +
-                            (item.extra2 ? '<img src="' + item.extra2 + '" alt="' + item.title + '" loading="lazy" onclick="openModal(\'' + item.extra2 + '\')" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover; margin-top:5px; cursor:pointer;">' : '') +
+                            (item.extra2 ? renderImagesHtml(item.extra2, item.title) : '') +
                             '</div>';
                 });
                 html += '</div>';
@@ -811,7 +812,7 @@
                 items.forEach(function(item) {
                     html += '<div class="child-item">' +
                             '<p><strong>📄 ' + (item.title || 'بدون عنوان') + '</strong></p>' +
-                            (item.extra1 ? '<img src="' + item.extra1 + '" alt="' + item.title + '" loading="lazy" onclick="openModal(\'' + item.extra1 + '\')" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px; cursor:pointer;">' : '') +
+                            (item.extra1 ? renderImagesHtml(item.extra1, item.title) : '') +
                             '<br><a href="' + item.content + '" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600; display:inline-block; margin-top:5px;">📥 تحميل الكتاب</a>' +
                             '</div>';
                 });
@@ -860,22 +861,6 @@
             });
         }
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.content > div, .content > section').forEach(function(el) {
-                el.style.display = 'none';
-            });
-            const target = document.getElementById(sectionId);
-            if (target) target.style.display = 'block';
-
-            document.querySelectorAll('.sidebar button').forEach(function(btn) {
-                btn.classList.remove('active');
-                const btnSection = btn.dataset.section;
-                let targetSection = sectionId.replace('Section', '').toLowerCase();
-                if (btnSection === targetSection) btn.classList.add('active');
-                if (sectionId === 'homeSection' && btnSection === 'home') btn.classList.add('active');
-            });
-        }
-
         async function loadAllContent() {
             try {
                 await loadSidebarInfo();
@@ -885,26 +870,12 @@
                 await loadVideos();
                 await loadAudio();
                 await loadImages();
-                showSection('homeSection');
             } catch (error) {
                 console.error('خطأ عام في التحميل:', error);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.sidebar button').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const section = this.dataset.section;
-                    if (section === 'home') showSection('homeSection');
-                    else if (section === 'articles') showSection('articlesSection');
-                    else if (section === 'books') showSection('booksSection');
-                    else if (section === 'videos') showSection('videosSection');
-                    else if (section === 'audio') showSection('audioSection');
-                    else if (section === 'images') showSection('imagesSection');
-                });
-            });
-            loadAllContent();
-        });
+        document.addEventListener('DOMContentLoaded', loadAllContent);
     </script>
 </body>
 </html>
