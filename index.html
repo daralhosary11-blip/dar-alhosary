@@ -206,7 +206,7 @@
             color: #85c1e9;
             font-size: 1.1rem;
         }
-        /* ===== كاروسيل - الإصلاح النهائي ===== */
+        /* ===== كاروسيل ===== */
         .carousel-container {
             position: relative;
             overflow: hidden;
@@ -220,7 +220,7 @@
             width: 100%;
         }
         .carousel-slide {
-            flex: 0 0 100%; /* ✅ كل شريحة تأخذ 100% من العرض */
+            flex: 0 0 100%;
             max-width: 100%;
             padding: 15px 20px;
             background: rgba(255,255,255,0.03);
@@ -260,6 +260,20 @@
             height: 315px;
             border-radius: 12px;
             border: none;
+        }
+        .carousel-slide .link-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #27ae60;
+            color: #fff;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .carousel-slide .link-btn:hover {
+            background: #2ecc71;
+            transform: scale(1.05);
         }
         .carousel-btn {
             position: absolute;
@@ -551,7 +565,7 @@
         }
 
         // ============================================================
-        // العمود الجانبي
+        // العمود الجانبي (معلومات جانبية)
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -597,7 +611,7 @@
         }
 
         // ============================================================
-        // كاروسيل الصفحة الرئيسية
+        // كاروسيل الصفحة الرئيسية (مع طباعة تفصيلية في Console)
         // ============================================================
         let currentSlide = 0;
         let slidesData = [];
@@ -647,7 +661,10 @@
                     } else {
                         html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
                     }
+                } else if (item.type === 'ربط' || item.type === 'رابط' || item.type === 'link') {
+                    html += `<a href="${item.content}" target="_blank" class="link-btn">🔗 ${item.content}</a>`;
                 } else {
+                    // نص
                     html += `<p>${item.content || ''}</p>`;
                     if (item.image) {
                         html += `<img src="${item.image}" alt="${item.title || 'صورة'}" loading="lazy">`;
@@ -699,37 +716,48 @@
             updateDots();
         }
 
+        // ✅ الدالة المعدلة مع طباعة تفصيلية
         async function loadHome() {
             const data = await fetchSheetData('الصفحة الرئيسية');
+            
+            // ✅ طباعة كل البيانات الخام في Console
+            console.log('📊 عدد الصفوف المستلمة من الجدول (بما فيها العناوين):', data.length);
+            console.log('📊 البيانات الخام من الجدول:', JSON.stringify(data));
+
             slidesData = [];
 
             if (data.length < 2) {
+                console.warn('⚠️ الجدول فيه صف واحد بس (العناوين) أو فاضي.');
                 renderCarousel();
                 return;
             }
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const title = row[0] ? row[0].trim() : '';
-                const content = row[1] ? row[1].trim() : '';
-                const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
-                const image = row[3] ? row[3].trim() : '';
+                // الأعمدة حسب صورتك: 0=صورة, 1=نوع, 2=محتوى, 3=عنوان
+                const title = (row[3] && row[3].trim()) ? row[3].trim() : '';
+                const content = (row[2] && row[2].trim()) ? row[2].trim() : '';
+                const type = (row[1] && row[1].trim()) ? row[1].trim().toLowerCase() : 'نص';
+                const image = (row[0] && row[0].trim()) ? row[0].trim() : '';
 
-                // ✅ نتأكد إن الصف فيه بيانات مفيدة
-                if (!title && !content && !image) continue;
+                // ✅ طباعة كل صف على حدة
+                console.log(`🔍 الصف رقم ${i}: العنوان="${title}", المحتوى="${content}", النوع="${type}", الصورة="${image}"`);
+
+                // نتأكد إن الصف مش فاضي تماماً
+                if (!title && !content && !image) {
+                    console.log(`⏭️ تخطي الصف ${i} لأنه فاضي.`);
+                    continue;
+                }
 
                 slidesData.push({ title, content, type, image });
             }
 
-            // ✅ هنطبع البيانات في Console عشان نتأكد
-            console.log('✅ البيانات المستخرجة من الجدول:', JSON.stringify(slidesData, null, 2));
-            console.log('✅ عدد الشرائح:', slidesData.length);
-
+            console.log('✅ عدد الشرائح الفعلية التي تم تحميلها:', slidesData.length);
             renderCarousel();
         }
 
         // ============================================================
-        // باقي الدوال (زي ما هي)
+        // باقي الدوال (نفس الكود السابق)
         // ============================================================
         function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
