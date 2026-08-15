@@ -611,7 +611,7 @@
         }
 
         // ============================================================
-        // كاروسيل الصفحة الرئيسية (مع طباعة تفصيلية في Console)
+        // كاروسيل الصفحة الرئيسية
         // ============================================================
         let currentSlide = 0;
         let slidesData = [];
@@ -636,7 +636,7 @@
                 return;
             }
 
-            console.log('🔄 جاري عرض السلايدر، عدد الشرائح:', slidesData.length);
+            console.log('🔄 عرض السلايدر، عدد الشرائح:', slidesData.length);
 
             let html = `<h2>🏠 الرئيسية</h2>
                 <div class="carousel-container">
@@ -716,43 +716,40 @@
             updateDots();
         }
 
-        // ✅ الدالة المعدلة مع طباعة تفصيلية
+        // ✅ التعديل النهائي حسب ترتيب الأعمدة الصحيح:
+        // A = العنوان (0), B = المحتوى (1), C = النوع (2), D = الصورة (3)
         async function loadHome() {
             const data = await fetchSheetData('الصفحة الرئيسية');
             
-            // ✅ طباعة كل البيانات الخام في Console
-            console.log('📊 عدد الصفوف المستلمة من الجدول (بما فيها العناوين):', data.length);
-            console.log('📊 البيانات الخام من الجدول:', JSON.stringify(data));
+            console.log('📊 عدد الصفوف المستلمة من الجدول:', data.length);
+            console.log('📊 البيانات الخام:', JSON.stringify(data));
 
             slidesData = [];
 
             if (data.length < 2) {
-                console.warn('⚠️ الجدول فيه صف واحد بس (العناوين) أو فاضي.');
                 renderCarousel();
                 return;
             }
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                // الأعمدة حسب صورتك: 0=صورة, 1=نوع, 2=محتوى, 3=عنوان
-                const title = (row[3] && row[3].trim()) ? row[3].trim() : '';
-                const content = (row[2] && row[2].trim()) ? row[2].trim() : '';
-                const type = (row[1] && row[1].trim()) ? row[1].trim().toLowerCase() : 'نص';
-                const image = (row[0] && row[0].trim()) ? row[0].trim() : '';
+                // الترتيب الصح: 0=عنوان, 1=محتوى, 2=نوع, 3=صورة
+                const title = row[0] ? row[0].trim() : '';
+                const content = row[1] ? row[1].trim() : '';
+                const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
+                const image = row[3] ? row[3].trim() : '';
 
-                // ✅ طباعة كل صف على حدة
-                console.log(`🔍 الصف رقم ${i}: العنوان="${title}", المحتوى="${content}", النوع="${type}", الصورة="${image}"`);
+                console.log(`🔍 الصف ${i}: العنوان="${title}", المحتوى="${content}", النوع="${type}", الصورة="${image}"`);
 
-                // نتأكد إن الصف مش فاضي تماماً
                 if (!title && !content && !image) {
-                    console.log(`⏭️ تخطي الصف ${i} لأنه فاضي.`);
+                    console.log(`⏭️ تخطي الصف ${i} (فاضي).`);
                     continue;
                 }
 
                 slidesData.push({ title, content, type, image });
             }
 
-            console.log('✅ عدد الشرائح الفعلية التي تم تحميلها:', slidesData.length);
+            console.log('✅ عدد الشرائح الفعلية:', slidesData.length);
             renderCarousel();
         }
 
