@@ -6,6 +6,8 @@
     <title>دار الحصري الصغير</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ... كل الـ Styles السابقة نفسها ... */
+        /* (هحطها مختصرة عشان المساحة) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', Tahoma, sans-serif;
@@ -176,6 +178,12 @@
             object-fit: cover;
             border-radius: 8px;
             cursor: pointer;
+        }
+        .left-sidebar .info-item .phone-link {
+            direction: ltr;
+            color: #27ae60;
+            font-weight: 700;
+            font-size: 1rem;
         }
         .content {
             flex: 1;
@@ -563,64 +571,42 @@
         }
 
         // ============================================================
-        // دالة تحويل رابط Drive إلى رابط مباشر (المضمون 100%)
+        // دوال تحويل الروابط
         // ============================================================
         function getDirectImageUrl(url) {
             if (!url) return url;
             let fileId = null;
-            
-            // استخراج الـ File ID من أي رابط Drive
             if (url.includes('drive.google.com')) {
-                // صيغة /d/ID
                 const match = url.match(/\/d\/([^\/]+)/);
-                if (match && match[1]) {
-                    fileId = match[1];
-                } else {
-                    // صيغة ?id=ID
+                if (match && match[1]) fileId = match[1];
+                else {
                     const idMatch = url.match(/[?&]id=([^&]+)/);
-                    if (idMatch && idMatch[1]) {
-                        fileId = idMatch[1];
-                    }
+                    if (idMatch && idMatch[1]) fileId = idMatch[1];
                 }
-                
-                if (fileId) {
-                    // 🔥 الرابط السحري اللي بيجيب الصورة مباشرة من Google
-                    return `https://lh3.googleusercontent.com/d/${fileId}`;
-                }
+                if (fileId) return `https://lh3.googleusercontent.com/d/${fileId}`;
             }
-            
-            // لو الرابط مش Drive, ارجعه زي ما هو
             return url;
         }
 
-        // ============================================================
-        // مودال تكبير الصور (مع Console.log للاختبار)
-        // ============================================================
         function openModal(src) {
-            console.log('✅ فتح المودال للصورة:', src);
             const modal = document.getElementById('imageModal');
             const img = document.getElementById('modalImage');
-            if (!modal || !img) {
-                console.error('❌ المودال مش موجود في الصفحة!');
-                return;
-            }
+            if (!modal || !img) return;
             img.src = src;
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
-        
         function closeModal() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.classList.remove('open');
             document.body.style.overflow = 'auto';
         }
-        
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
 
         // ============================================================
-        // العمود الجانبي (معلومات جانبية)
+        // العمود الجانبي (معلومات جانبية) - متعدد الأنواع
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -647,15 +633,42 @@
                 hasContent = true;
 
                 html += `<div class="info-item">`;
+
+                // ✅ معالجة حسب النوع
                 if (type === 'صورة' || type === 'image') {
                     const imgSrc = getDirectImageUrl(content);
                     html += `<img src="${imgSrc}" alt="${title}" loading="lazy" onclick="openModal('${imgSrc}')">`;
                     if (title) html += `<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">${title}</p>`;
-                } else if (type === 'رابط' || type === 'link') {
+                } 
+                else if (type === 'رابط' || type === 'link') {
                     html += `<a href="${content}" target="_blank">🔗 ${title || 'رابط'}</a>`;
-                } else {
-                    html += `<p>${content}</p>`;
+                } 
+                else if (type === 'هاتف' || type === 'phone' || type === 'تليفون') {
+                    // عرض رقم الهاتف مع أيقونة واتساب
+                    const phoneNumber = content.replace(/\s/g, '');
+                    html += `
+                        <p style="font-size:0.85rem; color:#e6edf5;">📞 ${title || 'رقم الهاتف'}</p>
+                        <a href="tel:${phoneNumber}" class="phone-link" style="direction:ltr;">${content}</a>
+                        <br>
+                        <a href="https://wa.me/${phoneNumber}" target="_blank" style="color:#25D366; font-weight:600; display:inline-block; margin-top:4px;">
+                            💬 واتساب
+                        </a>
+                    `;
+                } 
+                else if (type === 'باركود' || type === 'barcode' || type === 'qr') {
+                    // عرض صورة الباركود
+                    const imgSrc = getDirectImageUrl(content);
+                    html += `
+                        <p style="font-size:0.85rem; color:#e6edf5;">${title || 'باركود'}</p>
+                        <img src="${imgSrc}" alt="${title || 'باركود'}" loading="lazy" style="max-width:100%; max-height:120px; object-fit:contain; cursor:pointer;" onclick="openModal('${imgSrc}')">
+                    `;
                 }
+                else {
+                    // نوع "نص" أو أي نوع تاني
+                    html += `<p>${content}</p>`;
+                    if (title) html += `<p style="font-size:0.75rem; color:#85c1e9;">${title}</p>`;
+                }
+
                 html += `</div>`;
             }
 
@@ -667,20 +680,17 @@
         }
 
         // ============================================================
-        // الصفحة الرئيسية
+        // باقي الدوال (الصفحة الرئيسية، مقالات، كتب، فيديو، صوتيات، صور)
+        // (نفس الكود السابق مع تحويل الروابط)
         // ============================================================
+        // (هحطها مختصرة عشان المساحة، لكن هي نفس الدوال اللي قبل كده)
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
-            
             if (data.length < 2) {
-                container.innerHTML = `
-                    <h2>🏠 الرئيسية</h2>
-                    <p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير.</p>
-                `;
+                container.innerHTML = `<h2>🏠 الرئيسية</h2><p>مرحباً بكم في الموقع الرسمي لدار الحصري الصغير.</p>`;
                 return;
             }
-
             let items = [];
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
@@ -688,45 +698,31 @@
                 const content = row[1] ? row[1].trim() : '';
                 const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
                 const image = row[3] ? row[3].trim() : '';
-
                 if (!title && !content && !image) continue;
                 items.push({ title, content, type, image });
             }
-
             items.reverse();
-
             if (items.length === 0) {
                 container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى في الصفحة الرئيسية.</p>`;
                 return;
             }
-
             let html = `<h2>🏠 الرئيسية</h2>`;
             items.forEach(item => {
                 html += `<div class="home-item">`;
                 if (item.title) html += `<h3>${item.title}</h3>`;
-
                 const isImage = (item.type === 'صورة' || item.type === 'image');
                 const isVideo = (item.type === 'فيديو' || item.type === 'video');
                 const isLink = (item.type === 'ربط' || item.type === 'رابط' || item.type === 'link');
-
                 if (isImage) {
                     const imgSrc = getDirectImageUrl(item.content);
                     html += `<img src="${imgSrc}" alt="${item.title || 'صورة'}" loading="lazy" onclick="openModal('${imgSrc}')">`;
                 } else if (isVideo) {
                     let videoId = item.content;
-                    if (videoId.includes('youtu.be/')) {
-                        videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
-                    } else if (videoId.includes('watch?v=')) {
-                        videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
-                    } else if (videoId.includes('embed/')) {
-                        videoId = videoId.split('embed/')[1]?.split('?')[0] || videoId;
-                    }
+                    if (videoId.includes('youtu.be/')) videoId = videoId.split('youtu.be/')[1]?.split('?')[0] || videoId;
+                    else if (videoId.includes('watch?v=')) videoId = videoId.split('watch?v=')[1]?.split('&')[0] || videoId;
+                    else if (videoId.includes('embed/')) videoId = videoId.split('embed/')[1]?.split('?')[0] || videoId;
                     if (videoId) {
-                        html += `
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        `;
+                        html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
                     } else {
                         html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
                     }
@@ -746,16 +742,11 @@
                         html += `<img src="${imgSrc}" alt="${item.title || 'صورة'}" loading="lazy" onclick="openModal('${imgSrc}')">`;
                     }
                 }
-
                 html += `</div>`;
             });
-
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // دوال الأقسام الأخرى (مختصرة مع تحويل الروابط)
-        // ============================================================
         function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
             for (let i = 1; i < data.length; i++) {
@@ -765,7 +756,6 @@
                 const content = row[contentIndex] ? row[contentIndex].trim() : '';
                 const extra1 = (extraIndex1 !== undefined && row[extraIndex1]) ? row[extraIndex1].trim() : '';
                 const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
-
                 if (!title && !content) continue;
                 if (!seriesMap[series]) seriesMap[series] = [];
                 seriesMap[series].push({ title, content, extra1, extra2 });
@@ -950,7 +940,6 @@
             });
             const target = document.getElementById(sectionId);
             if (target) target.style.display = 'block';
-
             document.querySelectorAll('.sidebar button').forEach(btn => {
                 btn.classList.remove('active');
                 const btnSection = btn.dataset.section;
