@@ -224,8 +224,27 @@
         }
         .carousel-slide h3 { color: #f4d03f; margin-top: 0; margin-bottom: 10px; }
         .carousel-slide p { color: #e6edf5; line-height: 1.8; max-width: 90%; }
-        .carousel-slide img { max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: contain; margin: 10px 0; cursor: pointer; transition: 0.3s; }
-        .carousel-slide img:hover { opacity: 0.9; }
+        
+        /* تنسيق صور السلايدر (تدعم صورة واحدة أو مجموعة صور) */
+        .slide-images-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
+            width: 100%;
+        }
+        .carousel-slide img {
+            max-width: 100%;
+            max-height: 280px;
+            border-radius: 12px;
+            object-fit: contain;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .carousel-slide img:hover { opacity: 0.9; transform: scale(1.01); }
+
         .carousel-slide .video-container { width: 100%; max-width: 560px; margin: 10px auto; }
         .carousel-slide .video-container iframe { width: 100%; height: 315px; border-radius: 12px; border: none; }
         .carousel-slide .link-btn {
@@ -458,7 +477,6 @@
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
-        // وظيفة فتح الصورة المكبرة داخل الموقع
         function openModal(imgSrc) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
@@ -466,7 +484,6 @@
             modal.style.display = 'flex';
         }
 
-        // وظيفة إغلاق النافذة المكبرة
         function closeModal() {
             document.getElementById('imageModal').style.display = 'none';
         }
@@ -510,7 +527,7 @@
                 hasContent = true;
 
                 html += '<div class="info-item">';
-                if (type === 'صورة' || type === 'image') {
+                if (type === 'صورة' || type === 'image' || type === 'صور' || isImageUrl(content)) {
                     html += '<img src="' + content + '" alt="' + title + '" loading="lazy" onclick="openModal(\'' + content + '\')">';
                     if (title) html += '<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">' + title + '</p>';
                 } else if (type === 'رابط' || type === 'link' || type === 'ربط') {
@@ -545,6 +562,12 @@
             return videoId;
         }
 
+        function isImageUrl(url) {
+            if (!url) return false;
+            const cleanUrl = url.trim().toLowerCase();
+            return cleanUrl.match(/\.(jpeg|jpg|png|gif|webp|bmp|svg)($|\?)/i) || cleanUrl.includes('drive.google.com') || cleanUrl.includes('imgur.com') || cleanUrl.includes('cloudinary') || cleanUrl.includes('googleusercontent.com');
+        }
+
         function renderCarousel() {
             const container = document.getElementById('homeContent');
             if (!slidesData || slidesData.length === 0) {
@@ -561,10 +584,36 @@
                 html += '<div class="carousel-slide">';
                 if (item.title) html += '<h3>' + item.title + '</h3>';
 
-                if (item.type === 'صورة' || item.type === 'image') {
-                    html += '<img src="' + item.content + '" alt="' + (item.title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + item.content + '\')">';
-                } else if (item.type === 'فيديو' || item.type === 'video') {
-                    const videoId = getYouTubeId(item.content);
+                // جمع جميع الصور (سواء من حقل الصورة أو حقل المحتوى إذا كان رابط صورة أو مجموعة صور مفصولة بفاصلة)
+                let imagesList = [];
+                if (item.image) {
+                    item.image.split(',').forEach(function(img) {
+                        const trimmed = img.trim();
+                        if (trimmed) imagesList.push(trimmed);
+                    });
+                }
+
+                if (item.content) {
+                    const contentParts = item.content.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+                    const allAreImages = contentParts.length > 0 && contentParts.every(function(p) { return isImageUrl(p); });
+                    
+                    if (allAreImages || item.type === 'صورة' || item.type === 'image' || item.type === 'صور') {
+                        contentParts.forEach(function(img) { imagesList.push(img); });
+                        item.content = ''; // تفريغ المحتوى النصي لأنه عبارة عن صور
+                    }
+                }
+
+                // عرض الصور إذا وجدت (سواء صورة فردية أو مجموعة صور)
+                if (imagesList.length > 0) {
+                    html += '<div class="slide-images-container">';
+                    imagesList.forEach(function(imgSrc) {
+                        html += '<img src="' + imgSrc + '" alt="' + (item.title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + imgSrc + '\')">';
+                    });
+                    html += '</div>';
+                }
+
+                if (item.type === 'فيديو' || item.type === 'video') {
+                    const videoId = getYouTubeId(item.content || item.image);
                     if (videoId) {
                         html += '<div class="video-container"><iframe src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe></div>';
                     } else {
@@ -572,12 +621,10 @@
                     }
                 } else if (item.type === 'رابط' || item.type === 'link' || item.type === 'ربط') {
                     html += '<a href="' + item.content + '" target="_blank" class="link-btn">🔗 ' + (item.title || item.content) + '</a>';
-                } else {
-                    html += '<p>' + (item.content || '') + '</p>';
-                    if (item.image) {
-                        html += '<img src="' + item.image + '" alt="' + (item.title || 'صورة') + '" loading="lazy" onclick="openModal(\'' + item.image + '\')">';
-                    }
+                } else if (item.content) {
+                    html += '<p>' + item.content + '</p>';
                 }
+
                 html += '</div>';
             });
 
@@ -623,7 +670,12 @@
         }
 
         async function loadHome() {
-            const data = await fetchSheetData('الصفحة الرئيسية');
+            // محاولة جلب البيانات من شريحة "الصفحة الرئيسية" أو "آخر الأخبار"
+            let data = await fetchSheetData('الصفحة الرئيسية');
+            if (!data || data.length < 2) {
+                data = await fetchSheetData('آخر الأخبار');
+            }
+            
             slidesData = [];
             if (!data || data.length < 2) {
                 renderCarousel();
