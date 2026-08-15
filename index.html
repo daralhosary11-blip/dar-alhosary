@@ -206,7 +206,6 @@
             color: #85c1e9;
             font-size: 1.1rem;
         }
-        /* ===== الأخبار العمودية ===== */
         .home-item {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
@@ -277,7 +276,6 @@
             height: 100%;
             border: none;
         }
-        /* ===== مودال تكبير الصور (Lightbox) ===== */
         .modal {
             display: none;
             position: fixed;
@@ -324,7 +322,6 @@
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
         }
-        /* ===== باقي الأقسام ===== */
         .series-toggle {
             display: block;
             width: 100%;
@@ -428,9 +425,7 @@
             font-weight: 600;
         }
         .site-footer a:hover { text-decoration: underline; }
-        @media (max-width: 992px) {
-            .left-sidebar { display: none; }
-        }
+        @media (max-width: 992px) { .left-sidebar { display: none; } }
         @media (max-width: 768px) {
             .main-wrapper { flex-direction: column; }
             .sidebar {
@@ -477,7 +472,7 @@
 </head>
 <body>
 
-    <!-- ===== مودال تكبير الصور ===== -->
+    <!-- مودال تكبير الصور -->
     <div id="imageModal" class="modal" onclick="closeModal()">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <img class="modal-content" id="modalImage">
@@ -567,6 +562,36 @@
         }
 
         // ============================================================
+        // دوال معالجة روابط الصور
+        // ============================================================
+        function getDirectImageUrl(url) {
+            if (!url) return url;
+            // إذا كان رابط Google Drive
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/([^\/]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+                // إذا كان الرابط بالفعل مباشر
+                if (url.includes('uc?export=view') || url.includes('uc?id=')) {
+                    return url;
+                }
+                // محاولة استخراج id من الرابط بأي شكل
+                const idMatch = url.match(/[?&]id=([^&]+)/);
+                if (idMatch && idMatch[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+                }
+            }
+            return url;
+        }
+
+        function isImageUrl(url) {
+            if (!url) return false;
+            const imgExtensions = /\.(jpg|jpeg|png|gif|bmp|webp|svg)(\?.*)?$/i;
+            return imgExtensions.test(url) || url.includes('drive.google.com') || url.includes('imgur.com') || url.includes('i.ibb.co');
+        }
+
+        // ============================================================
         // مودال تكبير الصور
         // ============================================================
         function openModal(src) {
@@ -581,7 +606,6 @@
             modal.classList.remove('open');
             document.body.style.overflow = 'auto';
         }
-        // إغلاق المودال بضغط Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
@@ -615,7 +639,8 @@
 
                 html += `<div class="info-item">`;
                 if (type === 'صورة' || type === 'image') {
-                    html += `<img src="${content}" alt="${title}" loading="lazy">`;
+                    const imgSrc = getDirectImageUrl(content);
+                    html += `<img src="${imgSrc}" alt="${title}" loading="lazy" onclick="openModal('${imgSrc}')">`;
                     if (title) html += `<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">${title}</p>`;
                 } else if (type === 'رابط' || type === 'link') {
                     html += `<a href="${content}" target="_blank">🔗 ${title || 'رابط'}</a>`;
@@ -633,36 +658,12 @@
         }
 
         // ============================================================
-        // دوال معالجة الروابط
-        // ============================================================
-        function getDirectImageUrl(url) {
-            if (!url) return url;
-            if (url.includes('drive.google.com')) {
-                const match = url.match(/\/d\/([^\/]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-                }
-                if (url.includes('uc?export=view')) {
-                    return url;
-                }
-            }
-            return url;
-        }
-
-        function isImageUrl(url) {
-            if (!url) return false;
-            const imgExtensions = /\.(jpg|jpeg|png|gif|bmp|webp|svg)(\?.*)?$/i;
-            return imgExtensions.test(url) || url.includes('drive.google.com') || url.includes('imgur.com') || url.includes('i.ibb.co');
-        }
-
-        // ============================================================
         // الصفحة الرئيسية - عرض عمودي مع صور قابلة للتكبير
         // ============================================================
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
             
-            // ترتيب الأعمدة: A = عنوان (0), B = محتوى (1), C = نوع (2), D = صورة (3)
             if (data.length < 2) {
                 container.innerHTML = `
                     <h2>🏠 الرئيسية</h2>
@@ -683,8 +684,7 @@
                 items.push({ title, content, type, image });
             }
 
-            // ✅ عكس الترتيب (الأحدث فوق)
-            items.reverse();
+            items.reverse(); // الأحدث فوق
 
             if (items.length === 0) {
                 container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى في الصفحة الرئيسية.</p>`;
@@ -733,7 +733,6 @@
                             html += `<p>${item.content}</p>`;
                         }
                     }
-                    // إذا كان في العمود D صورة إضافية
                     if (item.image) {
                         const imgSrc = getDirectImageUrl(item.image);
                         html += `<img src="${imgSrc}" alt="${item.title || 'صورة'}" loading="lazy" onclick="openModal('${imgSrc}')">`;
@@ -747,7 +746,7 @@
         }
 
         // ============================================================
-        // باقي الدوال (نفس الكود السابق - مختصرة للاختصار)
+        // دوال الأقسام الأخرى (مع تحويل روابط الصور)
         // ============================================================
         function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
@@ -760,7 +759,6 @@
                 const extra2 = (extraIndex2 !== undefined && row[extraIndex2]) ? row[extraIndex2].trim() : '';
 
                 if (!title && !content) continue;
-
                 if (!seriesMap[series]) seriesMap[series] = [];
                 seriesMap[series].push({ title, content, extra1, extra2 });
             }
@@ -846,11 +844,13 @@
                 const items = seriesMap[name];
                 html += `<button class="series-toggle" data-target="article-${index}">📝 ${name}</button><div id="article-${index}" class="series-content">`;
                 items.forEach(item => {
+                    let imgSrc = '';
+                    if (item.extra2) imgSrc = getDirectImageUrl(item.extra2);
                     html += `
                         <div class="child-item">
                             <p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p>
                             <p>${item.content || ''}</p>
-                            ${item.extra2 ? `<img src="${item.extra2}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;" onclick="openModal('${item.extra2}')">` : ''}
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover; cursor:pointer;" onclick="openModal('${imgSrc}')">` : ''}
                         </div>
                     `;
                 });
@@ -878,10 +878,12 @@
                 const items = seriesMap[name];
                 html += `<button class="series-toggle" data-target="book-${index}">📚 ${name}</button><div id="book-${index}" class="series-content">`;
                 items.forEach(item => {
+                    let imgSrc = '';
+                    if (item.extra1) imgSrc = getDirectImageUrl(item.extra1);
                     html += `
                         <div class="child-item">
                             <p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>
-                            ${item.extra1 ? `<img src="${item.extra1}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px;" onclick="openModal('${item.extra1}')">` : ''}
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px; cursor:pointer;" onclick="openModal('${imgSrc}')">` : ''}
                             <a href="${item.content}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>
                         </div>
                     `;
@@ -910,9 +912,10 @@
                 const items = seriesMap[name];
                 html += `<button class="series-toggle" data-target="image-${index}">🖼️ ${name}</button><div id="image-${index}" class="series-content"><div class="image-grid">`;
                 items.forEach(item => {
+                    const imgSrc = getDirectImageUrl(item.content);
                     html += `
                         <div class="image-item">
-                            <img src="${item.content}" alt="${item.title || 'صورة'}" loading="lazy" onclick="openModal('${item.content}')">
+                            <img src="${imgSrc}" alt="${item.title || 'صورة'}" loading="lazy" onclick="openModal('${imgSrc}')">
                             <h4>${item.title || 'بدون عنوان'}</h4>
                             ${item.extra1 ? `<p>${item.extra1}</p>` : ''}
                         </div>
