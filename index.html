@@ -116,9 +116,10 @@
             transform: rotate(90deg);
         }
 
-        /* ===== الحاوية الرئيسية ===== */
+        /* ===== الحاوية الرئيسية (القائمة على اليسار والمحتوى على اليمين) ===== */
         .main-wrapper {
             display: flex;
+            flex-direction: row-reverse; /* يجعل القائمة شمال والمحتوى يمين */
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto 30px;
@@ -126,7 +127,7 @@
             flex: 1;
         }
 
-        /* ===== القائمة الجانبية ===== */
+        /* ===== القائمة الجانبية (في الشمال) ===== */
         .sidebar {
             flex: 0 0 200px;
             background: var(--card-bg);
@@ -203,7 +204,7 @@
             color: var(--text-light);
         }
 
-        /* ===== تصميم السلايدر (عرض الشرائح بالأسهم) ===== */
+        /* ===== تصميم السلايدر المتحرك (عرض الشرائح التلقائي واليدوي) ===== */
         .slider-container {
             position: relative;
             background: #faf6ef;
@@ -496,7 +497,7 @@
 
     <div class="main-wrapper">
 
-        <!-- القائمة الجانبية -->
+        <!-- القائمة الجانبية (على اليسار) -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -545,6 +546,7 @@
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
         let currentSlideIndex = 0;
+        let autoSlideTimer = null; // متغير للتحكم في المؤقت التلقائي
 
         async function fetchSheetData(sheetName) {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
@@ -583,19 +585,22 @@
             img.src = src;
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
+            stopAutoSlide(); // إيقاف السلايدر التلقائي عند فتح الصورة
         }
 
         function closeModal() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.classList.remove('open');
             document.body.style.overflow = 'auto';
+            startAutoSlide(); // استئناف التحريك التلقائي عند إغلاق الصورة
         }
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
         // ============================================================
-        // دالة تحريك السلايدر (التالي / السابق)
+        // دوال تحريك السلايدر (التالي / السابق) مع إعادة ضبط المؤقت
         // ============================================================
         window.moveSlide = function(n) {
+            stopAutoSlide();
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
             if (slides.length === 0) return;
@@ -613,9 +618,11 @@
 
             slides[currentSlideIndex].classList.add('active-slide');
             if(dots.length > 0) dots[currentSlideIndex].classList.add('active-dot');
+            startAutoSlide();
         }
 
         window.currentSlide = function(n) {
+            stopAutoSlide();
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
             if (slides.length === 0) return;
@@ -629,6 +636,36 @@
 
             slides[currentSlideIndex].classList.add('active-slide');
             if(dots.length > 0) dots[currentSlideIndex].classList.add('active-dot');
+            startAutoSlide();
+        }
+
+        // بدء التحريك التلقائي (يتنقل كل 4 ثوانٍ)
+        function startAutoSlide() {
+            stopAutoSlide();
+            autoSlideTimer = setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                const dots = document.querySelectorAll('.dot');
+                if (slides.length === 0) return;
+
+                slides[currentSlideIndex].classList.remove('active-slide');
+                if(dots.length > 0) dots[currentSlideIndex].classList.remove('active-dot');
+
+                currentSlideIndex++;
+                if (currentSlideIndex >= slides.length) {
+                    currentSlideIndex = 0;
+                }
+
+                slides[currentSlideIndex].classList.add('active-slide');
+                if(dots.length > 0) dots[currentSlideIndex].classList.add('active-dot');
+            }, 4000);
+        }
+
+        // إيقاف التحريك التلقائي (عند تحويم الفأرة فوق السلايدر)
+        function stopAutoSlide() {
+            if (autoSlideTimer) {
+                clearInterval(autoSlideTimer);
+                autoSlideTimer = null;
+            }
         }
 
         // ============================================================
@@ -659,7 +696,7 @@
                 return;
             }
 
-            let slidesHtml = `<div class="slider-container">`;
+            let slidesHtml = `<div class="slider-container" id="mainSliderContainer">`;
             // زر السابق (يمين) والتالي (يسار)
             slidesHtml += `<button class="slider-btn prev-btn" onclick="moveSlide(1)">&#10095;</button>`;
             slidesHtml += `<button class="slider-btn next-btn" onclick="moveSlide(-1)">&#10094;</button>`;
@@ -710,6 +747,15 @@
             slidesHtml += `</div>`;
             container.innerHTML = slidesHtml;
             currentSlideIndex = 0;
+
+            // إيقاف الحركة التلقائية عند مرور الفأرة واستئنافها عند إزالتها
+            const sliderEl = document.getElementById('mainSliderContainer');
+            if (sliderEl) {
+                sliderEl.addEventListener('mouseenter', stopAutoSlide);
+                sliderEl.addEventListener('mouseleave', startAutoSlide);
+            }
+
+            startAutoSlide();
         }
 
         // دوال الأقسام الأخرى
@@ -869,6 +915,12 @@
                 if (btn.dataset.section === id.replace('Section', '').toLowerCase()) btn.classList.add('active');
                 if (id === 'homeSection' && btn.dataset.section === 'home') btn.classList.add('active');
             });
+            // لو طلعنا برا الرئيسية نوقف السلايدر، ولو رجعنا للرئيسية نشغله
+            if (id === 'homeSection') {
+                startAutoSlide();
+            } else {
+                stopAutoSlide();
+            }
         }
 
         async function loadAll() {
