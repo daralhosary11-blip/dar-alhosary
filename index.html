@@ -122,8 +122,9 @@
             color: #f4d03f;
             box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
         }
+        /* ===== العمود الجانبي (معلومات جانبية) - بدون حذف للمحتوى ===== */
         .left-sidebar {
-            flex: 0 0 220px;
+            flex: 0 0 240px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -131,8 +132,8 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             position: sticky;
             top: 20px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
+            max-height: none; /* ✅ إزالة الحد الأقصى عشان يظهر كل المحتوى */
+            overflow-y: visible; /* ✅ إظهار كل المحتوى بدون تمرير */
             order: 2;
         }
         .left-sidebar h3 {
@@ -149,6 +150,8 @@
             background: rgba(255,255,255,0.03);
             border-radius: 8px;
             text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .left-sidebar .info-item p {
             color: #e6edf5;
@@ -217,6 +220,7 @@
         }
         .carousel-slide {
             min-width: 100%;
+            flex-shrink: 0;
             padding: 15px 20px;
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
@@ -275,12 +279,8 @@
             background: #f4d03f;
             color: #0b1a2e;
         }
-        .carousel-btn.prev {
-            right: 10px;
-        }
-        .carousel-btn.next {
-            left: 10px;
-        }
+        .carousel-btn.prev { right: 10px; }
+        .carousel-btn.next { left: 10px; }
         .carousel-dots {
             text-align: center;
             margin-top: 12px;
@@ -331,9 +331,7 @@
             padding-right: 15px;
             margin-bottom: 12px;
         }
-        .series-content.open {
-            display: block;
-        }
+        .series-content.open { display: block; }
         .child-item {
             padding: 10px;
             margin-bottom: 10px;
@@ -401,9 +399,7 @@
             text-align: center;
             margin: 15px 0 8px;
         }
-        .portal-btn {
-            display: none;
-        }
+        .portal-btn { display: none; }
         .site-footer {
             text-align: center;
             padding: 20px;
@@ -420,9 +416,7 @@
             text-decoration: none;
             font-weight: 600;
         }
-        .site-footer a:hover {
-            text-decoration: underline;
-        }
+        .site-footer a:hover { text-decoration: underline; }
         @media (max-width: 992px) {
             .left-sidebar { display: none; }
         }
@@ -460,12 +454,8 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .portal-btn-header {
-                align-self: center;
-            }
-            .carousel-slide .video-container iframe {
-                height: 200px;
-            }
+            .portal-btn-header { align-self: center; }
+            .carousel-slide .video-container iframe { height: 200px; }
         }
         @media (max-width: 480px) {
             .site-header h1 { font-size: 1.5rem; }
@@ -560,7 +550,7 @@
         }
 
         // ============================================================
-        // العمود الجانبي (معلومات جانبية)
+        // العمود الجانبي (معلومات جانبية) - بدون حدود
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -655,7 +645,6 @@
                         html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
                     }
                 } else {
-                    // نص
                     html += `<p>${item.content || ''}</p>`;
                     if (item.image) {
                         html += `<img src="${item.image}" alt="${item.title || 'صورة'}" loading="lazy">`;
@@ -708,45 +697,29 @@
         }
 
         async function loadHome() {
-    const data = await fetchSheetData('الصفحة الرئيسية');
-    slidesData = [];
+            const data = await fetchSheetData('الصفحة الرئيسية');
+            slidesData = [];
 
-    if (data.length < 2) {
-        renderCarousel();
-        return;
-    }
-
-    for (let i = 1; i < data.length; i++) {
-        const row = data[i];
-        
-        // ✅ الخطوة الجديدة: نتأكد إن الصف مش فاضي تماماً
-        const isEmpty = row.every(cell => !cell || cell.trim() === '');
-        if (isEmpty) continue;
-
-        const title = row[0] ? row[0].trim() : '';
-        const content = row[1] ? row[1].trim() : '';
-        const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
-        const image = row[3] ? row[3].trim() : '';
-
-        slidesData.push({ title, content, type, image });
-    }
-
-    // ✅ هنطبع عدد الشرائح اللي اتقرأت في Console عشان تتأكد
-    console.log('✅ عدد الشرائح التي تم تحميلها:', slidesData.length);
-
-    renderCarousel();
-}
+            if (data.length < 2) {
+                renderCarousel();
+                return;
+            }
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
+                // نتأكد إن الصف مش فاضي
+                const isEmpty = row.every(cell => !cell || cell.trim() === '');
+                if (isEmpty) continue;
+
                 const title = row[0] ? row[0].trim() : '';
                 const content = row[1] ? row[1].trim() : '';
                 const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
                 const image = row[3] ? row[3].trim() : '';
 
-                if (!title && !content && !image) continue;
                 slidesData.push({ title, content, type, image });
             }
+
+            console.log('✅ عدد الشرائح التي تم تحميلها:', slidesData.length);
             renderCarousel();
         }
 
