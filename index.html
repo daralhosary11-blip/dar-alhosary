@@ -122,7 +122,6 @@
             color: #f4d03f;
             box-shadow: 0 0 20px rgba(244, 208, 63, 0.08);
         }
-        /* ===== العمود الجانبي (معلومات جانبية) - بدون حذف للمحتوى ===== */
         .left-sidebar {
             flex: 0 0 240px;
             background: rgba(255, 255, 255, 0.06);
@@ -132,8 +131,8 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             position: sticky;
             top: 20px;
-            max-height: none; /* ✅ إزالة الحد الأقصى عشان يظهر كل المحتوى */
-            overflow-y: visible; /* ✅ إظهار كل المحتوى بدون تمرير */
+            max-height: none;
+            overflow-y: visible;
             order: 2;
         }
         .left-sidebar h3 {
@@ -207,20 +206,22 @@
             color: #85c1e9;
             font-size: 1.1rem;
         }
-        /* ===== كاروسيل متعدد الأنواع ===== */
+        /* ===== كاروسيل - الإصلاح النهائي ===== */
         .carousel-container {
             position: relative;
             overflow: hidden;
             border-radius: 16px;
             margin: 10px 0;
+            width: 100%;
         }
         .carousel-track {
             display: flex;
             transition: transform 0.5s ease-in-out;
+            width: 100%;
         }
         .carousel-slide {
-            min-width: 100%;
-            flex-shrink: 0;
+            flex: 0 0 100%; /* ✅ كل شريحة تأخذ 100% من العرض */
+            max-width: 100%;
             padding: 15px 20px;
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
@@ -550,7 +551,7 @@
         }
 
         // ============================================================
-        // العمود الجانبي (معلومات جانبية) - بدون حدود
+        // العمود الجانبي
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -596,7 +597,7 @@
         }
 
         // ============================================================
-        // كاروسيل الصفحة الرئيسية (يدعم نص، صورة، فيديو)
+        // كاروسيل الصفحة الرئيسية
         // ============================================================
         let currentSlide = 0;
         let slidesData = [];
@@ -620,6 +621,8 @@
                 container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى في الصفحة الرئيسية.</p>`;
                 return;
             }
+
+            console.log('🔄 جاري عرض السلايدر، عدد الشرائح:', slidesData.length);
 
             let html = `<h2>🏠 الرئيسية</h2>
                 <div class="carousel-container">
@@ -707,24 +710,26 @@
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                // نتأكد إن الصف مش فاضي
-                const isEmpty = row.every(cell => !cell || cell.trim() === '');
-                if (isEmpty) continue;
-
                 const title = row[0] ? row[0].trim() : '';
                 const content = row[1] ? row[1].trim() : '';
                 const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
                 const image = row[3] ? row[3].trim() : '';
 
+                // ✅ نتأكد إن الصف فيه بيانات مفيدة
+                if (!title && !content && !image) continue;
+
                 slidesData.push({ title, content, type, image });
             }
 
-            console.log('✅ عدد الشرائح التي تم تحميلها:', slidesData.length);
+            // ✅ هنطبع البيانات في Console عشان نتأكد
+            console.log('✅ البيانات المستخرجة من الجدول:', JSON.stringify(slidesData, null, 2));
+            console.log('✅ عدد الشرائح:', slidesData.length);
+
             renderCarousel();
         }
 
         // ============================================================
-        // دالة عامة لتنظيم البيانات على شكل سلاسل
+        // باقي الدوال (زي ما هي)
         // ============================================================
         function organizeIntoSeries(data, seriesColumnIndex, titleIndex, contentIndex, extraIndex1, extraIndex2) {
             const seriesMap = {};
@@ -744,9 +749,6 @@
             return seriesMap;
         }
 
-        // ============================================================
-        // الفيديوهات
-        // ============================================================
         async function loadVideos() {
             const container = document.getElementById('videosList');
             const data = await fetchSheetData('فيديوهات');
@@ -801,9 +803,6 @@
             });
         }
 
-        // ============================================================
-        // الصوتيات
-        // ============================================================
         async function loadAudio() {
             const container = document.getElementById('audioList');
             const data = await fetchSheetData('صوتيات');
@@ -850,9 +849,6 @@
             });
         }
 
-        // ============================================================
-        // المقالات
-        // ============================================================
         async function loadArticles() {
             const container = document.getElementById('articlesList');
             const data = await fetchSheetData('مقالات');
@@ -900,9 +896,6 @@
             });
         }
 
-        // ============================================================
-        // الكتب
-        // ============================================================
         async function loadBooks() {
             const container = document.getElementById('booksList');
             const data = await fetchSheetData('كتب PDF');
@@ -950,9 +943,6 @@
             });
         }
 
-        // ============================================================
-        // الصور
-        // ============================================================
         async function loadImages() {
             const container = document.getElementById('imagesList');
             const data = await fetchSheetData('صور');
