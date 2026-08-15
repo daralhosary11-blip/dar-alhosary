@@ -432,6 +432,11 @@
             font-weight: 600;
         }
         .site-footer a:hover { text-decoration: underline; }
+        .img-broken-note {
+            font-size: 0.75rem;
+            color: #e08283;
+            margin-top: 4px;
+        }
         @media (max-width: 992px) {
             .left-sidebar { display: none; }
         }
@@ -551,15 +556,40 @@
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
+        // ============================================================
+        // 🔧 مُصلِّح روابط الصور (خصوصًا روابط جوجل درايف اللي مش شغالة كـ <img>)
+        // ============================================================
+        function fixImageUrl(url) {
+            if (!url) return '';
+            url = url.trim();
+
+            // رابط جوجل درايف بصيغة /file/d/ID/view
+            let match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (match) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+
+            // رابط جوجل درايف بصيغة open?id=ID أو uc?id=ID
+            match = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (match && url.includes('drive.google.com')) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+
+            // أي رابط تاني (imgbb, github, cloudinary...) يفضل زي ما هو
+            return url;
+        }
+
         async function fetchSheetData(sheetName) {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
+                const rows = json.table.rows.map(row => row.c.map(cell => cell ? cell.v : ''));
+                console.log(`📥 تاب "${sheetName}": عدد الصفوف = ${rows.length}`);
+                return rows;
             } catch (error) {
-                console.error('خطأ:', error);
+                console.error(`❌ خطأ في تحميل تاب "${sheetName}":`, error);
                 return [];
             }
         }
@@ -593,7 +623,7 @@
 
                 html += `<div class="info-item">`;
                 if (type === 'صورة' || type === 'image') {
-                    html += `<img src="${content}" alt="${title}" loading="lazy">`;
+                    html += `<img src="${fixImageUrl(content)}" alt="${title}" loading="lazy">`;
                     if (title) html += `<p style="margin-top:4px; font-size:0.8rem; color:#85c1e9;">${title}</p>`;
                 } else if (type === 'رابط' || type === 'link') {
                     html += `<a href="${content}" target="_blank">🔗 ${title || 'رابط'}</a>`;
@@ -649,7 +679,7 @@
                 if (item.title) html += `<h3>${item.title}</h3>`;
 
                 if (item.type === 'صورة' || item.type === 'image') {
-                    html += `<img src="${item.content}" alt="${item.title || 'صورة'}" loading="lazy">`;
+                    html += `<img src="${fixImageUrl(item.content)}" alt="${item.title || 'صورة'}" loading="lazy">`;
                 } else if (item.type === 'فيديو' || item.type === 'video') {
                     const videoId = getYouTubeId(item.content);
                     if (videoId) {
@@ -667,7 +697,7 @@
                     // نص
                     html += `<p>${item.content || ''}</p>`;
                     if (item.image) {
-                        html += `<img src="${item.image}" alt="${item.title || 'صورة'}" loading="lazy">`;
+                        html += `<img src="${fixImageUrl(item.image)}" alt="${item.title || 'صورة'}" loading="lazy">`;
                     }
                 }
 
@@ -716,8 +746,7 @@
             updateDots();
         }
 
-        // ✅ التعديل النهائي حسب ترتيب الأعمدة الصحيح:
-        // A = العنوان (0), B = المحتوى (1), C = النوع (2), D = الصورة (3)
+        // ✅ ترتيب الأعمدة: A = العنوان (0), B = المحتوى (1), C = النوع (2), D = الصورة (3)
         async function loadHome() {
             const data = await fetchSheetData('الصفحة الرئيسية');
             
@@ -733,7 +762,6 @@
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                // الترتيب الصح: 0=عنوان, 1=محتوى, 2=نوع, 3=صورة
                 const title = row[0] ? row[0].trim() : '';
                 const content = row[1] ? row[1].trim() : '';
                 const type = row[2] ? row[2].trim().toLowerCase() : 'نص';
@@ -901,7 +929,7 @@
                         <div class="child-item">
                             <p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p>
                             <p>${item.content || ''}</p>
-                            ${item.extra2 ? `<img src="${item.extra2}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;">` : ''}
+                            ${item.extra2 ? `<img src="${fixImageUrl(item.extra2)}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; object-fit:cover;">` : ''}
                         </div>
                     `;
                 });
@@ -947,7 +975,7 @@
                     html += `
                         <div class="child-item">
                             <p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>
-                            ${item.extra1 ? `<img src="${item.extra1}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px;">` : ''}
+                            ${item.extra1 ? `<img src="${fixImageUrl(item.extra1)}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; object-fit:cover; margin-bottom:6px;">` : ''}
                             <a href="${item.content}" target="_blank" style="color:#f4d03f; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a>
                         </div>
                     `;
@@ -994,7 +1022,7 @@
                 items.forEach(item => {
                     html += `
                         <div class="image-item">
-                            <img src="${item.content}" alt="${item.title || 'صورة'}" loading="lazy">
+                            <img src="${fixImageUrl(item.content)}" alt="${item.title || 'صورة'}" loading="lazy">
                             <h4>${item.title || 'بدون عنوان'}</h4>
                             ${item.extra1 ? `<p>${item.extra1}</p>` : ''}
                         </div>
