@@ -273,33 +273,46 @@
             color: var(--text-light);
         }
 
-        /* ===== عناصر الأخبار ===== */
-        .home-item {
+        /* ===== تصميم السلايدر (الصفحة الرئيسية) ===== */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            border-radius: 12px;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide-item {
+            min-width: 100%;
+            box-sizing: border-box;
             background: #faf6ef;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 20px;
             border: 1px solid var(--border);
         }
-        .home-item h3 {
+        .slide-item h3 {
             color: var(--text);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
-        .home-item p {
+        .slide-item p {
             color: var(--text);
             line-height: 1.8;
         }
-        .home-item img {
+        .slide-item img {
             max-width: 100%;
-            max-height: 300px;
+            max-height: 350px;
             border-radius: 12px;
             object-fit: contain;
             margin-top: 10px;
             display: block;
             cursor: pointer;
             border: 1px solid var(--border);
+            margin-right: auto;
+            margin-left: auto;
         }
-        .home-item .link-btn {
+        .slide-item .link-btn {
             display: inline-block;
             padding: 8px 20px;
             background: var(--primary);
@@ -307,13 +320,63 @@
             border-radius: 30px;
             text-decoration: none;
             font-weight: 700;
-            margin-top: 6px;
+            margin-top: 10px;
             transition: 0.3s;
         }
-        .home-item .link-btn:hover {
+        .slide-item .link-btn:hover {
             background: var(--primary-dark);
             transform: scale(1.02);
         }
+
+        /* أسهم التحكم في السلايدر */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(26, 92, 58, 0.8);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover {
+            background: var(--primary-dark);
+        }
+        .slider-btn.prev {
+            right: 15px;
+        }
+        .slider-btn.next {
+            left: 15px;
+        }
+
+        /* نقاط المؤشرات (Dots) أسفل السلايدر */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .slider-dot.active {
+            background: var(--gold);
+            transform: scale(1.2);
+        }
+
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -656,8 +719,11 @@
         }
 
         // ============================================================
-        // 2. الصفحة الرئيسية
+        // 2. الصفحة الرئيسية (سلايدر متحرك أوتوماتيكي مع أسهم)
         // ============================================================
+        let currentSlide = 0;
+        let sliderInterval = null;
+
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
@@ -680,13 +746,20 @@
                 container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى</p>`;
                 return;
             }
+
             let html = `<h2>🏠 الرئيسية</h2>`;
+            html += `<div class="slider-container">`;
+            html += `<button class="slider-btn prev" onclick="moveSlide(-1)">&#10095;</button>`;
+            html += `<button class="slider-btn next" onclick="moveSlide(1)">&#10094;</button>`;
+            html += `<div class="slider-track" id="sliderTrack">`;
+
             items.forEach(item => {
-                html += `<div class="home-item">`;
+                html += `<div class="slide-item">`;
                 if (item.title) html += `<h3>${item.title}</h3>`;
                 const isImage = (item.type === 'صورة' || item.type === 'image');
                 const isVideo = (item.type === 'فيديو' || item.type === 'video');
                 const isLink = (item.type === 'ربط' || item.type === 'رابط' || item.type === 'link');
+                
                 if (isImage) {
                     const src = getDirectImageUrl(item.content);
                     html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
@@ -694,8 +767,7 @@
                     let vid = item.content;
                     if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
                     else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
-                    if (vid) html +=
-                        `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
+                    if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
                     else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
                 } else if (isLink) {
                     html += `<a href="${item.content}" target="_blank" class="link-btn">🔗 ${item.content}</a>`;
@@ -713,7 +785,51 @@
                 }
                 html += `</div>`;
             });
+
+            html += `</div>`; // نهاية slider-track
+            html += `</div>`; // نهاية slider-container
+
+            // إضافة نقاط التنقل (Dots)
+            html += `<div class="slider-dots" id="sliderDots">`;
+            items.forEach((_, idx) => {
+                html += `<span class="slider-dot ${idx === 0 ? 'active' : ''}" onclick="currentSlide = ${idx}; updateSlider(); resetAutoSlide();"></span>`;
+            });
+            html += `</div>`;
+
             container.innerHTML = html;
+            startAutoSlide();
+        }
+
+        function updateSlider() {
+            const track = document.getElementById('sliderTrack');
+            const dots = document.querySelectorAll('.slider-dot');
+            if (!track) return;
+            const slides = track.children;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+
+            track.style.transform = `translateX(${currentSlide * 100}%)`;
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentSlide);
+            });
+        }
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            updateSlider();
+            resetAutoSlide();
+        }
+
+        function startAutoSlide() {
+            if (sliderInterval) clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+                currentSlide++;
+                updateSlider();
+            }, 4500);
+        }
+
+        function resetAutoSlide() {
+            startAutoSlide();
         }
 
         // ============================================================
