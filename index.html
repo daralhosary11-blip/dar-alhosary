@@ -61,6 +61,12 @@
             color: #e8ddd0;
             margin: 0;
         }
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
         .portal-btn-header {
             background: var(--gold);
             color: var(--primary-dark);
@@ -76,6 +82,14 @@
         .portal-btn-header:hover {
             background: var(--gold-light);
             transform: scale(1.02);
+        }
+        .quran-btn {
+            background: #c9a96e;
+            color: #0f4027;
+            box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4);
+        }
+        .quran-btn:hover {
+            background: #e8d5a3;
         }
 
         /* ===== المودال ===== */
@@ -259,46 +273,33 @@
             color: var(--text-light);
         }
 
-        /* ===== تصميم السلايدر (الصفحة الرئيسية) ===== */
-        .slider-container {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            border-radius: 12px;
-        }
-        .slider-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .slide-item {
-            min-width: 100%;
-            box-sizing: border-box;
+        /* ===== عناصر الأخبار ===== */
+        .home-item {
             background: #faf6ef;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
             border: 1px solid var(--border);
         }
-        .slide-item h3 {
+        .home-item h3 {
             color: var(--text);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .slide-item p {
+        .home-item p {
             color: var(--text);
             line-height: 1.8;
         }
-        .slide-item img {
+        .home-item img {
             max-width: 100%;
-            max-height: 350px;
+            max-height: 300px;
             border-radius: 12px;
             object-fit: contain;
             margin-top: 10px;
             display: block;
             cursor: pointer;
             border: 1px solid var(--border);
-            margin-right: auto;
-            margin-left: auto;
         }
-        .slide-item .link-btn {
+        .home-item .link-btn {
             display: inline-block;
             padding: 8px 20px;
             background: var(--primary);
@@ -306,63 +307,13 @@
             border-radius: 30px;
             text-decoration: none;
             font-weight: 700;
-            margin-top: 10px;
+            margin-top: 6px;
             transition: 0.3s;
         }
-        .slide-item .link-btn:hover {
+        .home-item .link-btn:hover {
             background: var(--primary-dark);
             transform: scale(1.02);
         }
-
-        /* أسهم التحكم في السلايدر */
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(26, 92, 58, 0.8);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 10;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .slider-btn:hover {
-            background: var(--primary-dark);
-        }
-        .slider-btn.prev {
-            right: 15px;
-        }
-        .slider-btn.next {
-            left: 15px;
-        }
-
-        /* نقاط المؤشرات (Dots) أسفل السلايدر */
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-        .slider-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--border);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .slider-dot.active {
-            background: var(--gold);
-            transform: scale(1.2);
-        }
-
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -531,6 +482,9 @@
             .portal-btn-header {
                 align-self: center;
             }
+            .header-buttons {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -542,18 +496,22 @@
         <img id="modalImage" src="" alt="صورة مكبرة" />
     </div>
 
-    <!-- الهيدر -->
+    <!-- ===== الهيدر ===== -->
     <header class="site-header">
         <div class="logo">
             <h1>دار الحصري الصغير</h1>
             <p>إعداد معلمي ومعلمات القرآن الكريم والإجازة بالسند</p>
         </div>
-        <a href="#" class="portal-btn-header">الدخول إلى النظام التعليمي</a>
+        <div class="header-buttons">
+            <a href="#" class="portal-btn-header">الدخول إلى النظام التعليمي</a>
+            <a href="quran-organizer.html" target="_blank" class="portal-btn-header quran-btn">📖 ترتيب المصحف</a>
+        </div>
     </header>
 
+    <!-- ===== المحتوى الرئيسي ===== -->
     <div class="main-wrapper">
 
-        <!-- القائمة الرئيسية (الشمال) -->
+        <!-- القائمة الجانبية (الشمال) -->
         <aside class="sidebar">
             <h3>📋 القائمة</h3>
             <button class="active" data-section="home">🏠 الرئيسية</button>
@@ -569,7 +527,7 @@
             <div id="sidebarInfo"><div class="loading">جاري التحميل...</div></div>
         </aside>
 
-        <!-- المحتوى الرئيسي -->
+        <!-- المحتوى -->
         <main class="content">
             <section id="homeSection" class="card">
                 <div id="homeContent"><div class="loading">جاري تحميل المحتوى...</div></div>
@@ -597,6 +555,7 @@
         </main>
     </div>
 
+    <!-- ===== الفوتر ===== -->
     <footer class="site-footer">
         <p>&copy; 2026 جميع الحقوق محفوظة لدار الحصري الصغير</p>
         <p><a href="#" target="_blank">تابع صفحتنا الرسمية على فيسبوك</a></p>
@@ -605,8 +564,12 @@
     <script>
         const SHEET_ID = '1PDUkCKW41psD7VV9kHoPVLUsxG8kLB_qndLAlT_ohTo';
 
+        // ============================================================
+        // دالة جلب البيانات
+        // ============================================================
         async function fetchSheetData(sheetName) {
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+            const url =
+                `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
@@ -618,11 +581,17 @@
             }
         }
 
+        // ============================================================
+        // دالة لتحويل أي قيمة إلى نص
+        // ============================================================
         function safeString(value) {
             if (value === null || value === undefined) return '';
             return String(value).trim();
         }
 
+        // ============================================================
+        // دوال الصور والمودال
+        // ============================================================
         function getDirectImageUrl(url) {
             if (!url) return url;
             const str = safeString(url);
@@ -652,7 +621,7 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
         // ============================================================
-        // 1. العمود الجانبي (اليمين)
+        // 1. العمود الجانبي (معلومات جانبية) - اليمين
         // ============================================================
         async function loadSidebarInfo() {
             const container = document.getElementById('sidebarInfo');
@@ -687,11 +656,8 @@
         }
 
         // ============================================================
-        // 2. الصفحة الرئيسية (سلايدر متحرك أوتوماتيكي مع أسهم)
+        // 2. الصفحة الرئيسية
         // ============================================================
-        let currentSlide = 0;
-        let sliderInterval = null;
-
         async function loadHome() {
             const container = document.getElementById('homeContent');
             const data = await fetchSheetData('الصفحة الرئيسية');
@@ -714,20 +680,13 @@
                 container.innerHTML = `<h2>🏠 الرئيسية</h2><p>لا يوجد محتوى</p>`;
                 return;
             }
-
             let html = `<h2>🏠 الرئيسية</h2>`;
-            html += `<div class="slider-container">`;
-            html += `<button class="slider-btn prev" onclick="moveSlide(-1)">&#10095;</button>`;
-            html += `<button class="slider-btn next" onclick="moveSlide(1)">&#10094;</button>`;
-            html += `<div class="slider-track" id="sliderTrack">`;
-
             items.forEach(item => {
-                html += `<div class="slide-item">`;
+                html += `<div class="home-item">`;
                 if (item.title) html += `<h3>${item.title}</h3>`;
                 const isImage = (item.type === 'صورة' || item.type === 'image');
                 const isVideo = (item.type === 'فيديو' || item.type === 'video');
                 const isLink = (item.type === 'ربط' || item.type === 'رابط' || item.type === 'link');
-                
                 if (isImage) {
                     const src = getDirectImageUrl(item.content);
                     html += `<img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')">`;
@@ -735,7 +694,8 @@
                     let vid = item.content;
                     if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
                     else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
-                    if (vid) html += `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
+                    if (vid) html +=
+                        `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
                     else html += `<p>⚠️ رابط فيديو غير صحيح</p>`;
                 } else if (isLink) {
                     html += `<a href="${item.content}" target="_blank" class="link-btn">🔗 ${item.content}</a>`;
@@ -753,55 +713,11 @@
                 }
                 html += `</div>`;
             });
-
-            html += `</div>`; // نهاية slider-track
-            html += `</div>`; // نهاية slider-container
-
-            // إضافة نقاط التنقل (Dots)
-            html += `<div class="slider-dots" id="sliderDots">`;
-            items.forEach((_, idx) => {
-                html += `<span class="slider-dot ${idx === 0 ? 'active' : ''}" onclick="currentSlide = ${idx}; updateSlider(); resetAutoSlide();"></span>`;
-            });
-            html += `</div>`;
-
             container.innerHTML = html;
-            startAutoSlide();
-        }
-
-        function updateSlider() {
-            const track = document.getElementById('sliderTrack');
-            const dots = document.querySelectorAll('.slider-dot');
-            if (!track) return;
-            const slides = track.children;
-            if (currentSlide >= slides.length) currentSlide = 0;
-            if (currentSlide < 0) currentSlide = slides.length - 1;
-
-            track.style.transform = `translateX(${currentSlide * 100}%)`; // RTL اتجاه العرض بالعربي
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === currentSlide);
-            });
-        }
-
-        function moveSlide(direction) {
-            currentSlide += direction;
-            updateSlider();
-            resetAutoSlide();
-        }
-
-        function startAutoSlide() {
-            if (sliderInterval) clearInterval(sliderInterval);
-            sliderInterval = setInterval(() => {
-                currentSlide++;
-                updateSlider();
-            }, 4500); // يتحرك تلقائياً كل 4.5 ثانية
-        }
-
-        function resetAutoSlide() {
-            startAutoSlide();
         }
 
         // ============================================================
-        // بقية الأقسام (مقالات، كتب، فيديو، صوتيات، صور)
+        // دوال الأقسام الأخرى (مع safeString)
         // ============================================================
         function organizeSeries(data, seriesCol, titleCol, contentCol, extra1, extra2) {
             const map = {};
@@ -834,7 +750,8 @@
                     let vid = item.content;
                     if (vid.includes('youtu.be/')) vid = vid.split('youtu.be/')[1]?.split('?')[0] || vid;
                     else if (vid.includes('watch?v=')) vid = vid.split('watch?v=')[1]?.split('&')[0] || vid;
-                    html += `<div class="child-item"><p>${item.title || 'فيديو'}</p><div class="video-container" style="max-width:400px;"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div></div>`;
+                    html +=
+                        `<div class="child-item"><p>${item.title || 'فيديو'}</p><div class="video-container" style="max-width:400px;"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div></div>`;
                 });
                 html += `</div>`;
             });
@@ -842,7 +759,8 @@
             document.querySelectorAll('#videosList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = document.getElementById(this.dataset.target);
-                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                    if (target) { target.classList.toggle('open');
+                        this.classList.toggle('active'); }
                 });
             });
         }
@@ -859,7 +777,8 @@
                 const items = map[name];
                 html += `<button class="series-toggle" data-target="aud-${idx}">🎧 ${name}</button><div id="aud-${idx}" class="series-content">`;
                 items.forEach(item => {
-                    html += `<div class="child-item"><p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p><audio controls><source src="${item.content}" type="audio/mpeg"></audio></div>`;
+                    html +=
+                        `<div class="child-item"><p>${item.title || 'ملف صوتي'} ${item.extra1 ? `🎤 ${item.extra1}` : ''}</p><audio controls><source src="${item.content}" type="audio/mpeg"></audio></div>`;
                 });
                 html += `</div>`;
             });
@@ -867,7 +786,8 @@
             document.querySelectorAll('#audioList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = document.getElementById(this.dataset.target);
-                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                    if (target) { target.classList.toggle('open');
+                        this.classList.toggle('active'); }
                 });
             });
         }
@@ -885,7 +805,8 @@
                 html += `<button class="series-toggle" data-target="art-${idx}">📝 ${name}</button><div id="art-${idx}" class="series-content">`;
                 items.forEach(item => {
                     let img = item.extra2 ? getDirectImageUrl(item.extra2) : '';
-                    html += `<div class="child-item"><p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p><p>${item.content || ''}</p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; cursor:pointer;" onclick="openModal('${img}')">` : ''}</div>`;
+                    html +=
+                        `<div class="child-item"><p><strong>${item.title || 'بدون عنوان'}</strong> ${item.extra1 ? `📅 ${item.extra1}` : ''}</p><p>${item.content || ''}</p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:200px; border-radius:8px; cursor:pointer;" onclick="openModal('${img}')">` : ''}</div>`;
                 });
                 html += `</div>`;
             });
@@ -893,7 +814,8 @@
             document.querySelectorAll('#articlesList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = document.getElementById(this.dataset.target);
-                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                    if (target) { target.classList.toggle('open');
+                        this.classList.toggle('active'); }
                 });
             });
         }
@@ -911,7 +833,8 @@
                 html += `<button class="series-toggle" data-target="bok-${idx}">📚 ${name}</button><div id="bok-${idx}" class="series-content">`;
                 items.forEach(item => {
                     let img = item.extra1 ? getDirectImageUrl(item.extra1) : '';
-                    html += `<div class="child-item"><p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; margin-bottom:6px; cursor:pointer;" onclick="openModal('${img}')">` : ''}<a href="${item.content}" target="_blank" style="color:#1a5c3a; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a></div>`;
+                    html +=
+                        `<div class="child-item"><p><strong>📄 ${item.title || 'بدون عنوان'}</strong></p>${img ? `<img src="${img}" alt="${item.title}" style="max-width:100%; max-height:150px; border-radius:8px; margin-bottom:6px; cursor:pointer;" onclick="openModal('${img}')">` : ''}<a href="${item.content}" target="_blank" style="color:#1a5c3a; text-decoration:none; font-weight:600;">📥 تحميل الكتاب</a></div>`;
                 });
                 html += `</div>`;
             });
@@ -919,7 +842,8 @@
             document.querySelectorAll('#booksList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = document.getElementById(this.dataset.target);
-                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                    if (target) { target.classList.toggle('open');
+                        this.classList.toggle('active'); }
                 });
             });
         }
@@ -937,7 +861,8 @@
                 html += `<button class="series-toggle" data-target="img-${idx}">🖼️ ${name}</button><div id="img-${idx}" class="series-content"><div class="image-grid">`;
                 items.forEach(item => {
                     const src = getDirectImageUrl(item.content);
-                    html += `<div class="image-item"><img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')"><h4>${item.title || 'بدون عنوان'}</h4>${item.extra1 ? `<p>${item.extra1}</p>` : ''}</div>`;
+                    html +=
+                        `<div class="image-item"><img src="${src}" alt="${item.title}" loading="lazy" onclick="openModal('${src}')"><h4>${item.title || 'بدون عنوان'}</h4>${item.extra1 ? `<p>${item.extra1}</p>` : ''}</div>`;
                 });
                 html += `</div></div>`;
             });
@@ -945,7 +870,8 @@
             document.querySelectorAll('#imagesList .series-toggle').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = document.getElementById(this.dataset.target);
-                    if (target) { target.classList.toggle('open'); this.classList.toggle('active'); }
+                    if (target) { target.classList.toggle('open');
+                        this.classList.toggle('active'); }
                 });
             });
         }
@@ -964,6 +890,9 @@
             });
         }
 
+        // ============================================================
+        // تحميل كل المحتوى
+        // ============================================================
         async function loadAll() {
             try {
                 await loadSidebarInfo();
